@@ -2978,7 +2978,11 @@ window.__ModuleLoader__.load({
               setQr(null);
               setQrState('done');
               setNotice(t('source.qrDone', { n: fmtNumber(res.added || 0) }));
-              await props.onRefresh();
+              if (typeof props.onRefresh === 'function') {
+                try { await props.onRefresh(); } catch (err) {}
+                setTimeout(() => { try { props.onRefresh(); } catch (err) {} }, 1500);
+                setTimeout(() => { try { props.onRefresh(); } catch (err) {} }, 4000);
+              }
               if (props.onSay) props.onSay(t('source.qrDone', { n: fmtNumber(res.added || 0) }));
               if (props.onClose) props.onClose();
               return;
@@ -6548,6 +6552,7 @@ window.__ModuleLoader__.load({
                     onDisconnect: disconnectProvider,
                     onSync: syncProvider,
                     onSearch: searchProvider,
+                    onRefresh: loadState,
                     onOpenResult: openProviderBook,
                   }),
                 ]
@@ -6613,8 +6618,8 @@ window.__ModuleLoader__.load({
             ;[[0.5, 0.5], [0.5, 0.18], [0.82, 0.25], [0.3, 0.45], [0.975, 0.42], [0.9, 0.07]].forEach((pairXY) => {
               const px = Math.round(window.innerWidth * pairXY[0])
               const py = Math.round(window.innerHeight * pairXY[1])
-              const top = doc.elementFromPoint(px, py)
-              out.push('at ' + px + ',' + py + ' -> ' + (top ? String(top.className || top.tagName) + ' pe=' + getComputedStyle(top).pointerEvents : 'null'))
+              const stack = doc.elementsFromPoint(px, py)
+              out.push('at ' + px + ',' + py + ' -> ' + stack.slice(0, 4).map((el) => String(el.className || el.tagName) + '[' + getComputedStyle(el).pointerEvents + ']').join(' > '))
             })
           }
           setText(out.join('\n'))
