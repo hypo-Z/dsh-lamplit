@@ -1499,6 +1499,21 @@ window.__ModuleLoader__.load({
       return clamp(Math.round(remote), 0, 100);
     }
 
+    /** 是否已经开读：本地进度或微信读书云端进度任一存在即可。 */
+    function bookStarted(book) {
+      if (!book || book.finished) return false;
+      const progress = book.progress || {};
+      if ((book.lastOpenedAt || 0) > 0) return true;
+      if ((progress.chapterIndex || 0) > 0 || (progress.percent || 0) > 0) return true;
+      const remote = book.remote || {};
+      return (Number(remote.percent) || 0) > 0 || (Number(remote.seconds) || 0) > 0;
+    }
+
+    /** 读完：本地手动标记，或进度到 100%。 */
+    function bookFinished(book) {
+      return !!book && (book.finished === true || bookPercent(book) >= 100);
+    }
+
     /** 这本书显示的进度是不是来自微信读书云端。 */
     function percentFromWechat(book) {
       if (!book || book.finished) return false;
@@ -6219,14 +6234,10 @@ window.__ModuleLoader__.load({
         const stats = data.stats || {};
 
         const counts = useMemo(() => {
-          const started = (book) => {
-            const progress = book.progress || {};
-            return (book.lastOpenedAt || 0) > 0 || (progress.chapterIndex || 0) > 0 || (progress.percent || 0) > 0;
-          };
           return {
             all: shelf.length,
-            reading: shelf.filter((book) => !book.finished && started(book)).length,
-            finished: shelf.filter((book) => book.finished).length,
+            reading: shelf.filter((book) => bookStarted(book) && !bookFinished(book)).length,
+            finished: shelf.filter((book) => bookFinished(book)).length,
             weread: shelf.filter((book) => book.source === 'weread').length,
             local: shelf.filter((book) => book.source !== 'weread').length,
             notes: notes.length,
@@ -6248,12 +6259,8 @@ window.__ModuleLoader__.load({
           const list = shelf
             .filter((book) => (sourceFilter === 'all' ? true : sourceFilter === 'local' ? book.source !== 'weread' : book.source === 'weread'))
             .filter((book) => {
-              if (filter === 'finished') return !!book.finished;
-              if (filter === 'reading') {
-                if (book.finished) return false;
-                const progress = book.progress || {};
-                return (book.lastOpenedAt || 0) > 0 || (progress.chapterIndex || 0) > 0 || (progress.percent || 0) > 0;
-              }
+              if (filter === 'finished') return bookFinished(book);
+              if (filter === 'reading') return bookStarted(book) && !bookFinished(book);
               return true;
             })
             .filter((book) => {
