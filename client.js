@@ -871,6 +871,8 @@ window.__ModuleLoader__.load({
          give the panel an opaque surface so it does not float over the wallpaper. */
       '.pb-cards{position:static!important;inset:auto!important;width:auto!important;max-width:100%!important}',
       '.pb-root{background-color:#141519;background-image:linear-gradient(var(--dsw-alias-bg-base,#141519),var(--dsw-alias-bg-base,#141519))}',
+      /* 面板在宿主里被继承成 pointer-events:none，导致整页点不动；在根节点上强制恢复命中测试 */
+      '.pb-root{pointer-events:auto!important}',
       '@media (max-width:980px){.pb-cards{grid-template-columns:1fr 1fr}.pb-cards>.pb-card:last-child{grid-column:1/-1}}',
       '@media (max-width:680px){.pb-cards{grid-template-columns:1fr}.pb-cards>.pb-card:last-child{grid-column:auto}}',
       '.pb-card{border:1px solid var(--pb-line);border-radius:10px;padding:16px 18px;background:var(--pb-panel);min-width:0}',
@@ -5727,6 +5729,7 @@ window.__ModuleLoader__.load({
 
       render() {
         if (this.state.message === '') return this.props.children;
+
         return h(
           'div',
           { className: 'pb-root' },
@@ -5768,6 +5771,14 @@ window.__ModuleLoader__.load({
         const [importing, setImporting] = useState(null);
         const [importError, setImportError] = useState('');
         const [sheet, setSheet] = useState(false);
+        const rootRef = useRef(null);
+        const [dropForOverlay, setDropForOverlay] = useState(false);
+        useEffect(() => {
+          const node = rootRef.current;
+          if (!node || !node.parentElement) return;
+          const layer = node.parentElement.closest('[class*="overlayLayer"],[class*="OverlayLayer"]');
+          if (layer) setDropForOverlay(true);
+        }, []);
         const [toast, setToast] = useState('');
         const [session, setSession] = useState(null);
         const [dragDepth, setDragDepth] = useState(0);
@@ -6479,9 +6490,11 @@ window.__ModuleLoader__.load({
                         onConnect: () => setSheet(true),
                       });
 
+        if (dropForOverlay) return null;
+
         return h(
           'div',
-          { className: 'pb-root' },
+          { className: 'pb-root', ref: rootRef },
           h('style', null, CSS),
           session
             ? null
@@ -6538,6 +6551,7 @@ window.__ModuleLoader__.load({
                 ]
               : null,
             toast ? h('div', { className: 'pb-toast', role: 'status', 'aria-live': 'polite' }, toast) : null,
+            h(DebugBox),
             h('input', {
               ref: fileRef,
               type: 'file',
@@ -6549,6 +6563,65 @@ window.__ModuleLoader__.load({
           ),
         );
       };
+    }
+
+    /* TEMP DEBUG (remove after diagnosing the stray top-right block) */
+    function DebugBox() {
+      const ref = useRef(null)
+      const pair = useState('')
+      const text = pair[0]
+      const setText = pair[1]
+      useEffect(() => {
+        function fmt(el) {
+          if (!el) return 'none'
+          const r = el.getBoundingClientRect()
+          const cs = getComputedStyle(el)
+          const parent = el.parentElement
+          return Math.round(r.top) + ',' + Math.round(r.left) + ' ' + Math.round(r.width) + 'x' + Math.round(r.height) +
+            ' pos=' + cs.position + ' z=' + cs.zIndex + ' pe=' + cs.pointerEvents + ' parent=' + (parent ? String(parent.className || parent.tagName) : '-')
+        }
+        function tick() {
+          const node = ref.current
+          const root = node && node.closest ? node.closest('.pb-root') : null
+          const out = []
+          out.push('win ' + window.innerWidth + 'x' + window.innerHeight + ' dpr=' + window.devicePixelRatio)
+          if (root) {
+            const chain = []
+            let up = root
+            for (let i = 0; i < 4 && up; i += 1) { chain.push(String(up.className || up.tagName)); up = up.parentElement }
+            out.push('root-chain: ' + chain.join(' < '))
+          }
+          ;['.pb-root', '.pb-stage', '.pb-appbar', '.pb-scrim', '.pb-sheet', '.pb-cards', '.pb-shell', '.pb-scroll'].forEach((sel) => {
+            const el = root ? root.querySelector(sel) : null
+            out.push(sel + ': ' + fmt(el))
+            if (sel === '.pb-sheet' && el) {
+              out.push('  sheet offsetTop=' + el.offsetTop + ' offsetParent=' + (el.offsetParent ? String(el.offsetParent.className || el.offsetParent.tagName) : 'null'))
+            }
+          })
+          const doc = root ? root.ownerDocument : null
+          if (doc) {
+            const all = doc.querySelectorAll('.pb-root')
+            out.push('pb-root count: ' + all.length)
+            for (let i = 0; i < all.length; i += 1) {
+              let up = all[i]
+              const chain = []
+              for (let k = 0; k < 3 && up; k += 1) { chain.push(String(up.className || up.tagName)); up = up.parentElement }
+              out.push('  root[' + i + '] ' + fmt(all[i]) + ' chain=' + chain.join(' < '))
+            }
+            ;[[0.5, 0.5], [0.5, 0.18], [0.82, 0.25], [0.3, 0.45], [0.975, 0.42], [0.9, 0.07]].forEach((pairXY) => {
+              const px = Math.round(window.innerWidth * pairXY[0])
+              const py = Math.round(window.innerHeight * pairXY[1])
+              const top = doc.elementFromPoint(px, py)
+              out.push('at ' + px + ',' + py + ' -> ' + (top ? String(top.className || top.tagName) + ' pe=' + getComputedStyle(top).pointerEvents : 'null'))
+            })
+          }
+          setText(out.join('\n'))
+        }
+        tick()
+        const timer = setInterval(tick, 900)
+        return () => clearInterval(timer)
+      }, [])
+      return h('div', { ref: ref, style: { position: 'fixed', left: '50%', bottom: '10px', transform: 'translateX(-50%)', zIndex: 2147483000, padding: '8px 10px', borderRadius: '8px', background: 'rgba(0,0,0,.9)', color: '#8f8', font: '11px/1.45 ui-monospace, Menlo, monospace', whiteSpace: 'pre-wrap', maxWidth: '900px', pointerEvents: 'none' } }, 'DEBUG\n' + text)
     }
 
     function apply(ctx) {
