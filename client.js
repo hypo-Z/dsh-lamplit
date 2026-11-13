@@ -873,6 +873,8 @@ window.__ModuleLoader__.load({
       '.pb-root{background-color:#141519;background-image:linear-gradient(var(--dsw-alias-bg-base,#141519),var(--dsw-alias-bg-base,#141519))}',
       /* 面板在宿主里被继承成 pointer-events:none，导致整页点不动；在根节点上强制恢复命中测试 */
       '.pb-root{pointer-events:auto!important}',
+      /* 宿主会把面板再克隆/挂一份到 overlay 层（64px 宽、z=30），它盖住来源面板并裁掉二维码 */
+      '[class*="overlayLayer"] .pb-root,[class*="OverlayLayer"] .pb-root{display:none!important}',
       '@media (max-width:980px){.pb-cards{grid-template-columns:1fr 1fr}.pb-cards>.pb-card:last-child{grid-column:1/-1}}',
       '@media (max-width:680px){.pb-cards{grid-template-columns:1fr}.pb-cards>.pb-card:last-child{grid-column:auto}}',
       '.pb-card{border:1px solid var(--pb-line);border-radius:10px;padding:16px 18px;background:var(--pb-panel);min-width:0}',
