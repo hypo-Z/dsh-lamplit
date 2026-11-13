@@ -2216,7 +2216,7 @@ window.__ModuleLoader__.load({
             'div',
             { className: 'lamp-book-cover' },
             h(Cover, { book, t, size: 'md' }),
-            book.finished ? h('span', { className: 'lamp-done-dot', 'aria-hidden': true }, h(IconCheck, { size: 8 })) : null,
+            bookFinished(book) ? h('span', { className: 'lamp-done-dot', 'aria-hidden': true }, h(IconCheck, { size: 8 })) : null,
           ),
           h(
             'div',
@@ -2226,7 +2226,7 @@ window.__ModuleLoader__.load({
               'p',
               { className: 'lamp-book-meta' },
               h('em', null, subtitle),
-              h('b', { className: 'lamp-num' }, book.finished ? t('shelf.finished') : t('shelf.percent', { n: percent })),
+              h('b', { className: 'lamp-num' }, bookFinished(book) ? t('shelf.finished') : t('shelf.percent', { n: percent })),
             ),
           ),
           h(
@@ -6294,7 +6294,7 @@ window.__ModuleLoader__.load({
         }, [shelf, sourceFilter, filter, query, sort]);
 
         const continueBook = useMemo(() => {
-          const opened = shelf.filter((book) => !book.finished && lastReadAt(book) > 0);
+          const opened = shelf.filter((book) => !bookFinished(book) && lastReadAt(book) > 0);
           if (opened.length === 0) return null;
           return opened.slice().sort((a, b) => lastReadAt(b) - lastReadAt(a))[0];
         }, [shelf]);
@@ -6309,23 +6309,29 @@ window.__ModuleLoader__.load({
           [shelf],
         );
 
-        // 进面板先确认微信读书的会话还能不能用：过期就别再装作已连接。只在挂载时探一次。
+        // 确认微信读书的会话还能不能用：进面板探一次，打开「来源」面板时再探一次。
+        const probeWeread = useCallback(async () => {
+          try {
+            const res = await call('/provider/weread/status');
+            if (!res || !res.provider) return;
+            setData((current) => ({
+              ...current,
+              providers: (current.providers || []).map((item) => (item.id === 'weread' ? res.provider : item)),
+            }));
+          } catch (err) {}
+        }, []);
         const probedRef = useRef(false);
         useEffect(() => {
           if (probedRef.current) return;
           const weread = (data.providers || []).find((item) => item.id === 'weread');
           if (!weread || !weread.connected) return;
           probedRef.current = true;
-          call('/provider/weread/status')
-            .then((res) => {
-              if (!res || !res.provider) return;
-              setData((current) => ({
-                ...current,
-                providers: (current.providers || []).map((item) => (item.id === 'weread' ? res.provider : item)),
-              }));
-            })
-            .catch(() => {});
-        }, [data.providers]);
+          probeWeread();
+        }, [data.providers, probeWeread]);
+        useEffect(() => {
+          if (!sheet) return;
+          probeWeread();
+        }, [sheet, probeWeread]);
 
         // 正在读的书如果被同步/删除移出了书架，就退出阅读器，别让人对着 404 干瞪眼。
         useEffect(() => {
