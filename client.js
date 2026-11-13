@@ -1256,6 +1256,7 @@ window.__ModuleLoader__.load({
       '.lamp-h1,.lamp-h2,.lamp-h3{font-family:var(--lamp-font);text-indent:0;font-weight:600;line-height:1.45;margin:1.7em 0 .8em;text-align:center;letter-spacing:.02em}',
       '.lamp-h1{font-size:1.32em}.lamp-h2{font-size:1.14em}.lamp-h3{font-size:1.02em;text-align:start}',
       '.lamp-prose>:first-child{margin-top:0}',
+      '.lamp-block[data-tts="1"]{background:color-mix(in srgb,var(--dsw-alias-brand-primary,#5b8cff) 14%,transparent);border-radius:6px;box-shadow:0 0 0 6px color-mix(in srgb,var(--dsw-alias-brand-primary,#5b8cff) 14%,transparent)}',
       '.lamp-q{text-indent:0;margin:1em 0;padding:.1em 0 .1em 1.1em;border-left:2px solid color-mix(in srgb,var(--lamp-ink) 22%,var(--lamp-paper));',
       'font-style:italic;color:color-mix(in srgb,var(--lamp-ink) 82%,var(--lamp-paper))}',
       '.lamp-pre{text-indent:0;margin:1em 0;padding:.7em .9em;border-radius:8px;overflow-x:auto;',
@@ -4638,6 +4639,12 @@ window.__ModuleLoader__.load({
       const [scrollPercent, setScrollPercent] = useState(0);
       const [overflowFallback, setOverflowFallback] = useState(false);
       const [fontOpen, setFontOpen] = useState(false);
+      const [auto, setAuto] = useState(false);
+      const [autoOpen, setAutoOpen] = useState(false);
+      const [autoSpeed, setAutoSpeed] = useState(40);
+      const [autoSecs, setAutoSecs] = useState(20);
+      const [tts, setTts] = useState(null);
+      const ttsToken = useRef(0);
 
       const [selection, setSelection] = useState(null);
       const [ai, setAi] = useState(null);
@@ -4860,6 +4867,132 @@ window.__ModuleLoader__.load({
       );
 
       const blocks = chapter && chapter.chapter && Array.isArray(chapter.chapter.blocks) ? chapter.chapter.blocks : [];
+
+      /* ---------------- 自动翻页 / 滚动 + 听书 ---------------- */
+
+      useEffect(() => {
+        if (!auto || status !== 'ready') return undefined;
+        if (settings.mode === 'paged') {
+          const timer = setInterval(() => {
+            if (page + 1 < layout.pages) setPage(page + 1);
+            else if (hasNext(chapter)) loadChapter(chapter.next, 0);
+            else setAuto(false);
+          }, Math.max(5, autoSecs) * 1000);
+          return () => clearInterval(timer);
+        }
+        const node = scrollRef.current;
+        if (!node) return undefined;
+        let raf = 0;
+        let last = 0;
+        const tick = (now) => {
+          if (!last) last = now;
+          const dt = Math.min(0.12, (now - last) / 1000);
+          last = now;
+          node.scrollTop += autoSpeed * dt;
+          if (node.scrollTop + node.clientHeight >= node.scrollHeight - 3) {
+            setAuto(false);
+            return;
+          }
+          raf = requestAnimationFrame(tick);
+        };
+        raf = requestAnimationFrame(tick);
+        return () => cancelAnimationFrame(raf);
+      }, [auto, autoSpeed, autoSecs, settings.mode, page, layout.pages, chapter, chapterKey, status]);
+
+      useEffect(() => {
+        if (!auto) return undefined;
+        const node = scrollRef.current;
+        const stop = () => setAuto(false);
+        window.addEventListener('keydown', stop);
+        if (node) {
+          node.addEventListener('wheel', stop, { passive: true });
+          node.addEventListener('touchstart', stop, { passive: true });
+          node.addEventListener('pointerdown', stop);
+        }
+        return () => {
+          window.removeEventListener('keydown', stop);
+          if (node) {
+            node.removeEventListener('wheel', stop);
+            node.removeEventListener('touchstart', stop);
+            node.removeEventListener('pointerdown', stop);
+          }
+        };
+      }, [auto]);
+
+      const ttsSupported =
+        typeof window !== 'undefined' && typeof window.SpeechSynthesisUtterance === 'function' && !!window.speechSynthesis;
+
+      const ttsStop = () => {
+        ttsToken.current += 1;
+        try {
+          if (window.speechSynthesis) window.speechSynthesis.cancel();
+        } catch (err) {}
+        setTts(null);
+      };
+
+      const ttsPlay = () => {
+        if (!ttsSupported) return;
+        ttsToken.current += 1;
+        const token = ttsToken.current;
+        const texts = blocks
+          .map((block) => String((block && (block.text || block.content)) || '').trim())
+          .filter((text) => text !== '');
+        if (texts.length === 0) return;
+        const speak = (index) => {
+          if (ttsToken.current !== token) return;
+          if (index >= texts.length) {
+            ttsStop();
+            return;
+          }
+          const utter = new window.SpeechSynthesisUtterance(texts[index]);
+          utter.lang = 'zh-CN';
+          const voices = window.speechSynthesis.getVoices();
+          const zh = voices.find((voice) => /^zh/i.test(voice.lang));
+          if (zh) utter.voice = zh;
+          utter.onend = () => {
+            if (ttsToken.current !== token) return;
+            speak(index + 1);
+          };
+          utter.onerror = () => {
+            if (ttsToken.current !== token) return;
+            ttsStop();
+          };
+          setTts({ index, paused: false });
+          window.speechSynthesis.speak(utter);
+        };
+        speak(0);
+      };
+
+      const ttsToggle = () => {
+        if (tts === null) {
+          ttsPlay();
+          return;
+        }
+        if (tts.paused) {
+          try { window.speechSynthesis.resume(); } catch (err) {}
+          setTts({ index: tts.index, paused: false });
+        } else {
+          try { window.speechSynthesis.pause(); } catch (err) {}
+          setTts({ index: tts.index, paused: true });
+        }
+      };
+
+      useEffect(
+        () => () => {
+          ttsToken.current += 1;
+          try {
+            if (typeof window !== 'undefined' && window.speechSynthesis) window.speechSynthesis.cancel();
+          } catch (err) {}
+        },
+        [],
+      );
+      useEffect(() => {
+        ttsToken.current += 1;
+        try {
+          if (typeof window !== 'undefined' && window.speechSynthesis) window.speechSynthesis.cancel();
+        } catch (err) {}
+        setTts(null);
+      }, [chapterKey]);
 
       /** 从笔记/今日一句进来时，把正文滚到那一句（只做一次）。 */
       useEffect(() => {
@@ -5271,7 +5404,8 @@ window.__ModuleLoader__.load({
           if (!element) return null;
           const marked = noteMarks.has(index);
           const focused = focusIndex === index;
-          if (!marked && !focused) return element;
+          const speaking = tts !== null && tts.index === index;
+          if (!marked && !focused && !speaking) return element;
           return h(
             'div',
             {
@@ -5279,6 +5413,7 @@ window.__ModuleLoader__.load({
               className: 'lamp-block',
               'data-mark': marked ? '1' : '0',
               'data-focus': focused ? '1' : '0',
+              'data-tts': speaking ? '1' : '0',
             },
             element,
             marked
@@ -5446,7 +5581,92 @@ window.__ModuleLoader__.load({
                 )
               : null,
           ),
-          h(
+          isScan
+            ? null
+            : h(
+                'button',
+                {
+                  type: 'button',
+                  className: 'lamp-btn lamp-icon-btn',
+                  'data-on': tts !== null ? '1' : '0',
+                  title: '听书',
+                  'aria-label': '听书',
+                  disabled: !ttsSupported,
+                  onClick: ttsToggle,
+                },
+                tts === null ? '听' : tts.paused ? '▶' : '❚❚',
+              ),
+          tts !== null
+            ? h(
+                'button',
+                {
+                  type: 'button',
+                  className: 'lamp-btn lamp-icon-btn',
+                  title: '停止听书',
+                  'aria-label': '停止听书',
+                  onClick: ttsStop,
+                },
+                '×',
+              )
+            : null,
+          isScan
+            ? null
+            : h(
+                'div',
+                { style: { position: 'relative' } },
+                h(
+                  'button',
+                  {
+                    type: 'button',
+                    className: 'lamp-btn lamp-icon-btn',
+                    'data-on': auto ? '1' : '0',
+                    title: '自动翻页 / 滚动',
+                    'aria-label': '自动翻页 / 滚动',
+                    onClick: () => setAutoOpen((open) => !open),
+                  },
+                  '自',
+                ),
+                autoOpen
+                  ? h(
+                      'div',
+                      { className: 'lamp-fontpop', style: { right: 0, top: 38, width: 232, gap: 10 } },
+                      h(
+                        'div',
+                        { className: 'lamp-fontpop-row' },
+                        h('span', null, settings.mode === 'paged' ? '自动翻页' : '自动滚动'),
+                        h(
+                          'button',
+                          {
+                            type: 'button',
+                            className: 'lamp-btn',
+                            style: { padding: '2px 12px', fontSize: 12 },
+                            onClick: () => setAuto((on) => !on),
+                          },
+                          auto ? '开' : '关',
+                        ),
+                      ),
+                      settings.mode === 'paged'
+                        ? h(
+                            'div',
+                            { className: 'lamp-fontpop-row' },
+                            h('span', null, '翻页间隔'),
+                            h('button', { type: 'button', className: 'lamp-btn lamp-icon-btn', onClick: () => setAutoSecs((n) => Math.max(5, n - 5)) }, '−'),
+                            h('b', null, autoSecs + 's'),
+                            h('button', { type: 'button', className: 'lamp-btn lamp-icon-btn', onClick: () => setAutoSecs((n) => Math.min(60, n + 5)) }, '+'),
+                          )
+                        : h(
+                            'div',
+                            { className: 'lamp-fontpop-row' },
+                            h('span', null, '滚动速度'),
+                            h('button', { type: 'button', className: 'lamp-btn lamp-icon-btn', onClick: () => setAutoSpeed((n) => Math.max(16, n - 8)) }, '−'),
+                            h('b', null, autoSpeed),
+                            h('button', { type: 'button', className: 'lamp-btn lamp-icon-btn', onClick: () => setAutoSpeed((n) => Math.min(160, n + 8)) }, '+'),
+                          ),
+                      h('p', { style: { margin: 0, fontSize: 11, color: 'var(--dsw-alias-label-tertiary)', lineHeight: 1.5 } }, '手动滚动或按键会暂停'),
+                    )
+                  : null,
+              ),
+                    h(
             'button',
             {
               type: 'button',
