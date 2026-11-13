@@ -369,6 +369,7 @@ window.__ModuleLoader__.load({
       'sort.recent': '最近阅读',
       'sort.added': '加入时间',
       'sort.title': '书名',
+      'sort.progress': '进度',
       'density.grid': '网格',
       'density.list': '列表',
 
@@ -727,6 +728,7 @@ window.__ModuleLoader__.load({
       'sort.recent': 'Recently read',
       'sort.added': 'Date added',
       'sort.title': 'Title',
+      'sort.progress': 'Progress',
       'density.grid': 'Grid',
       'density.list': 'List',
 
@@ -1507,6 +1509,15 @@ window.__ModuleLoader__.load({
       if ((progress.chapterIndex || 0) > 0 || (progress.percent || 0) > 0) return true;
       const remote = book.remote || {};
       return (Number(remote.percent) || 0) > 0 || (Number(remote.seconds) || 0) > 0;
+    }
+
+    /** 最近一次阅读时间（ms）：本地打开时间，或微信读书云端的 updateTime（秒）。 */
+    function lastReadAt(book) {
+      if (!book) return 0;
+      const local = Number(book.lastOpenedAt) || 0;
+      const remote = Number((book.remote && book.remote.updatedAt) || 0);
+      const remoteMs = remote > 0 && remote < 1e12 ? remote * 1000 : remote;
+      return Math.max(local, remoteMs);
     }
 
     /** 读完：本地手动标记，或进度到 100%。 */
@@ -2612,7 +2623,7 @@ window.__ModuleLoader__.load({
                         ? h(
                             'div',
                             { className: 'lamp-pop', style: { right: 0, top: 32 } },
-                            ['recent', 'added', 'title'].map((key) =>
+                            ['recent', 'added', 'title', 'progress'].map((key) =>
                               h(
                                 'button',
                                 {
@@ -6271,27 +6282,29 @@ window.__ModuleLoader__.load({
               );
             });
           const sorted = list.slice();
-          if (sort === 'title') sorted.sort((a, b) => String(a.title || '').localeCompare(String(b.title || '')));
+          if (sort === 'title') sorted.sort((a, b) => String(a.title || '').localeCompare(String(b.title || ''), 'zh'));
           else if (sort === 'added') sorted.sort((a, b) => (b.addedAt || 0) - (a.addedAt || 0));
+          else if (sort === 'progress')
+            sorted.sort((a, b) => bookPercent(b) - bookPercent(a) || lastReadAt(b) - lastReadAt(a));
           else
             sorted.sort(
-              (a, b) => Math.max(b.lastOpenedAt || 0, b.addedAt || 0) - Math.max(a.lastOpenedAt || 0, a.addedAt || 0),
+              (a, b) => lastReadAt(b) - lastReadAt(a) || (b.addedAt || 0) - (a.addedAt || 0),
             );
           return sorted;
         }, [shelf, sourceFilter, filter, query, sort]);
 
         const continueBook = useMemo(() => {
-          const opened = shelf.filter((book) => !book.finished && (book.lastOpenedAt || 0) > 0);
+          const opened = shelf.filter((book) => !book.finished && lastReadAt(book) > 0);
           if (opened.length === 0) return null;
-          return opened.slice().sort((a, b) => (b.lastOpenedAt || 0) - (a.lastOpenedAt || 0))[0];
+          return opened.slice().sort((a, b) => lastReadAt(b) - lastReadAt(a))[0];
         }, [shelf]);
 
         const recentBooks = useMemo(
           () =>
             shelf
-              .filter((book) => (book.lastOpenedAt || 0) > 0)
+              .filter((book) => lastReadAt(book) > 0)
               .slice()
-              .sort((a, b) => (b.lastOpenedAt || 0) - (a.lastOpenedAt || 0))
+              .sort((a, b) => lastReadAt(b) - lastReadAt(a))
               .slice(0, 5),
           [shelf],
         );
