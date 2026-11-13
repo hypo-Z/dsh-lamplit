@@ -1257,6 +1257,7 @@ window.__ModuleLoader__.load({
       '.lamp-h1{font-size:1.32em}.lamp-h2{font-size:1.14em}.lamp-h3{font-size:1.02em;text-align:start}',
       '.lamp-prose>:first-child{margin-top:0}',
       '.lamp-block[data-tts="1"]{background:color-mix(in srgb,var(--dsw-alias-brand-primary,#5b8cff) 14%,transparent);border-radius:6px;box-shadow:0 0 0 6px color-mix(in srgb,var(--dsw-alias-brand-primary,#5b8cff) 14%,transparent)}',
+      '.lamp-prose [data-tts-past="1"],.lamp-block[data-tts-past="1"]{opacity:.42;transition:opacity .25s ease}',
       '.lamp-q{text-indent:0;margin:1em 0;padding:.1em 0 .1em 1.1em;border-left:2px solid color-mix(in srgb,var(--lamp-ink) 22%,var(--lamp-paper));',
       'font-style:italic;color:color-mix(in srgb,var(--lamp-ink) 82%,var(--lamp-paper))}',
       '.lamp-pre{text-indent:0;margin:1em 0;padding:.7em .9em;border-radius:8px;overflow-x:auto;',
@@ -5431,7 +5432,11 @@ window.__ModuleLoader__.load({
           const marked = noteMarks.has(index);
           const focused = focusIndex === index;
           const speaking = tts !== null && tts.index === index;
-          if (!marked && !focused && !speaking) return element;
+          const spoken = tts !== null && tts.index > index;
+          if (!marked && !focused && !speaking) {
+            if (!spoken) return element;
+            return React.cloneElement(element, { 'data-tts-past': '1' });
+          }
           return h(
             'div',
             {
@@ -5440,6 +5445,7 @@ window.__ModuleLoader__.load({
               'data-mark': marked ? '1' : '0',
               'data-focus': focused ? '1' : '0',
               'data-tts': speaking ? '1' : '0',
+              'data-tts-past': spoken && !speaking ? '1' : '0',
             },
             element,
             marked
