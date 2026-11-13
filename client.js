@@ -4617,6 +4617,20 @@ window.__ModuleLoader__.load({
       );
     }
 
+    function readAutoPrefs() {
+      try {
+        return JSON.parse(window.localStorage.getItem('lamplit-auto') || '{}');
+      } catch (err) {
+        return {};
+      }
+    }
+
+    function writeAutoPrefs(value) {
+      try {
+        window.localStorage.setItem('lamplit-auto', JSON.stringify(value));
+      } catch (err) {}
+    }
+
     function Reader(props) {
       const { t, book } = props;
       const settings = props.settings;
@@ -4643,16 +4657,16 @@ window.__ModuleLoader__.load({
       const [auto, setAuto] = useState(false);
       const [autoOpen, setAutoOpen] = useState(false);
       const [autoSpeed, setAutoSpeed] = useState(() => {
-        const saved = loadLS('lamplit-auto', {});
+        const saved = readAutoPrefs();
         return Number(saved.speed) > 0 ? Number(saved.speed) : 40;
       });
       const [autoSecs, setAutoSecs] = useState(() => {
-        const saved = loadLS('lamplit-auto', {});
+        const saved = readAutoPrefs();
         return Number(saved.secs) > 0 ? Number(saved.secs) : 20;
       });
       const [tts, setTts] = useState(null);
       const [ttsRate, setTtsRate] = useState(1);
-      useEffect(() => { saveLS('lamplit-auto', { speed: autoSpeed, secs: autoSecs }); }, [autoSpeed, autoSecs]);
+      useEffect(() => { writeAutoPrefs({ speed: autoSpeed, secs: autoSecs }); }, [autoSpeed, autoSecs]);
       const ttsToken = useRef(0);
       const ttsContinue = useRef(false);
 
