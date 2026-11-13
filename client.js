@@ -4641,10 +4641,19 @@ window.__ModuleLoader__.load({
       const [fontOpen, setFontOpen] = useState(false);
       const [auto, setAuto] = useState(false);
       const [autoOpen, setAutoOpen] = useState(false);
-      const [autoSpeed, setAutoSpeed] = useState(40);
-      const [autoSecs, setAutoSecs] = useState(20);
+      const [autoSpeed, setAutoSpeed] = useState(() => {
+        const saved = loadLS('lamplit-auto', {});
+        return Number(saved.speed) > 0 ? Number(saved.speed) : 40;
+      });
+      const [autoSecs, setAutoSecs] = useState(() => {
+        const saved = loadLS('lamplit-auto', {});
+        return Number(saved.secs) > 0 ? Number(saved.secs) : 20;
+      });
       const [tts, setTts] = useState(null);
+      const [ttsRate, setTtsRate] = useState(1);
+      useEffect(() => { saveLS('lamplit-auto', { speed: autoSpeed, secs: autoSecs }); }, [autoSpeed, autoSecs]);
       const ttsToken = useRef(0);
+      const ttsContinue = useRef(false);
 
       const [selection, setSelection] = useState(null);
       const [ai, setAi] = useState(null);
@@ -4890,7 +4899,8 @@ window.__ModuleLoader__.load({
           last = now;
           node.scrollTop += autoSpeed * dt;
           if (node.scrollTop + node.clientHeight >= node.scrollHeight - 3) {
-            setAuto(false);
+            if (hasNext(chapter)) loadChapter(chapter.next, 0);
+            else setAuto(false);
             return;
           }
           raf = requestAnimationFrame(tick);
@@ -4934,30 +4944,40 @@ window.__ModuleLoader__.load({
         if (!ttsSupported) return;
         ttsToken.current += 1;
         const token = ttsToken.current;
-        const texts = blocks
-          .map((block) => String((block && (block.text || block.content)) || '').trim())
-          .filter((text) => text !== '');
-        if (texts.length === 0) return;
-        const speak = (index) => {
+        const segments = [];
+        blocks.forEach((block, index) => {
+          if (!block || block.t === 'hr' || block.t === 'code') return;
+          const text = typeof block.x === 'string' ? block.x.trim() : '';
+          if (text !== '') segments.push({ index, text });
+        });
+        if (segments.length === 0) return;
+        const speak = (position) => {
           if (ttsToken.current !== token) return;
-          if (index >= texts.length) {
-            ttsStop();
+          if (position >= segments.length) {
+            if (hasNext(chapter)) {
+              ttsContinue.current = true;
+              loadChapter(chapter.next, 0);
+            } else {
+              ttsStop();
+            }
             return;
           }
-          const utter = new window.SpeechSynthesisUtterance(texts[index]);
+          const segment = segments[position];
+          const utter = new window.SpeechSynthesisUtterance(segment.text);
           utter.lang = 'zh-CN';
+          utter.rate = ttsRate;
           const voices = window.speechSynthesis.getVoices();
           const zh = voices.find((voice) => /^zh/i.test(voice.lang));
           if (zh) utter.voice = zh;
           utter.onend = () => {
             if (ttsToken.current !== token) return;
-            speak(index + 1);
+            speak(position + 1);
           };
           utter.onerror = () => {
             if (ttsToken.current !== token) return;
             ttsStop();
           };
-          setTts({ index, paused: false });
+          setTts({ index: segment.index, paused: false });
           window.speechSynthesis.speak(utter);
         };
         speak(0);
@@ -4993,6 +5013,12 @@ window.__ModuleLoader__.load({
         } catch (err) {}
         setTts(null);
       }, [chapterKey]);
+      useEffect(() => {
+        if (status !== 'ready') return;
+        if (!ttsContinue.current) return;
+        ttsContinue.current = false;
+        ttsPlay();
+      }, [chapterKey, status]);
 
       /** 从笔记/今日一句进来时，把正文滚到那一句（只做一次）。 */
       useEffect(() => {
@@ -5479,6 +5505,16 @@ window.__ModuleLoader__.load({
         onPointerDown: poke,
       };
 
+      useEffect(() => {
+        if (tts === null || settings.mode !== 'scroll') return;
+        const root = contentRef.current;
+        if (!root || typeof root.querySelector !== 'function') return;
+        const node = root.querySelector('[data-tts="1"]');
+        if (node && typeof node.scrollIntoView === 'function') {
+          node.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        }
+      }, [tts, settings.mode]);
+
       const topbar = h(
         'header',
         { className: 'lamp-topbar lamp-chrome' },
@@ -5589,7 +5625,7 @@ window.__ModuleLoader__.load({
                   type: 'button',
                   className: 'lamp-btn lamp-icon-btn',
                   'data-on': tts !== null ? '1' : '0',
-                  title: '听书',
+                  title: ttsSupported ? '听书（跟随当前章，读完自动续章）' : '当前环境不支持语音朗读',
                   'aria-label': '听书',
                   disabled: !ttsSupported,
                   onClick: ttsToggle,
@@ -5602,9 +5638,30 @@ window.__ModuleLoader__.load({
                 {
                   type: 'button',
                   className: 'lamp-btn lamp-icon-btn',
+                  title: '语速',
+                  'aria-label': '语速',
+                  style: { width: 'auto', padding: '0 8px', fontSize: 11 },
+                  onClick: () => {
+                    const rates = [0.8, 1, 1.2, 1.5];
+                    const next = rates[(rates.indexOf(ttsRate) + 1) % rates.length];
+                    setTtsRate(next);
+                  },
+                },
+                ttsRate.toFixed(1) + '×',
+              )
+            : null,
+          tts !== null
+            ? h(
+                'button',
+                {
+                  type: 'button',
+                  className: 'lamp-btn lamp-icon-btn',
                   title: '停止听书',
                   'aria-label': '停止听书',
-                  onClick: ttsStop,
+                  onClick: () => {
+                    ttsContinue.current = false;
+                    ttsStop();
+                  },
                 },
                 '×',
               )
