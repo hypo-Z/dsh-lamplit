@@ -45,7 +45,7 @@ test('样式只用 pb- 前缀的 class，且不碰宿主 DOM', () => {
     for (const token of match[1].split(/\s+/)) if (token !== '') classes.add(token)
   }
   for (const token of classes) {
-    assert.ok(token.startsWith('pb-'), `class 没有 pb- 前缀：${token}`)
+    assert.ok(token.startsWith('lamp-'), `class 没有 lamp- 前缀：${token}`)
   }
   const documentUses = [...code.matchAll(/document\.([a-zA-Z]+)/g)].map((match) => match[1])
   for (const use of documentUses) {

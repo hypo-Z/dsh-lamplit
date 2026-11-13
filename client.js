@@ -763,654 +763,649 @@ window.__ModuleLoader__.load({
 
     const CSS = [
       /* ---------- 基底 ---------- */
-      '.pb-root{position:relative;height:100%;min-height:0;display:flex;flex-direction:column;overflow:hidden;',
+      '.lamp-root{position:relative;height:100%;min-height:0;display:flex;flex-direction:column;overflow:hidden;',
       'background:var(--dsw-alias-bg-base);color:var(--dsw-alias-label-primary);',
       'font-family:var(--dsw-font-family,-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif);',
-      'font-size:13px;line-height:1.5;box-sizing:border-box;padding-top:var(--pb-frame-pad,0px);',
-      '--pb-line:var(--dsw-alias-border-l1);--pb-line-strong:var(--dsw-alias-border-l2);',
-      '--pb-accent:var(--dsw-alias-brand-primary);--pb-mute:var(--dsw-alias-label-tertiary);',
-      '--pb-ink2:var(--dsw-alias-label-secondary);',
-      '--pb-panel:var(--dsw-alias-bg-layer-1);--pb-panel2:var(--dsw-alias-bg-layer-2);',
-      '--pb-cover-shadow:0 1px 3px rgba(0,0,0,.18);--pb-r-btn:8px;--pb-r-card:10px;--pb-r-chip:999px;',
+      'font-size:13px;line-height:1.5;box-sizing:border-box;padding-top:var(--lamp-frame-pad,0px);',
+      '--lamp-line:var(--dsw-alias-border-l1);--lamp-line-strong:var(--dsw-alias-border-l2);',
+      '--lamp-accent:var(--dsw-alias-brand-primary);--lamp-mute:var(--dsw-alias-label-tertiary);',
+      '--lamp-ink2:var(--dsw-alias-label-secondary);',
+      '--lamp-panel:var(--dsw-alias-bg-layer-1);--lamp-panel2:var(--dsw-alias-bg-layer-2);',
+      '--lamp-cover-shadow:0 1px 3px rgba(0,0,0,.18);--lamp-r-btn:8px;--lamp-r-card:10px;--lamp-r-chip:999px;',
       '-webkit-font-smoothing:antialiased}',
-      '[data-platform="darwin"] .pb-root{--pb-frame-pad:var(--dsh-frame-top-clearance,0px)}',
-      '.pb-root *,.pb-root *::before,.pb-root *::after{box-sizing:border-box}',
-      '.pb-num{font-variant-numeric:tabular-nums}',
+      '[data-platform="darwin"] .lamp-root{--lamp-frame-pad:var(--dsh-frame-top-clearance,0px)}',
+      '.lamp-root *,.lamp-root *::before,.lamp-root *::after{box-sizing:border-box}',
+      '.lamp-num{font-variant-numeric:tabular-nums}',
 
       /* ---------- 控件 ---------- */
-      '.pb-btn{border:1px solid var(--pb-line);background:transparent;color:var(--dsw-alias-label-primary);',
+      '.lamp-btn{border:1px solid var(--lamp-line);background:transparent;color:var(--dsw-alias-label-primary);',
       'border-radius:8px;height:32px;padding:0 12px;font:inherit;font-size:13px;line-height:1;cursor:pointer;',
       'display:inline-flex;align-items:center;gap:6px;white-space:nowrap;transition:background .15s ease,border-color .15s ease,color .15s ease}',
-      '.pb-btn:hover{background:var(--dsw-alias-interactive-bg-hover)}',
-      '.pb-btn:disabled{opacity:.45;cursor:default}',
-      '.pb-btn-primary{background:var(--pb-accent);border-color:transparent;color:var(--dsw-alias-label-primary-foreground);font-weight:600}',
-      '.pb-btn-primary:hover{background:var(--pb-accent);opacity:.9}',
-      '.pb-btn-quiet{border-color:transparent;color:var(--pb-ink2);padding:0 8px}',
-      '.pb-btn-quiet:hover{background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary)}',
-      '.pb-iconbtn{width:32px;height:32px;padding:0;justify-content:center;border-radius:8px;border:1px solid transparent;',
-      'background:transparent;color:var(--pb-ink2);display:inline-flex;align-items:center;cursor:pointer;font:inherit}',
-      '.pb-iconbtn:hover{background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary)}',
-      '.pb-iconbtn[data-on="1"]{color:var(--dsw-alias-label-primary);background:var(--dsw-alias-interactive-bg-hover)}',
-      '.pb-btn:focus-visible,.pb-iconbtn:focus-visible,.pb-tab:focus-visible,.pb-book:focus-visible,.pb-chip:focus-visible,',
-      '.pb-scope:focus-visible,.pb-textlink:focus-visible,.pb-more:focus-visible,.pb-note-del:focus-visible,',
-      '.pb-book-menu:focus-visible,.pb-sortbtn:focus-visible,.pb-pop-item:focus-visible,.pb-note-quote:focus-visible,',
-      '.pb-continue:focus-visible,.pb-cfg-swatch:focus-visible,.pb-cfg-seg-opt:focus-visible,.pb-cfg-switch:focus-visible,',
-      '.pb-srcchip:focus-visible,.pb-repo:focus-visible{outline:2px solid var(--dsw-focus-ring-color,var(--pb-accent));outline-offset:2px}',
-      '.pb-input{height:32px;border:1px solid transparent;border-radius:8px;background:var(--pb-panel2);',
+      '.lamp-btn:hover{background:var(--dsw-alias-interactive-bg-hover)}',
+      '.lamp-btn:disabled{opacity:.45;cursor:default}',
+      '.lamp-btn-primary{background:var(--lamp-accent);border-color:transparent;color:var(--dsw-alias-label-primary-foreground);font-weight:600}',
+      '.lamp-btn-primary:hover{background:var(--lamp-accent);opacity:.9}',
+      '.lamp-btn-quiet{border-color:transparent;color:var(--lamp-ink2);padding:0 8px}',
+      '.lamp-btn-quiet:hover{background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary)}',
+      '.lamp-iconbtn{width:32px;height:32px;padding:0;justify-content:center;border-radius:8px;border:1px solid transparent;',
+      'background:transparent;color:var(--lamp-ink2);display:inline-flex;align-items:center;cursor:pointer;font:inherit}',
+      '.lamp-iconbtn:hover{background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary)}',
+      '.lamp-iconbtn[data-on="1"]{color:var(--dsw-alias-label-primary);background:var(--dsw-alias-interactive-bg-hover)}',
+      '.lamp-btn:focus-visible,.lamp-iconbtn:focus-visible,.lamp-tab:focus-visible,.lamp-book:focus-visible,.lamp-chip:focus-visible,',
+      '.lamp-scope:focus-visible,.lamp-textlink:focus-visible,.lamp-more:focus-visible,.lamp-note-del:focus-visible,',
+      '.lamp-book-menu:focus-visible,.lamp-sortbtn:focus-visible,.lamp-pop-item:focus-visible,.lamp-note-quote:focus-visible,',
+      '.lamp-continue:focus-visible,.lamp-cfg-swatch:focus-visible,.lamp-cfg-seg-opt:focus-visible,.lamp-cfg-switch:focus-visible,',
+      '.lamp-srcchip:focus-visible,.lamp-repo:focus-visible{outline:2px solid var(--dsw-focus-ring-color,var(--lamp-accent));outline-offset:2px}',
+      '.lamp-input{height:32px;border:1px solid transparent;border-radius:8px;background:var(--lamp-panel2);',
       'color:var(--dsw-alias-label-primary);font:inherit;font-size:13px;padding:0 10px;outline:none;min-width:0}',
-      '.pb-input:focus{border-color:var(--pb-accent)}',
-      '.pb-input::placeholder{color:var(--pb-mute)}',
+      '.lamp-input:focus{border-color:var(--lamp-accent)}',
+      '.lamp-input::placeholder{color:var(--lamp-mute)}',
 
       /* ---------- 顶栏 ---------- */
-      '.pb-appbar{flex:none;height:56px;display:flex;align-items:center;gap:20px;padding:0 32px;',
-      'border-bottom:1px solid var(--pb-line);background:var(--dsw-alias-bg-base);position:relative;z-index:6}',
-      '.pb-wordmark{font-family:' + SERIF + ';font-size:13px;letter-spacing:.16em;color:var(--pb-mute);white-space:nowrap;flex:none}',
-      '.pb-wordmark-rule{width:1px;height:12px;background:var(--pb-line);flex:none}',
-      '.pb-tabs{display:flex;align-items:center;gap:22px;height:100%;flex:none}',
-      '.pb-tab{position:relative;display:flex;align-items:center;gap:6px;height:100%;padding:0;border:0;background:none;',
-      'font:inherit;font-size:14px;color:var(--pb-ink2);cursor:pointer;white-space:nowrap;flex:none;transition:color .15s ease}',
-      '.pb-tab:hover{color:var(--dsw-alias-label-primary)}',
-      '.pb-tab[data-on="1"]{color:var(--pb-accent);font-weight:600}',
-      '.pb-tab[data-on="1"]::after{content:"";position:absolute;left:0;right:0;bottom:15px;height:2px;border-radius:2px;background:var(--pb-accent)}',
-      '.pb-tab i{font-style:normal;font-size:12px;color:var(--pb-mute);font-weight:400}',
-      '.pb-grow{flex:1}',
-      '.pb-actions{margin-left:auto;display:flex;align-items:center;gap:8px;flex:none}',
-      '.pb-search{position:relative;display:flex;align-items:center}',
-      '.pb-search svg{position:absolute;left:10px;color:var(--pb-mute);pointer-events:none}',
-      '.pb-search input{width:200px;height:32px;border:1px solid transparent;border-radius:8px;background:var(--pb-panel2);',
+      '.lamp-appbar{flex:none;height:56px;display:flex;align-items:center;gap:20px;padding:0 32px;',
+      'border-bottom:1px solid var(--lamp-line);background:var(--dsw-alias-bg-base);position:relative;z-index:6}',
+      '.lamp-wordmark{font-family:' + SERIF + ';font-size:13px;letter-spacing:.16em;color:var(--lamp-mute);white-space:nowrap;flex:none}',
+      '.lamp-wordmark-rule{width:1px;height:12px;background:var(--lamp-line);flex:none}',
+      '.lamp-tabs{display:flex;align-items:center;gap:22px;height:100%;flex:none}',
+      '.lamp-tab{position:relative;display:flex;align-items:center;gap:6px;height:100%;padding:0;border:0;background:none;',
+      'font:inherit;font-size:14px;color:var(--lamp-ink2);cursor:pointer;white-space:nowrap;flex:none;transition:color .15s ease}',
+      '.lamp-tab:hover{color:var(--dsw-alias-label-primary)}',
+      '.lamp-tab[data-on="1"]{color:var(--lamp-accent);font-weight:600}',
+      '.lamp-tab[data-on="1"]::after{content:"";position:absolute;left:0;right:0;bottom:15px;height:2px;border-radius:2px;background:var(--lamp-accent)}',
+      '.lamp-tab i{font-style:normal;font-size:12px;color:var(--lamp-mute);font-weight:400}',
+      '.lamp-grow{flex:1}',
+      '.lamp-actions{margin-left:auto;display:flex;align-items:center;gap:8px;flex:none}',
+      '.lamp-search{position:relative;display:flex;align-items:center}',
+      '.lamp-search svg{position:absolute;left:10px;color:var(--lamp-mute);pointer-events:none}',
+      '.lamp-search input{width:200px;height:32px;border:1px solid transparent;border-radius:8px;background:var(--lamp-panel2);',
       'color:var(--dsw-alias-label-primary);font:inherit;font-size:13px;padding:0 10px 0 30px;outline:none;transition:border-color .15s ease}',
-      '.pb-search input:focus{border-color:var(--pb-accent)}',
-      '.pb-search input::placeholder{color:var(--pb-mute)}',
-      '.pb-pagehead{display:flex;align-items:center;gap:10px;min-width:0}',
-      '.pb-back{width:24px;height:24px;flex:none;display:grid;place-items:center;border:0;background:none;color:var(--pb-mute);',
+      '.lamp-search input:focus{border-color:var(--lamp-accent)}',
+      '.lamp-search input::placeholder{color:var(--lamp-mute)}',
+      '.lamp-pagehead{display:flex;align-items:center;gap:10px;min-width:0}',
+      '.lamp-back{width:24px;height:24px;flex:none;display:grid;place-items:center;border:0;background:none;color:var(--lamp-mute);',
       'cursor:pointer;border-radius:4px;padding:0;margin-left:-6px}',
-      '.pb-back:hover{color:var(--dsw-alias-label-primary);background:var(--dsw-alias-interactive-bg-hover)}',
-      '.pb-pagehead h1{margin:0;font-size:20px;font-weight:600;line-height:1.3;white-space:nowrap}',
+      '.lamp-back:hover{color:var(--dsw-alias-label-primary);background:var(--dsw-alias-interactive-bg-hover)}',
+      '.lamp-pagehead h1{margin:0;font-size:20px;font-weight:600;line-height:1.3;white-space:nowrap}',
 
       /* ---------- 弹层 ---------- */
-      '.pb-pop{position:absolute;z-index:24;background:var(--pb-panel);border:1px solid var(--pb-line-strong);',
-      'border-radius:8px;box-shadow:var(--dsw-elevation-panel);padding:4px;min-width:172px;animation:pb-rise .14s ease}',
-      '@keyframes pb-rise{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}',
-      '.pb-pop-item{display:flex;width:100%;align-items:center;gap:8px;height:30px;padding:0 9px;border:0;border-radius:6px;',
+      '.lamp-pop{position:absolute;z-index:24;background:var(--lamp-panel);border:1px solid var(--lamp-line-strong);',
+      'border-radius:8px;box-shadow:var(--dsw-elevation-panel);padding:4px;min-width:172px;animation:lamp-rise .14s ease}',
+      '@keyframes lamp-rise{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}',
+      '.lamp-pop-item{display:flex;width:100%;align-items:center;gap:8px;height:30px;padding:0 9px;border:0;border-radius:6px;',
       'background:transparent;color:var(--dsw-alias-label-primary);font:inherit;font-size:13px;cursor:pointer;text-align:left;white-space:nowrap}',
-      '.pb-pop-item:hover{background:var(--dsw-alias-interactive-bg-hover)}',
-      '.pb-pop-item[data-on="1"]{color:var(--pb-accent);font-weight:600}',
-      '.pb-pop-item[data-danger="1"]{color:var(--dsw-alias-state-error-primary)}',
-      '.pb-pop-path{display:flex;gap:6px;padding:4px}',
+      '.lamp-pop-item:hover{background:var(--dsw-alias-interactive-bg-hover)}',
+      '.lamp-pop-item[data-on="1"]{color:var(--lamp-accent);font-weight:600}',
+      '.lamp-pop-item[data-danger="1"]{color:var(--dsw-alias-state-error-primary)}',
+      '.lamp-pop-path{display:flex;gap:6px;padding:4px}',
 
       /* ---------- 布局 ---------- */
-      '.pb-stage{position:relative;flex:1;min-height:0;display:flex;flex-direction:column}',
-      '.pb-view{position:relative;flex:1;min-height:0;display:flex;flex-direction:column}',
-      '.pb-scroll{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:28px 0 48px;scrollbar-color:var(--dsw-alias-scrollbar-bg-l2) transparent}',
-      '.pb-shell{max-width:1120px;margin:0 auto;padding:0 32px;display:flex;gap:32px;align-items:flex-start}',
-      '.pb-main{flex:1;min-width:0}',
-      '.pb-h1{margin:0 0 20px;font-size:20px;font-weight:600;letter-spacing:.01em}',
+      '.lamp-stage{position:relative;flex:1;min-height:0;display:flex;flex-direction:column}',
+      '.lamp-view{position:relative;flex:1;min-height:0;display:flex;flex-direction:column}',
+      '.lamp-scroll{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:28px 0 48px;scrollbar-color:var(--dsw-alias-scrollbar-bg-l2) transparent}',
+      '.lamp-shell{max-width:1120px;margin:0 auto;padding:0 32px;display:flex;gap:32px;align-items:flex-start}',
+      '.lamp-main{flex:1;min-width:0}',
+      '.lamp-h1{margin:0 0 20px;font-size:20px;font-weight:600;letter-spacing:.01em}',
 
       /* ---------- 继续阅读 ---------- */
-      '.pb-continue{display:flex;align-items:center;gap:24px;width:100%;padding:18px 0 24px;border:0;border-bottom:1px solid var(--pb-line);',
+      '.lamp-continue{display:flex;align-items:center;gap:24px;width:100%;padding:18px 0 24px;border:0;border-bottom:1px solid var(--lamp-line);',
       'border-radius:0;background:none;font:inherit;color:inherit;text-align:left;cursor:pointer;margin:0 0 24px}',
-      '.pb-continue:hover{background:transparent}',
-      '.pb-continue:hover .pb-continue-title{color:var(--pb-accent)}',
-      '.pb-continue-cover{width:88px;height:117px;flex:none;border-radius:4px;overflow:hidden;box-shadow:var(--pb-cover-shadow);position:relative}',
-      '.pb-continue-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}',
-      '.pb-eyebrow{margin:0;font-size:12px;letter-spacing:.08em;color:var(--pb-mute)}',
-      '.pb-continue-title{margin:0;font-family:' + SERIF + ';font-size:22px;font-weight:600;line-height:1.35;',
+      '.lamp-continue:hover{background:transparent}',
+      '.lamp-continue:hover .lamp-continue-title{color:var(--lamp-accent)}',
+      '.lamp-continue-cover{width:88px;height:117px;flex:none;border-radius:4px;overflow:hidden;box-shadow:var(--lamp-cover-shadow);position:relative}',
+      '.lamp-continue-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}',
+      '.lamp-eyebrow{margin:0;font-size:12px;letter-spacing:.08em;color:var(--lamp-mute)}',
+      '.lamp-continue-title{margin:0;font-family:' + SERIF + ';font-size:22px;font-weight:600;line-height:1.35;',
       'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:color .15s ease}',
-      '.pb-continue-sub{margin:0;font-size:13px;color:var(--pb-ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
-      '.pb-progress-row{display:flex;align-items:center;gap:12px;max-width:420px;margin-top:4px}',
-      '.pb-progress{flex:1;height:3px;border-radius:2px;background:var(--pb-line);overflow:hidden}',
-      '.pb-progress i{display:block;height:100%;background:var(--pb-accent);border-radius:2px;transition:width .3s ease}',
-      '.pb-progress-label{font-size:13px;color:var(--pb-ink2);font-variant-numeric:tabular-nums;flex:none}',
-      '.pb-continue-note{margin:0;font-size:12px;color:var(--pb-mute);font-variant-numeric:tabular-nums}',
-      '@media (max-width:760px){.pb-continue{flex-wrap:wrap;gap:16px}}.pb-continue{--x:0}',
+      '.lamp-continue-sub{margin:0;font-size:13px;color:var(--lamp-ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+      '.lamp-progress-row{display:flex;align-items:center;gap:12px;max-width:420px;margin-top:4px}',
+      '.lamp-progress{flex:1;height:3px;border-radius:2px;background:var(--lamp-line);overflow:hidden}',
+      '.lamp-progress i{display:block;height:100%;background:var(--lamp-accent);border-radius:2px;transition:width .3s ease}',
+      '.lamp-progress-label{font-size:13px;color:var(--lamp-ink2);font-variant-numeric:tabular-nums;flex:none}',
+      '.lamp-continue-note{margin:0;font-size:12px;color:var(--lamp-mute);font-variant-numeric:tabular-nums}',
+      '@media (max-width:760px){.lamp-continue{flex-wrap:wrap;gap:16px}}.lamp-continue{--x:0}',
 
       /* ---------- 首页卡片 ---------- */
-      '.pb-cards{display:grid;grid-template-columns:1.15fr 1fr .95fr;gap:20px;margin:0 0 32px}',
+      '.lamp-cards{display:grid;grid-template-columns:1.15fr 1fr .95fr;gap:20px;margin:0 0 32px}',
       /* 2026-11 local fix: the dashboard cards were being pinned to the window's
          top-right corner (out of flow) by an external rule. Keep them static and
          give the panel an opaque surface so it does not float over the wallpaper. */
-      '.pb-cards{position:static!important;inset:auto!important;width:auto!important;max-width:100%!important}',
-      '.pb-root{background-color:#141519;background-image:linear-gradient(var(--dsw-alias-bg-base,#141519),var(--dsw-alias-bg-base,#141519))}',
-      /* 面板在宿主里被继承成 pointer-events:none，导致整页点不动；在根节点上强制恢复命中测试 */
-      '.pb-root{pointer-events:auto!important}',
-      /* 宿主会把面板再克隆/挂一份到 overlay 层（64px 宽、z=30），它盖住来源面板并裁掉二维码 */
-      '[class*="overlayLayer"] .pb-root,[class*="OverlayLayer"] .pb-root{display:none!important}',
-      '@media (max-width:980px){.pb-cards{grid-template-columns:1fr 1fr}.pb-cards>.pb-card:last-child{grid-column:1/-1}}',
-      '@media (max-width:680px){.pb-cards{grid-template-columns:1fr}.pb-cards>.pb-card:last-child{grid-column:auto}}',
-      '.pb-card{border:1px solid var(--pb-line);border-radius:10px;padding:16px 18px;background:var(--pb-panel);min-width:0}',
-      '.pb-card h3{margin:0 0 12px;font-size:12px;font-weight:400;letter-spacing:.06em;color:var(--pb-mute)}',
-      '.pb-card-click{cursor:pointer;transition:border-color .15s ease,background .15s ease}',
-      '.pb-card-click:hover{border-color:var(--pb-line-strong);background:var(--pb-panel2)}',
-      '.pb-big{font-size:26px;font-weight:600;line-height:1.2;font-variant-numeric:tabular-nums;margin:0}',
-      '.pb-big small{font-size:13px;font-weight:400;color:var(--pb-mute);margin-left:4px}',
-      '.pb-bars{display:flex;align-items:flex-end;gap:8px;height:56px;margin:14px 0 8px}',
-      '.pb-bar{width:10px;flex:none;border-radius:2px 2px 0 0;background:color-mix(in srgb,var(--pb-accent) 22%,transparent);min-height:3px}',
-      '.pb-bar[data-on="1"]{background:var(--pb-accent)}',
-      '.pb-rowline{display:flex;justify-content:space-between;gap:12px;font-size:12px;color:var(--pb-ink2);padding:3px 0}',
-      '.pb-rowline b{font-weight:400;font-variant-numeric:tabular-nums;color:var(--dsw-alias-label-primary)}',
-      '.pb-kv{display:flex;gap:22px;margin-top:2px}',
-      '.pb-kv div{display:flex;flex-direction:column;gap:2px}',
-      '.pb-kv b{font-size:15px;font-weight:600;font-variant-numeric:tabular-nums}',
-      '.pb-kv span{font-size:12px;color:var(--pb-mute)}',
-      '.pb-sec{display:flex;align-items:baseline;justify-content:space-between;margin:0 0 14px}',
-      '.pb-sec h2{margin:0;font-size:15px;font-weight:600}',
-      '.pb-link{border:0;background:none;padding:0;font-size:12px;color:var(--pb-accent);cursor:pointer}',
-      '.pb-link:hover{text-decoration:underline}',
-      '.pb-strip{display:flex;gap:20px;overflow:hidden;margin:0 0 32px}',
-      '.pb-mini{width:76px;flex:none;border:0;background:none;padding:0;font:inherit;color:inherit;text-align:left;cursor:pointer}',
-      '.pb-mini .pb-cover-box{width:76px;height:101px;border-radius:4px;overflow:hidden;position:relative;box-shadow:var(--pb-cover-shadow);background:var(--pb-panel2);transition:transform .18s ease}',
-      '.pb-mini:hover .pb-cover-box{transform:translateY(-2px)}',
-      '.pb-mini p{margin:8px 0 0;font-size:12px;line-height:1.4;color:var(--pb-ink2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}',
-      '.pb-note{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--pb-line);width:100%;text-align:left;border-left:0;border-right:0;border-top:0;background:none;font:inherit;color:inherit;cursor:pointer}',
-      '.pb-note:last-child{border-bottom:0}',
-      '.pb-note:hover .pb-note-line{background:var(--pb-accent)}',
-      '.pb-note-line{width:2px;border-radius:2px;flex:none;background:color-mix(in srgb,var(--pb-accent) 40%,transparent);transition:background .15s ease}',
-      '.pb-note-body{min-width:0}',
-      '.pb-note-body p{margin:0;font-size:13px;line-height:1.6;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
-      '.pb-note-body p.pb-note-sub{font-size:12px;color:var(--pb-mute);margin-top:4px}',
-      '.pb-foot{margin:26px 0 0;font-size:12px;color:var(--pb-mute);font-variant-numeric:tabular-nums}',
+      '.lamp-root{background-color:#141519;background-image:linear-gradient(var(--dsw-alias-bg-base,#141519),var(--dsw-alias-bg-base,#141519))}',
+      '@media (max-width:980px){.lamp-cards{grid-template-columns:1fr 1fr}.lamp-cards>.lamp-card:last-child{grid-column:1/-1}}',
+      '@media (max-width:680px){.lamp-cards{grid-template-columns:1fr}.lamp-cards>.lamp-card:last-child{grid-column:auto}}',
+      '.lamp-card{border:1px solid var(--lamp-line);border-radius:10px;padding:16px 18px;background:var(--lamp-panel);min-width:0}',
+      '.lamp-card h3{margin:0 0 12px;font-size:12px;font-weight:400;letter-spacing:.06em;color:var(--lamp-mute)}',
+      '.lamp-card-click{cursor:pointer;transition:border-color .15s ease,background .15s ease}',
+      '.lamp-card-click:hover{border-color:var(--lamp-line-strong);background:var(--lamp-panel2)}',
+      '.lamp-big{font-size:26px;font-weight:600;line-height:1.2;font-variant-numeric:tabular-nums;margin:0}',
+      '.lamp-big small{font-size:13px;font-weight:400;color:var(--lamp-mute);margin-left:4px}',
+      '.lamp-bars{display:flex;align-items:flex-end;gap:8px;height:56px;margin:14px 0 8px}',
+      '.lamp-bar{width:10px;flex:none;border-radius:2px 2px 0 0;background:color-mix(in srgb,var(--lamp-accent) 22%,transparent);min-height:3px}',
+      '.lamp-bar[data-on="1"]{background:var(--lamp-accent)}',
+      '.lamp-rowline{display:flex;justify-content:space-between;gap:12px;font-size:12px;color:var(--lamp-ink2);padding:3px 0}',
+      '.lamp-rowline b{font-weight:400;font-variant-numeric:tabular-nums;color:var(--dsw-alias-label-primary)}',
+      '.lamp-kv{display:flex;gap:22px;margin-top:2px}',
+      '.lamp-kv div{display:flex;flex-direction:column;gap:2px}',
+      '.lamp-kv b{font-size:15px;font-weight:600;font-variant-numeric:tabular-nums}',
+      '.lamp-kv span{font-size:12px;color:var(--lamp-mute)}',
+      '.lamp-sec{display:flex;align-items:baseline;justify-content:space-between;margin:0 0 14px}',
+      '.lamp-sec h2{margin:0;font-size:15px;font-weight:600}',
+      '.lamp-link{border:0;background:none;padding:0;font-size:12px;color:var(--lamp-accent);cursor:pointer}',
+      '.lamp-link:hover{text-decoration:underline}',
+      '.lamp-strip{display:flex;gap:20px;overflow:hidden;margin:0 0 32px}',
+      '.lamp-mini{width:76px;flex:none;border:0;background:none;padding:0;font:inherit;color:inherit;text-align:left;cursor:pointer}',
+      '.lamp-mini .lamp-cover-box{width:76px;height:101px;border-radius:4px;overflow:hidden;position:relative;box-shadow:var(--lamp-cover-shadow);background:var(--lamp-panel2);transition:transform .18s ease}',
+      '.lamp-mini:hover .lamp-cover-box{transform:translateY(-2px)}',
+      '.lamp-mini p{margin:8px 0 0;font-size:12px;line-height:1.4;color:var(--lamp-ink2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}',
+      '.lamp-note{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--lamp-line);width:100%;text-align:left;border-left:0;border-right:0;border-top:0;background:none;font:inherit;color:inherit;cursor:pointer}',
+      '.lamp-note:last-child{border-bottom:0}',
+      '.lamp-note:hover .lamp-note-line{background:var(--lamp-accent)}',
+      '.lamp-note-line{width:2px;border-radius:2px;flex:none;background:color-mix(in srgb,var(--lamp-accent) 40%,transparent);transition:background .15s ease}',
+      '.lamp-note-body{min-width:0}',
+      '.lamp-note-body p{margin:0;font-size:13px;line-height:1.6;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+      '.lamp-note-body p.lamp-note-sub{font-size:12px;color:var(--lamp-mute);margin-top:4px}',
+      '.lamp-foot{margin:26px 0 0;font-size:12px;color:var(--lamp-mute);font-variant-numeric:tabular-nums}',
 
       /* ---------- 书架 ---------- */
-      '.pb-toolbar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0 0 22px}',
-      '.pb-chip{height:28px;padding:0 10px;border-radius:8px;border:0;background:none;color:var(--pb-ink2);font:inherit;font-size:12px;',
+      '.lamp-toolbar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0 0 22px}',
+      '.lamp-chip{height:28px;padding:0 10px;border-radius:8px;border:0;background:none;color:var(--lamp-ink2);font:inherit;font-size:12px;',
       'display:inline-flex;align-items:center;gap:6px;cursor:pointer;white-space:nowrap}',
-      '.pb-chip:hover{background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary)}',
-      '.pb-chip[data-on="1"]{background:var(--pb-panel2);color:var(--dsw-alias-label-primary);font-weight:600}',
-      '.pb-chip i{font-style:normal;color:var(--pb-mute);font-weight:400;font-variant-numeric:tabular-nums}',
-      '.pb-chip-dot{width:5px;height:5px;border-radius:50%;background:var(--pb-accent);flex:none}',
-      '.pb-toolbar .pb-grow{flex:1}',
-      '.pb-sortbtn{height:28px;padding:0 8px;border:0;background:none;color:var(--pb-ink2);font:inherit;font-size:12px;',
+      '.lamp-chip:hover{background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary)}',
+      '.lamp-chip[data-on="1"]{background:var(--lamp-panel2);color:var(--dsw-alias-label-primary);font-weight:600}',
+      '.lamp-chip i{font-style:normal;color:var(--lamp-mute);font-weight:400;font-variant-numeric:tabular-nums}',
+      '.lamp-chip-dot{width:5px;height:5px;border-radius:50%;background:var(--lamp-accent);flex:none}',
+      '.lamp-toolbar .lamp-grow{flex:1}',
+      '.lamp-sortbtn{height:28px;padding:0 8px;border:0;background:none;color:var(--lamp-ink2);font:inherit;font-size:12px;',
       'cursor:pointer;display:inline-flex;align-items:center;gap:4px;border-radius:8px;white-space:nowrap}',
-      '.pb-sortbtn:hover{background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary)}',
-      '.pb-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:28px 22px;margin:0;padding:0;list-style:none}',
-      '@media (max-width:1100px){.pb-grid{grid-template-columns:repeat(4,1fr)}}',
-      '@media (max-width:760px){.pb-grid{grid-template-columns:repeat(3,1fr);gap:20px 14px}}',
-      '@media (max-width:520px){.pb-grid{grid-template-columns:repeat(2,1fr)}}',
-      '.pb-grid[data-density="list"]{grid-template-columns:1fr;gap:12px}',
-      '.pb-book{position:relative;display:flex;flex-direction:column;gap:8px;padding:0;border:0;background:none;',
+      '.lamp-sortbtn:hover{background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary)}',
+      '.lamp-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:28px 22px;margin:0;padding:0;list-style:none}',
+      '@media (max-width:1100px){.lamp-grid{grid-template-columns:repeat(4,1fr)}}',
+      '@media (max-width:760px){.lamp-grid{grid-template-columns:repeat(3,1fr);gap:20px 14px}}',
+      '@media (max-width:520px){.lamp-grid{grid-template-columns:repeat(2,1fr)}}',
+      '.lamp-grid[data-density="list"]{grid-template-columns:1fr;gap:12px}',
+      '.lamp-book{position:relative;display:flex;flex-direction:column;gap:8px;padding:0;border:0;background:none;',
       'font:inherit;color:inherit;text-align:left;cursor:pointer}',
-      '.pb-book-cover{position:relative;width:100%;aspect-ratio:3/4;border-radius:4px;overflow:hidden;background:var(--pb-panel2);',
-      'box-shadow:var(--pb-cover-shadow);transition:transform .18s ease}',
-      '.pb-book:hover .pb-book-cover{transform:translateY(-2px)}',
-      '.pb-book-title{margin:0;font-size:13px;font-weight:400;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;',
+      '.lamp-book-cover{position:relative;width:100%;aspect-ratio:3/4;border-radius:4px;overflow:hidden;background:var(--lamp-panel2);',
+      'box-shadow:var(--lamp-cover-shadow);transition:transform .18s ease}',
+      '.lamp-book:hover .lamp-book-cover{transform:translateY(-2px)}',
+      '.lamp-book-title{margin:0;font-size:13px;font-weight:400;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;',
       '-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}',
-      '.pb-book-meta{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--pb-mute);min-width:0;line-height:1.4;margin:0}',
-      '.pb-book-meta em{font-style:normal;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}',
-      '.pb-book-meta b{margin-left:auto;font-weight:400;font-variant-numeric:tabular-nums;flex:none}',
-      '.pb-book-menu{position:absolute;top:6px;right:6px;width:24px;height:24px;border:0;border-radius:4px;background:rgba(0,0,0,.45);',
+      '.lamp-book-meta{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--lamp-mute);min-width:0;line-height:1.4;margin:0}',
+      '.lamp-book-meta em{font-style:normal;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}',
+      '.lamp-book-meta b{margin-left:auto;font-weight:400;font-variant-numeric:tabular-nums;flex:none}',
+      '.lamp-book-menu{position:absolute;top:6px;right:6px;width:24px;height:24px;border:0;border-radius:4px;background:rgba(0,0,0,.45);',
       'color:#fff;display:grid;place-items:center;opacity:0;cursor:pointer;padding:0;transition:opacity .15s ease}',
-      '.pb-book:hover .pb-book-menu,.pb-book-menu[data-open="1"]{opacity:1}',
-      '.pb-done-dot{position:absolute;top:6px;left:6px;width:14px;height:14px;border-radius:50%;background:rgba(0,0,0,.42);',
+      '.lamp-book:hover .lamp-book-menu,.lamp-book-menu[data-open="1"]{opacity:1}',
+      '.lamp-done-dot{position:absolute;top:6px;left:6px;width:14px;height:14px;border-radius:50%;background:rgba(0,0,0,.42);',
       'border:2px solid #fff;display:grid;place-items:center;color:#fff}',
-      '.pb-grid[data-density="list"] .pb-book{flex-direction:row;align-items:center;gap:14px}',
-      '.pb-grid[data-density="list"] .pb-book-cover{width:44px;height:59px;aspect-ratio:auto;flex:none}',
-      '.pb-grid[data-density="list"] .pb-book-title{-webkit-line-clamp:1}',
-      '.pb-grid[data-density="list"] .pb-book-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}',
-      '.pb-book-body{display:flex;flex-direction:column;gap:4px;min-width:0}',
+      '.lamp-grid[data-density="list"] .lamp-book{flex-direction:row;align-items:center;gap:14px}',
+      '.lamp-grid[data-density="list"] .lamp-book-cover{width:44px;height:59px;aspect-ratio:auto;flex:none}',
+      '.lamp-grid[data-density="list"] .lamp-book-title{-webkit-line-clamp:1}',
+      '.lamp-grid[data-density="list"] .lamp-book-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}',
+      '.lamp-book-body{display:flex;flex-direction:column;gap:4px;min-width:0}',
 
       /* ---------- 广场 ---------- */
-      '.pb-srcbar{display:flex;flex-wrap:nowrap;gap:8px;margin:0 0 16px;overflow-x:auto;overflow-y:hidden;',
+      '.lamp-srcbar{display:flex;flex-wrap:nowrap;gap:8px;margin:0 0 16px;overflow-x:auto;overflow-y:hidden;',
       'padding-bottom:2px;scrollbar-width:none}',
-      '.pb-srcbar::-webkit-scrollbar{display:none}',
-      '.pb-srcchip{white-space:nowrap;flex:none;max-width:280px;overflow:hidden;text-overflow:ellipsis}',
-      '.pb-boundary{max-width:760px;margin:40px auto;padding:20px 22px;border:1px solid var(--pb-line-strong);border-radius:12px;',
-      'background:var(--pb-panel2);font-size:13px;line-height:1.6}',
-      '.pb-boundary h2{margin:0 0 6px;font-size:15px}',
-      '.pb-boundary pre{margin:12px 0;padding:12px;border-radius:8px;background:var(--dsw-alias-bg-layer-1);',
+      '.lamp-srcbar::-webkit-scrollbar{display:none}',
+      '.lamp-srcchip{white-space:nowrap;flex:none;max-width:280px;overflow:hidden;text-overflow:ellipsis}',
+      '.lamp-boundary{max-width:760px;margin:40px auto;padding:20px 22px;border:1px solid var(--lamp-line-strong);border-radius:12px;',
+      'background:var(--lamp-panel2);font-size:13px;line-height:1.6}',
+      '.lamp-boundary h2{margin:0 0 6px;font-size:15px}',
+      '.lamp-boundary pre{margin:12px 0;padding:12px;border-radius:8px;background:var(--dsw-alias-bg-layer-1);',
       'font-size:12px;overflow:auto;max-height:40vh;white-space:pre-wrap;word-break:break-word}',
-      '.pb-plaza-broken{padding:36px 0;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px}',
-      '.pb-plaza-broken p{margin:0;color:var(--dsw-alias-label-secondary);font-size:13px}',
-      '.pb-onboard{display:none;align-items:center;gap:16px;justify-content:space-between;padding:14px 18px;border-radius:10px;',
-      'border:1px solid var(--pb-line-strong);background:var(--pb-panel2);margin:0 0 20px}',
-      '.pb-onboard[data-show="1"]{display:flex}',
-      '.pb-onboard-main b{font-size:13px}',
-      '.pb-onboard-main p{margin:2px 0 0;font-size:12px;color:var(--dsw-alias-label-secondary);max-width:62ch}',
-      '.pb-modal{position:fixed;left:50%;top:22%;transform:translateX(-50%);width:min(480px,calc(100vw - 48px));',
-      'background:var(--dsw-alias-bg-layer-1);border:1px solid var(--pb-line-strong);border-radius:12px;padding:20px;',
+      '.lamp-plaza-broken{padding:36px 0;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px}',
+      '.lamp-plaza-broken p{margin:0;color:var(--dsw-alias-label-secondary);font-size:13px}',
+      '.lamp-onboard{display:none;align-items:center;gap:16px;justify-content:space-between;padding:14px 18px;border-radius:10px;',
+      'border:1px solid var(--lamp-line-strong);background:var(--lamp-panel2);margin:0 0 20px}',
+      '.lamp-onboard[data-show="1"]{display:flex}',
+      '.lamp-onboard-main b{font-size:13px}',
+      '.lamp-onboard-main p{margin:2px 0 0;font-size:12px;color:var(--dsw-alias-label-secondary);max-width:62ch}',
+      '.lamp-modal{position:fixed;left:50%;top:22%;transform:translateX(-50%);width:min(480px,calc(100vw - 48px));',
+      'background:var(--dsw-alias-bg-layer-1);border:1px solid var(--lamp-line-strong);border-radius:12px;padding:20px;',
       'box-shadow:var(--dsw-elevation-panel);z-index:40}',
-      '.pb-modal-list{display:flex;flex-direction:column;gap:2px;max-height:180px;overflow:auto;margin:6px 0 10px}',
-      '.pb-modal-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--pb-line);font-size:12px}',
-      '.pb-modal-row:last-child{border-bottom:0}',
-      '.pb-modal-row code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
-      '.pb-modal-row .pb-textlink{margin-left:auto}',
-      '.pb-modal-add{display:flex;gap:8px;align-items:center}',
-      '.pb-modal h3{margin:0 0 6px;font-size:15px;font-weight:600}',
-      '.pb-modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}',
-      '.pb-skel-row{display:flex;align-items:center;gap:14px;padding:9px 0;animation:pb-breathe 1.4s ease-in-out infinite}',
-      '@keyframes pb-breathe{0%,100%{opacity:.55}50%{opacity:1}}',
-      '.pb-skel-cover{width:44px;height:59px;border-radius:4px;flex:none;height:59px}',
-      '.pb-skel-line{flex:1;height:14px;border-radius:4px}',
-      '.pb-hintrow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:2px 0 6px}',
-      '.pb-pager{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--dsw-alias-label-secondary)}',
-      '.pb-pagebtn{width:24px;height:24px;border-radius:6px;border:1px solid var(--pb-line-strong);background:none;',
+      '.lamp-modal-list{display:flex;flex-direction:column;gap:2px;max-height:180px;overflow:auto;margin:6px 0 10px}',
+      '.lamp-modal-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--lamp-line);font-size:12px}',
+      '.lamp-modal-row:last-child{border-bottom:0}',
+      '.lamp-modal-row code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+      '.lamp-modal-row .lamp-textlink{margin-left:auto}',
+      '.lamp-modal-add{display:flex;gap:8px;align-items:center}',
+      '.lamp-modal h3{margin:0 0 6px;font-size:15px;font-weight:600}',
+      '.lamp-modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}',
+      '.lamp-skel-row{display:flex;align-items:center;gap:14px;padding:9px 0;animation:lamp-breathe 1.4s ease-in-out infinite}',
+      '@keyframes lamp-breathe{0%,100%{opacity:.55}50%{opacity:1}}',
+      '.lamp-skel-cover{width:44px;height:59px;border-radius:4px;flex:none;height:59px}',
+      '.lamp-skel-line{flex:1;height:14px;border-radius:4px}',
+      '.lamp-hintrow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:2px 0 6px}',
+      '.lamp-pager{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--dsw-alias-label-secondary)}',
+      '.lamp-pagebtn{width:24px;height:24px;border-radius:6px;border:1px solid var(--lamp-line-strong);background:none;',
       'color:var(--dsw-alias-label-secondary);font:inherit;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}',
-      '.pb-pagebtn:hover:not(:disabled){background:var(--dsw-interactive-bg-hover,var(--dsw-alias-interactive-bg-hover));color:var(--dsw-alias-label-primary)}',
-      '.pb-pagebtn:disabled{opacity:.35;cursor:default}',
-      '.pb-filerow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:4px 0 10px;border-bottom:1px solid var(--pb-line);margin-bottom:6px}',
-      '.pb-filerow-actions{display:flex;gap:14px;align-items:center}',
-      '.pb-srcbtn{height:34px;padding:0 12px;border-radius:8px;border:1px solid var(--pb-line-strong);background:var(--panel2);',
+      '.lamp-pagebtn:hover:not(:disabled){background:var(--dsw-interactive-bg-hover,var(--dsw-alias-interactive-bg-hover));color:var(--dsw-alias-label-primary)}',
+      '.lamp-pagebtn:disabled{opacity:.35;cursor:default}',
+      '.lamp-filerow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:4px 0 10px;border-bottom:1px solid var(--lamp-line);margin-bottom:6px}',
+      '.lamp-filerow-actions{display:flex;gap:14px;align-items:center}',
+      '.lamp-srcbtn{height:34px;padding:0 12px;border-radius:8px;border:1px solid var(--lamp-line-strong);background:var(--panel2);',
       'color:var(--dsw-alias-label-primary);font:inherit;font-size:13px;display:inline-flex;align-items:center;gap:8px;cursor:pointer;max-width:420px}',
-      '.pb-srcbtn:hover{background:var(--dsw-alias-interactive-bg-hover)}',
-      '.pb-srcchip{height:30px;padding:0 12px;border-radius:8px;border:1px solid transparent;background:none;color:var(--pb-ink2);',
+      '.lamp-srcbtn:hover{background:var(--dsw-alias-interactive-bg-hover)}',
+      '.lamp-srcchip{height:30px;padding:0 12px;border-radius:8px;border:1px solid transparent;background:none;color:var(--lamp-ink2);',
       'font:inherit;font-size:13px;cursor:pointer}',
-      '.pb-srcchip:hover{color:var(--dsw-alias-label-primary)}',
-      '.pb-srcchip[data-on="1"]{background:var(--pb-panel2);color:var(--dsw-alias-label-primary);font-weight:600}',
-      '.pb-srch{display:flex;gap:8px;margin:0 0 8px}',
-      '.pb-srch .pb-field{flex:1}',
-      '.pb-field{height:36px;border-radius:8px;background:var(--pb-panel2);display:flex;align-items:center;gap:8px;padding:0 12px;min-width:0}',
-      '.pb-field svg{color:var(--pb-mute);flex:none}',
-      '.pb-field input{flex:1;min-width:0;height:100%;border:0;background:none;color:var(--dsw-alias-label-primary);font:inherit;font-size:13px;outline:none}',
-      '.pb-field input::placeholder{color:var(--pb-mute)}',
-      '.pb-hint{margin:10px 0 20px;font-size:12px;color:var(--pb-mute);line-height:1.7}',
-      '.pb-list{margin:0;padding:0;list-style:none}',
-      '.pb-item{display:flex;align-items:center;gap:16px;padding:10px 10px;border-radius:8px}',
-      '.pb-item:hover{background:var(--pb-panel2)}',
-      '.pb-item-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}',
-      '.pb-item-title{margin:0;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
-      '.pb-item-sub{margin:0;font-size:12px;color:var(--pb-mute);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
-      '.pb-kind{width:32px;height:32px;border-radius:6px;background:var(--pb-panel2);display:grid;place-items:center;',
-      'font-size:10px;color:var(--pb-mute);flex:none;letter-spacing:.02em}',
-      '.pb-mini-cover{display:block;width:44px;height:59px;flex:none;border-radius:4px;overflow:hidden;position:relative;box-shadow:var(--pb-cover-shadow)}',
-      '.pb-repo-block{margin:0 0 26px}',
-      '.pb-plaza-start{margin-top:6px}',
-      '.pb-chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 22px}',
-      '.pb-chip{height:28px;padding:0 12px;border-radius:999px;border:1px solid var(--pb-line-strong);background:none;',
+      '.lamp-srcchip:hover{color:var(--dsw-alias-label-primary)}',
+      '.lamp-srcchip[data-on="1"]{background:var(--lamp-panel2);color:var(--dsw-alias-label-primary);font-weight:600}',
+      '.lamp-srch{display:flex;gap:8px;margin:0 0 8px}',
+      '.lamp-srch .lamp-field{flex:1}',
+      '.lamp-field{height:36px;border-radius:8px;background:var(--lamp-panel2);display:flex;align-items:center;gap:8px;padding:0 12px;min-width:0}',
+      '.lamp-field svg{color:var(--lamp-mute);flex:none}',
+      '.lamp-field input{flex:1;min-width:0;height:100%;border:0;background:none;color:var(--dsw-alias-label-primary);font:inherit;font-size:13px;outline:none}',
+      '.lamp-field input::placeholder{color:var(--lamp-mute)}',
+      '.lamp-hint{margin:10px 0 20px;font-size:12px;color:var(--lamp-mute);line-height:1.7}',
+      '.lamp-list{margin:0;padding:0;list-style:none}',
+      '.lamp-item{display:flex;align-items:center;gap:16px;padding:10px 10px;border-radius:8px}',
+      '.lamp-item:hover{background:var(--lamp-panel2)}',
+      '.lamp-item-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}',
+      '.lamp-item-title{margin:0;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+      '.lamp-item-sub{margin:0;font-size:12px;color:var(--lamp-mute);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+      '.lamp-kind{width:32px;height:32px;border-radius:6px;background:var(--lamp-panel2);display:grid;place-items:center;',
+      'font-size:10px;color:var(--lamp-mute);flex:none;letter-spacing:.02em}',
+      '.lamp-mini-cover{display:block;width:44px;height:59px;flex:none;border-radius:4px;overflow:hidden;position:relative;box-shadow:var(--lamp-cover-shadow)}',
+      '.lamp-repo-block{margin:0 0 26px}',
+      '.lamp-plaza-start{margin-top:6px}',
+      '.lamp-chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 22px}',
+      '.lamp-chip{height:28px;padding:0 12px;border-radius:999px;border:1px solid var(--lamp-line-strong);background:none;',
       'color:var(--dsw-alias-label-secondary);font:inherit;font-size:12px;cursor:pointer}',
-      '.pb-chip:hover{background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary)}',
-      '.pb-start-block{margin-top:4px}',
-      '.pb-start-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:18px 16px}',
-      '@media (max-width:1100px){.pb-start-grid{grid-template-columns:repeat(4,1fr)}}',
-      '.pb-start-item{min-width:0}',
-      '.pb-start-cover{position:relative;width:100%;aspect-ratio:3/4;border-radius:4px;overflow:hidden;box-shadow:var(--pb-cover-shadow)}',
-      '.pb-start-title{margin:6px 0 0;font-size:12px;line-height:1.4;color:var(--dsw-alias-label-secondary);',
+      '.lamp-chip:hover{background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary)}',
+      '.lamp-start-block{margin-top:4px}',
+      '.lamp-start-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:18px 16px}',
+      '@media (max-width:1100px){.lamp-start-grid{grid-template-columns:repeat(4,1fr)}}',
+      '.lamp-start-item{min-width:0}',
+      '.lamp-start-cover{position:relative;width:100%;aspect-ratio:3/4;border-radius:4px;overflow:hidden;box-shadow:var(--lamp-cover-shadow)}',
+      '.lamp-start-title{margin:6px 0 0;font-size:12px;line-height:1.4;color:var(--dsw-alias-label-secondary);',
       'display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}',
-      '.pb-repo-empty{margin:16px 0;font-size:12px;color:var(--pb-mute)}',
+      '.lamp-repo-empty{margin:16px 0;font-size:12px;color:var(--lamp-mute)}',
 
       /* ---------- 设置 ---------- */
-      '.pb-drawer-settings{position:absolute;top:0;right:0;bottom:0;width:min(320px,88%);z-index:19;display:flex;flex-direction:column;',
-      'background:var(--pb-panel);border-left:1px solid var(--pb-line-strong);box-shadow:var(--dsw-elevation-panel);',
-      'animation:pb-slide-in .2s cubic-bezier(.2,.7,.3,1)}',
-      '.pb-drawer-settings-body{flex:1;min-height:0;overflow-y:auto;padding:4px 16px 24px}',
-      '.pb-settings-page{max-width:760px}',
-      '.pb-sect{margin:0 0 34px}',
-      '.pb-sect>h2{margin:0 0 6px;font-size:13px;font-weight:600;letter-spacing:.04em}',
-      '.pb-sect>.pb-desc{margin:0 0 14px;font-size:12px;color:var(--pb-mute);line-height:1.7}',
-      '.pb-srow{display:flex;align-items:center;gap:16px;padding:12px 0;border-bottom:1px solid var(--pb-line)}',
-      '.pb-srow:last-child{border-bottom:0}',
-      '.pb-srow .pb-lbl{flex:1;min-width:0}',
-      '.pb-srow .pb-lbl b{display:block;font-size:13px;font-weight:400}',
-      '.pb-srow .pb-lbl span{display:block;font-size:12px;color:var(--pb-mute);margin-top:2px;line-height:1.6}',
-      '.pb-srow .pb-ctl{display:flex;align-items:center;gap:8px;flex:none;flex-wrap:wrap;justify-content:flex-end}',
-      '.pb-source-row{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid var(--pb-line)}',
-      '.pb-source-row:last-child{border-bottom:0}',
-      '.pb-source-mark{width:32px;height:32px;border-radius:8px;background:var(--pb-panel2);display:grid;place-items:center;',
-      'font-family:' + SERIF + ';font-size:12px;color:var(--pb-ink2);flex:none}',
-      '.pb-source-main{flex:1;min-width:0}',
-      '.pb-source-main b{font-size:13px;font-weight:400;display:flex;align-items:center;gap:8px}',
-      '.pb-source-main p{margin:2px 0 0;font-size:12px;color:var(--pb-mute);line-height:1.6;overflow-wrap:anywhere}',
-      '.pb-state{font-size:11px;padding:1px 6px;border-radius:4px;background:var(--pb-panel2);color:var(--pb-mute)}',
-      '.pb-state[data-on="1"]{background:color-mix(in srgb,var(--pb-accent) 20%,transparent);color:var(--pb-accent)}',
-      '.pb-repo-row{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:12px;border-bottom:1px solid var(--pb-line)}',
-      '.pb-repo-row code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:var(--pb-ink2);overflow-wrap:anywhere}',
-      '.pb-repo-row span{margin-left:auto;color:var(--pb-mute);flex:none}',
-      '.pb-cfg-swatches{display:flex;gap:8px}',
-      '.pb-cfg-swatch{width:56px;height:36px;border-radius:6px;border:1px solid var(--pb-line);position:relative;cursor:pointer;padding:0}',
-      '.pb-cfg-swatch[data-on="1"]{outline:2px solid var(--pb-accent);outline-offset:2px}',
-      '.pb-cfg-swatch em{position:absolute;left:0;right:0;bottom:3px;text-align:center;font-style:normal;font-size:10px;color:rgba(0,0,0,.55)}',
-      '.pb-cfg-seg{display:flex;gap:2px;background:var(--pb-panel2);border-radius:8px;padding:2px}',
-      '.pb-cfg-seg-opt{border:0;background:none;font:inherit;font-size:12px;padding:4px 10px;border-radius:6px;color:var(--pb-mute);cursor:pointer}',
-      '.pb-cfg-seg-opt[data-on="1"]{background:var(--dsw-alias-bg-base);color:var(--dsw-alias-label-primary)}',
-      '.pb-cfg-switch{width:34px;height:20px;border-radius:999px;background:var(--pb-panel2);position:relative;cursor:pointer;border:0;padding:0;flex:none}',
-      '.pb-cfg-switch::after{content:"";position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:var(--pb-mute);transition:left .15s ease,background .15s ease}',
-      '.pb-cfg-switch[data-on="1"]{background:color-mix(in srgb,var(--pb-accent) 45%,transparent)}',
-      '.pb-cfg-switch[data-on="1"]::after{left:17px;background:var(--pb-accent)}',
-      '.pb-cfg-range{width:120px;accent-color:var(--pb-accent)}',
+      '.lamp-drawer-settings{position:absolute;top:0;right:0;bottom:0;width:min(320px,88%);z-index:19;display:flex;flex-direction:column;',
+      'background:var(--lamp-panel);border-left:1px solid var(--lamp-line-strong);box-shadow:var(--dsw-elevation-panel);',
+      'animation:lamp-slide-in .2s cubic-bezier(.2,.7,.3,1)}',
+      '.lamp-drawer-settings-body{flex:1;min-height:0;overflow-y:auto;padding:4px 16px 24px}',
+      '.lamp-settings-page{max-width:760px}',
+      '.lamp-sect{margin:0 0 34px}',
+      '.lamp-sect>h2{margin:0 0 6px;font-size:13px;font-weight:600;letter-spacing:.04em}',
+      '.lamp-sect>.lamp-desc{margin:0 0 14px;font-size:12px;color:var(--lamp-mute);line-height:1.7}',
+      '.lamp-srow{display:flex;align-items:center;gap:16px;padding:12px 0;border-bottom:1px solid var(--lamp-line)}',
+      '.lamp-srow:last-child{border-bottom:0}',
+      '.lamp-srow .lamp-lbl{flex:1;min-width:0}',
+      '.lamp-srow .lamp-lbl b{display:block;font-size:13px;font-weight:400}',
+      '.lamp-srow .lamp-lbl span{display:block;font-size:12px;color:var(--lamp-mute);margin-top:2px;line-height:1.6}',
+      '.lamp-srow .lamp-ctl{display:flex;align-items:center;gap:8px;flex:none;flex-wrap:wrap;justify-content:flex-end}',
+      '.lamp-source-row{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid var(--lamp-line)}',
+      '.lamp-source-row:last-child{border-bottom:0}',
+      '.lamp-source-mark{width:32px;height:32px;border-radius:8px;background:var(--lamp-panel2);display:grid;place-items:center;',
+      'font-family:' + SERIF + ';font-size:12px;color:var(--lamp-ink2);flex:none}',
+      '.lamp-source-main{flex:1;min-width:0}',
+      '.lamp-source-main b{font-size:13px;font-weight:400;display:flex;align-items:center;gap:8px}',
+      '.lamp-source-main p{margin:2px 0 0;font-size:12px;color:var(--lamp-mute);line-height:1.6;overflow-wrap:anywhere}',
+      '.lamp-state{font-size:11px;padding:1px 6px;border-radius:4px;background:var(--lamp-panel2);color:var(--lamp-mute)}',
+      '.lamp-state[data-on="1"]{background:color-mix(in srgb,var(--lamp-accent) 20%,transparent);color:var(--lamp-accent)}',
+      '.lamp-repo-row{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:12px;border-bottom:1px solid var(--lamp-line)}',
+      '.lamp-repo-row code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:var(--lamp-ink2);overflow-wrap:anywhere}',
+      '.lamp-repo-row span{margin-left:auto;color:var(--lamp-mute);flex:none}',
+      '.lamp-cfg-swatches{display:flex;gap:8px}',
+      '.lamp-cfg-swatch{width:56px;height:36px;border-radius:6px;border:1px solid var(--lamp-line);position:relative;cursor:pointer;padding:0}',
+      '.lamp-cfg-swatch[data-on="1"]{outline:2px solid var(--lamp-accent);outline-offset:2px}',
+      '.lamp-cfg-swatch em{position:absolute;left:0;right:0;bottom:3px;text-align:center;font-style:normal;font-size:10px;color:rgba(0,0,0,.55)}',
+      '.lamp-cfg-seg{display:flex;gap:2px;background:var(--lamp-panel2);border-radius:8px;padding:2px}',
+      '.lamp-cfg-seg-opt{border:0;background:none;font:inherit;font-size:12px;padding:4px 10px;border-radius:6px;color:var(--lamp-mute);cursor:pointer}',
+      '.lamp-cfg-seg-opt[data-on="1"]{background:var(--dsw-alias-bg-base);color:var(--dsw-alias-label-primary)}',
+      '.lamp-cfg-switch{width:34px;height:20px;border-radius:999px;background:var(--lamp-panel2);position:relative;cursor:pointer;border:0;padding:0;flex:none}',
+      '.lamp-cfg-switch::after{content:"";position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:var(--lamp-mute);transition:left .15s ease,background .15s ease}',
+      '.lamp-cfg-switch[data-on="1"]{background:color-mix(in srgb,var(--lamp-accent) 45%,transparent)}',
+      '.lamp-cfg-switch[data-on="1"]::after{left:17px;background:var(--lamp-accent)}',
+      '.lamp-cfg-range{width:120px;accent-color:var(--lamp-accent)}',
 
       /* ---------- 空态 ---------- */
-      '.pb-empty{min-height:52vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;padding:40px 0}',
-      '.pb-empty svg{color:var(--pb-mute);opacity:.55}',
-      '.pb-empty h2{margin:6px 0 0;font-size:17px;font-weight:600}',
-      '.pb-empty p{margin:0;max-width:420px;font-size:13px;line-height:1.7;color:var(--pb-mute)}',
-      '.pb-empty-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;justify-content:center}',
+      '.lamp-empty{min-height:52vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;padding:40px 0}',
+      '.lamp-empty svg{color:var(--lamp-mute);opacity:.55}',
+      '.lamp-empty h2{margin:6px 0 0;font-size:17px;font-weight:600}',
+      '.lamp-empty p{margin:0;max-width:420px;font-size:13px;line-height:1.7;color:var(--lamp-mute)}',
+      '.lamp-empty-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;justify-content:center}',
 
-      '.pb-cover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:14px 14px 26px;overflow:hidden}',
-      '.pb-cover img{width:100%;height:100%;object-fit:cover;display:block}',
+      '.lamp-cover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:14px 14px 26px;overflow:hidden}',
+      '.lamp-cover img{width:100%;height:100%;object-fit:cover;display:block}',
       'border-right:1px solid currentColor;opacity:.3}',
-      '.pb-cover-title{margin:0;font-family:' + SERIF + ';font-size:13px;line-height:1.1;letter-spacing:.06em;text-align:center;',
+      '.lamp-cover-title{margin:0;font-family:' + SERIF + ';font-size:13px;line-height:1.1;letter-spacing:.06em;text-align:center;',
       'max-height:100%;overflow:hidden}',
-      '.pb-cover-title[data-vertical="1"]{writing-mode:vertical-rl;text-orientation:upright;height:100%;white-space:nowrap;',
+      '.lamp-cover-title[data-vertical="1"]{writing-mode:vertical-rl;text-orientation:upright;height:100%;white-space:nowrap;',
       'text-overflow:ellipsis;letter-spacing:.1em}',
-      '.pb-cover-title[data-vertical="0"]{font-size:12px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;',
+      '.lamp-cover-title[data-vertical="0"]{font-size:12px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;',
       '-webkit-box-orient:vertical;overflow:hidden}',
       'opacity:.7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
-      '.pb-cover-mini .pb-cover-title,.pb-cover-mini .pb-cover-author,.pb-cover-mini .pb-cover-frame{display:none}',
+      '.lamp-cover-mini .lamp-cover-title,.lamp-cover-mini .lamp-cover-author,.lamp-cover-mini .lamp-cover-frame{display:none}',
 
       /* ---------- 右栏 ---------- */
-      '.pb-bars{display:flex;align-items:flex-end;gap:8px;height:56px;margin:12px 0 8px}',
-      '.pb-bar{width:10px;flex:none;border-radius:2px 2px 0 0;background:color-mix(in srgb,var(--pb-accent) 20%,transparent);min-height:2px}',
-      '.pb-bar[data-today="1"]{background:var(--pb-accent)}',
-      '.pb-textlink{border:0;background:none;padding:0;color:var(--pb-accent);font:inherit;font-size:12px;cursor:pointer}',
-      '.pb-textlink:hover{text-decoration:underline}',
+      '.lamp-bars{display:flex;align-items:flex-end;gap:8px;height:56px;margin:12px 0 8px}',
+      '.lamp-bar{width:10px;flex:none;border-radius:2px 2px 0 0;background:color-mix(in srgb,var(--lamp-accent) 20%,transparent);min-height:2px}',
+      '.lamp-bar[data-today="1"]{background:var(--lamp-accent)}',
+      '.lamp-textlink{border:0;background:none;padding:0;color:var(--lamp-accent);font:inherit;font-size:12px;cursor:pointer}',
+      '.lamp-textlink:hover{text-decoration:underline}',
 
       /* ---------- 笔记页 ---------- */
-      '.pb-page{padding-bottom:48px}',
-      '.pb-filterbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:0 0 16px}',
-      '.pb-scope{height:28px;padding:0 10px;border:1px solid transparent;border-radius:8px;background:none;',
+      '.lamp-page{padding-bottom:48px}',
+      '.lamp-filterbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:0 0 16px}',
+      '.lamp-scope{height:28px;padding:0 10px;border:1px solid transparent;border-radius:8px;background:none;',
       'color:var(--dsw-alias-label-secondary);font:inherit;font-size:13px;cursor:pointer}',
-      '.pb-scope:hover{color:var(--dsw-alias-label-primary)}',
-      '.pb-scope[data-on="1"]{background:var(--dsw-alias-bg-layer-2);color:var(--dsw-alias-label-primary)}',
-      '.pb-filterbar .pb-grow{flex:1}',
-      '.pb-group{margin:0 0 28px}',
-      '.pb-group-head{display:flex;align-items:center;gap:10px;padding:0 0 10px;border-bottom:1px solid var(--pb-line);margin-bottom:2px}',
-      '.pb-group-cover{width:24px;height:32px;flex:none;border-radius:4px;overflow:hidden;position:relative;box-shadow:var(--pb-cover-shadow)}',
-      '.pb-group-title{margin:0;font-size:15px;font-weight:600;line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
-      '.pb-group-count{font-size:12px;color:var(--pb-mute);flex:none;font-variant-numeric:tabular-nums}',
-      '.pb-group-head .pb-grow{flex:1;min-width:0}',
-      '.pb-note-item{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--pb-line)}',
-      '.pb-note-item:hover{background:color-mix(in srgb,var(--dsw-alias-interactive-bg-hover) 55%,transparent)}',
-      '.pb-note-rail{width:2px;flex:none;border-radius:1px;background:color-mix(in srgb,var(--pb-accent) 30%,transparent)}',
-      '.pb-note-main{flex:1;min-width:0}',
-      '.pb-note-quote{margin:0;font-size:15px;line-height:1.7;cursor:pointer;display:-webkit-box;-webkit-line-clamp:3;',
+      '.lamp-scope:hover{color:var(--dsw-alias-label-primary)}',
+      '.lamp-scope[data-on="1"]{background:var(--dsw-alias-bg-layer-2);color:var(--dsw-alias-label-primary)}',
+      '.lamp-filterbar .lamp-grow{flex:1}',
+      '.lamp-group{margin:0 0 28px}',
+      '.lamp-group-head{display:flex;align-items:center;gap:10px;padding:0 0 10px;border-bottom:1px solid var(--lamp-line);margin-bottom:2px}',
+      '.lamp-group-cover{width:24px;height:32px;flex:none;border-radius:4px;overflow:hidden;position:relative;box-shadow:var(--lamp-cover-shadow)}',
+      '.lamp-group-title{margin:0;font-size:15px;font-weight:600;line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+      '.lamp-group-count{font-size:12px;color:var(--lamp-mute);flex:none;font-variant-numeric:tabular-nums}',
+      '.lamp-group-head .lamp-grow{flex:1;min-width:0}',
+      '.lamp-note-item{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--lamp-line)}',
+      '.lamp-note-item:hover{background:color-mix(in srgb,var(--dsw-alias-interactive-bg-hover) 55%,transparent)}',
+      '.lamp-note-rail{width:2px;flex:none;border-radius:1px;background:color-mix(in srgb,var(--lamp-accent) 30%,transparent)}',
+      '.lamp-note-main{flex:1;min-width:0}',
+      '.lamp-note-quote{margin:0;font-size:15px;line-height:1.7;cursor:pointer;display:-webkit-box;-webkit-line-clamp:3;',
       '-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}',
-      '.pb-note-quote[data-open="1"]{display:block;-webkit-line-clamp:unset;overflow:visible}',
-      '.pb-note-quote:hover{color:var(--pb-accent)}',
-      '.pb-note-text{margin:6px 0 0;font-size:14px;line-height:1.6;color:var(--dsw-alias-label-secondary);white-space:pre-wrap;overflow-wrap:anywhere}',
-      '.pb-note-meta{margin:6px 0 0;font-size:12px;color:var(--pb-mute);font-variant-numeric:tabular-nums}',
-      '.pb-more{border:0;background:none;padding:4px 0 0;color:var(--pb-accent);font:inherit;font-size:12px;cursor:pointer;display:block}',
-      '.pb-note-del{border:0;background:none;color:var(--pb-mute);font:inherit;font-size:12px;cursor:pointer;',
+      '.lamp-note-quote[data-open="1"]{display:block;-webkit-line-clamp:unset;overflow:visible}',
+      '.lamp-note-quote:hover{color:var(--lamp-accent)}',
+      '.lamp-note-text{margin:6px 0 0;font-size:14px;line-height:1.6;color:var(--dsw-alias-label-secondary);white-space:pre-wrap;overflow-wrap:anywhere}',
+      '.lamp-note-meta{margin:6px 0 0;font-size:12px;color:var(--lamp-mute);font-variant-numeric:tabular-nums}',
+      '.lamp-more{border:0;background:none;padding:4px 0 0;color:var(--lamp-accent);font:inherit;font-size:12px;cursor:pointer;display:block}',
+      '.lamp-note-del{border:0;background:none;color:var(--lamp-mute);font:inherit;font-size:12px;cursor:pointer;',
       'padding:2px 6px;border-radius:4px;opacity:0;flex:none;height:22px;align-self:flex-start}',
-      '.pb-note-item:hover .pb-note-del{opacity:1}',
-      '.pb-note-del[data-armed="1"]{opacity:1;color:var(--dsw-alias-state-error-primary);background:var(--dsw-alias-interactive-bg-hover)}',
+      '.lamp-note-item:hover .lamp-note-del{opacity:1}',
+      '.lamp-note-del[data-armed="1"]{opacity:1;color:var(--dsw-alias-state-error-primary);background:var(--dsw-alias-interactive-bg-hover)}',
 
       /* ---------- 统计页 ---------- */
-      '.pb-stat-row{display:flex;gap:clamp(24px,5vw,64px);flex-wrap:wrap;padding:4px 0 28px;align-items:flex-start}',
-      '.pb-stat{display:flex;flex-direction:column;gap:2px}',
-      '.pb-stat b{font-size:22px;font-weight:600;line-height:1.3;font-variant-numeric:tabular-nums}',
-      '.pb-stat span{font-size:12px;color:var(--pb-mute)}',
-      '.pb-stat-goal{margin-left:auto;display:flex;align-items:center;gap:10px}',
-      '.pb-goal-ring{position:relative;color:var(--pb-accent)}',
-      '.pb-goal-num{position:absolute;inset:0;display:grid;place-items:center;font-size:11px;font-weight:600;',
+      '.lamp-stat-row{display:flex;gap:clamp(24px,5vw,64px);flex-wrap:wrap;padding:4px 0 28px;align-items:flex-start}',
+      '.lamp-stat{display:flex;flex-direction:column;gap:2px}',
+      '.lamp-stat b{font-size:22px;font-weight:600;line-height:1.3;font-variant-numeric:tabular-nums}',
+      '.lamp-stat span{font-size:12px;color:var(--lamp-mute)}',
+      '.lamp-stat-goal{margin-left:auto;display:flex;align-items:center;gap:10px}',
+      '.lamp-goal-ring{position:relative;color:var(--lamp-accent)}',
+      '.lamp-goal-num{position:absolute;inset:0;display:grid;place-items:center;font-size:11px;font-weight:600;',
       'font-variant-numeric:tabular-nums;color:var(--dsw-alias-label-primary)}',
-      '.pb-goal-label{font-size:12px;color:var(--pb-mute)}',
-      '.pb-chart{display:flex;align-items:flex-end;gap:12px;height:120px;margin:6px 0 0}',
-      '.pb-chart-day{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:16px;height:100%;justify-content:flex-end}',
-      '.pb-chart-track{width:16px;display:flex;align-items:flex-end;flex:1}',
-      '.pb-chart-bar{width:100%;border-radius:2px 2px 0 0;background:color-mix(in srgb,var(--pb-accent) 20%,transparent);min-height:2px}',
-      '.pb-chart-day[data-today="1"] .pb-chart-bar{background:var(--pb-accent)}',
-      '.pb-chart-day[data-zero="1"] .pb-chart-bar{background:var(--dsw-alias-bg-skeleton)}',
-      '.pb-chart-label{font-size:12px;color:var(--pb-mute)}',
-      '.pb-chart-day[data-today="1"] .pb-chart-label{color:var(--pb-accent);font-weight:600}',
-      '.pb-page-foot{margin:24px 0 0;font-size:12px;color:var(--pb-mute);font-variant-numeric:tabular-nums}',
+      '.lamp-goal-label{font-size:12px;color:var(--lamp-mute)}',
+      '.lamp-chart{display:flex;align-items:flex-end;gap:12px;height:120px;margin:6px 0 0}',
+      '.lamp-chart-day{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:16px;height:100%;justify-content:flex-end}',
+      '.lamp-chart-track{width:16px;display:flex;align-items:flex-end;flex:1}',
+      '.lamp-chart-bar{width:100%;border-radius:2px 2px 0 0;background:color-mix(in srgb,var(--lamp-accent) 20%,transparent);min-height:2px}',
+      '.lamp-chart-day[data-today="1"] .lamp-chart-bar{background:var(--lamp-accent)}',
+      '.lamp-chart-day[data-zero="1"] .lamp-chart-bar{background:var(--dsw-alias-bg-skeleton)}',
+      '.lamp-chart-label{font-size:12px;color:var(--lamp-mute)}',
+      '.lamp-chart-day[data-today="1"] .lamp-chart-label{color:var(--lamp-accent);font-weight:600}',
+      '.lamp-page-foot{margin:24px 0 0;font-size:12px;color:var(--lamp-mute);font-variant-numeric:tabular-nums}',
 
       /* ---------- 空态 / 加载 / 错误 ---------- */
-      '.pb-empty{display:flex;flex-direction:column;align-items:center;gap:10px;padding:72px 20px;text-align:center}',
-      '.pb-empty svg{color:var(--dsw-alias-border-l4)}',
-      '.pb-empty h2{margin:0;font-size:15px;font-weight:600}',
-      '.pb-empty p{margin:0;font-size:13px;line-height:1.6;color:var(--dsw-alias-label-secondary);max-width:40ch}',
-      '.pb-empty-actions{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;justify-content:center}',
-      '.pb-empty-note{padding:56px 20px;text-align:center;color:var(--dsw-alias-label-secondary);font-size:13px;line-height:1.7}',
-      '.pb-skel{height:196px;border-radius:4px;background:var(--dsw-alias-bg-layer-2);position:relative;overflow:hidden}',
-      '.pb-skel::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,var(--dsw-alias-bg-skeleton),transparent);',
-      'animation:pb-shimmer 1.6s ease-in-out infinite}',
-      '@keyframes pb-shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}',
-      '.pb-error{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:8px;margin:0 0 16px;',
+      '.lamp-empty{display:flex;flex-direction:column;align-items:center;gap:10px;padding:72px 20px;text-align:center}',
+      '.lamp-empty svg{color:var(--dsw-alias-border-l4)}',
+      '.lamp-empty h2{margin:0;font-size:15px;font-weight:600}',
+      '.lamp-empty p{margin:0;font-size:13px;line-height:1.6;color:var(--dsw-alias-label-secondary);max-width:40ch}',
+      '.lamp-empty-actions{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;justify-content:center}',
+      '.lamp-empty-note{padding:56px 20px;text-align:center;color:var(--dsw-alias-label-secondary);font-size:13px;line-height:1.7}',
+      '.lamp-skel{height:196px;border-radius:4px;background:var(--dsw-alias-bg-layer-2);position:relative;overflow:hidden}',
+      '.lamp-skel::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,var(--dsw-alias-bg-skeleton),transparent);',
+      'animation:lamp-shimmer 1.6s ease-in-out infinite}',
+      '@keyframes lamp-shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}',
+      '.lamp-error{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:8px;margin:0 0 16px;',
       'border:1px solid color-mix(in srgb,var(--dsw-alias-state-error-primary) 30%,transparent);',
       'background:color-mix(in srgb,var(--dsw-alias-state-error-primary) 7%,transparent)}',
-      '.pb-error h3{margin:0 0 3px;font-size:13px;font-weight:600}',
-      '.pb-error p{margin:0;font-size:12px;color:var(--dsw-alias-label-secondary);overflow-wrap:anywhere}',
-      '.pb-error svg{color:var(--dsw-alias-state-error-primary);flex:none;margin-top:1px}',
-      '.pb-spin{width:12px;height:12px;border-radius:50%;border:1.5px solid var(--dsw-alias-border-l3);',
-      'border-top-color:var(--pb-accent);animation:pb-spin .7s linear infinite;flex:none}',
-      '@keyframes pb-spin{to{transform:rotate(360deg)}}',
-      '.pb-import-bar{display:flex;align-items:center;gap:8px;margin:0 0 14px;padding:8px 12px;border-radius:8px;',
+      '.lamp-error h3{margin:0 0 3px;font-size:13px;font-weight:600}',
+      '.lamp-error p{margin:0;font-size:12px;color:var(--dsw-alias-label-secondary);overflow-wrap:anywhere}',
+      '.lamp-error svg{color:var(--dsw-alias-state-error-primary);flex:none;margin-top:1px}',
+      '.lamp-spin{width:12px;height:12px;border-radius:50%;border:1.5px solid var(--dsw-alias-border-l3);',
+      'border-top-color:var(--lamp-accent);animation:lamp-spin .7s linear infinite;flex:none}',
+      '@keyframes lamp-spin{to{transform:rotate(360deg)}}',
+      '.lamp-import-bar{display:flex;align-items:center;gap:8px;margin:0 0 14px;padding:8px 12px;border-radius:8px;',
       'background:var(--dsw-alias-bg-layer-2);font-size:12px;color:var(--dsw-alias-label-secondary)}',
-      '.pb-drop{position:absolute;inset:8px;border-radius:8px;z-index:8;border:1.5px dashed var(--pb-accent);',
+      '.lamp-drop{position:absolute;inset:8px;border-radius:8px;z-index:8;border:1.5px dashed var(--lamp-accent);',
       'display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;',
       'background:color-mix(in srgb,var(--dsw-alias-bg-base) 84%,transparent);pointer-events:none}',
-      '.pb-drop strong{font-size:15px;font-weight:600}',
-      '.pb-drop span{font-size:12px;color:var(--dsw-alias-label-secondary)}',
+      '.lamp-drop strong{font-size:15px;font-weight:600}',
+      '.lamp-drop span{font-size:12px;color:var(--dsw-alias-label-secondary)}',
 
       /* ---------- 来源面板 ---------- */
-      '.pb-scrim{position:absolute;inset:0;z-index:17;background:var(--dsw-alias-bg-mask-1);animation:pb-fade .16s ease}',
-      '@keyframes pb-fade{from{opacity:0}to{opacity:1}}',
-      '.pb-sheet{position:absolute;top:0;right:0;bottom:0;width:min(420px,100%);z-index:22;display:flex;flex-direction:column;',
-      'background:var(--dsw-alias-bg-layer-1);border-left:1px solid var(--pb-line-strong);box-shadow:var(--dsw-elevation-panel);',
-      'animation:pb-slide-in .2s cubic-bezier(.2,.7,.3,1)}',
-      '@keyframes pb-slide-in{from{transform:translateX(20px);opacity:.5}to{transform:none;opacity:1}}',
-      '.pb-sheet-head{display:flex;align-items:center;gap:10px;padding:16px 18px 12px;border-bottom:1px solid var(--pb-line)}',
-      '.pb-sheet-head h2{margin:0;font-size:15px;font-weight:600}',
-      '.pb-sheet-head p{margin:2px 0 0;font-size:12px;color:var(--pb-mute)}',
-      '.pb-sheet-body{flex:1;min-height:0;overflow-y:auto;padding:14px 16px 26px;display:flex;flex-direction:column;gap:12px}',
-      '.pb-prov{border:1px solid var(--pb-line);border-radius:8px;background:var(--dsw-alias-bg-layer-2);padding:14px}',
-      '.pb-prov-head{display:flex;align-items:center;gap:8px;margin:0 0 4px}',
-      '.pb-prov-head h3{margin:0;font-size:13px;font-weight:600;flex:1}',
-      '.pb-dot{width:6px;height:6px;border-radius:50%;background:var(--dsw-alias-state-idle-primary);flex:none}',
-      '.pb-dot[data-on="1"]{background:var(--dsw-alias-state-success-primary)}',
-      '.pb-prov-state{font-size:12px;color:var(--pb-mute)}',
-      '.pb-prov-row{display:flex;align-items:baseline;gap:8px;font-size:12px;color:var(--dsw-alias-label-secondary);margin:6px 0 0}',
-      '.pb-prov-row b{color:var(--dsw-alias-label-primary);font-weight:600;overflow-wrap:anywhere}',
-      '.pb-prov-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}',
-      '.pb-prov-help{margin:10px 0 0;font-size:12px;line-height:1.6;color:var(--pb-mute)}',
-      '.pb-prov-field{display:flex;flex-direction:column;gap:6px;margin-top:10px}',
-      '.pb-prov-label{font-size:12px;color:var(--dsw-alias-label-secondary)}',
-      '.pb-prov-search{display:flex;gap:6px;margin-top:12px}',
-      '.pb-results{display:flex;flex-direction:column;gap:2px;margin:8px 0 0;padding:0;list-style:none;max-height:220px;overflow-y:auto}',
-      '.pb-result{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:4px;font-size:12px}',
-      '.pb-result:hover{background:var(--dsw-alias-interactive-bg-hover)}',
-      '.pb-result-main{flex:1;min-width:0}',
-      '.pb-result-title{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
-      '.pb-result-author{display:block;font-size:12px;color:var(--pb-mute)}',
-      '.pb-note-msg{font-size:12px;color:var(--dsw-alias-state-error-primary);margin:8px 0 0;overflow-wrap:anywhere}',
-      '.pb-toast{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);z-index:30;padding:6px 12px;border-radius:8px;',
+      '.lamp-scrim{position:absolute;inset:0;z-index:17;background:var(--dsw-alias-bg-mask-1);animation:lamp-fade .16s ease}',
+      '@keyframes lamp-fade{from{opacity:0}to{opacity:1}}',
+      '.lamp-sheet{position:absolute;top:0;right:0;bottom:0;width:min(420px,100%);z-index:22;display:flex;flex-direction:column;',
+      'background:var(--dsw-alias-bg-layer-1);border-left:1px solid var(--lamp-line-strong);box-shadow:var(--dsw-elevation-panel);',
+      'animation:lamp-slide-in .2s cubic-bezier(.2,.7,.3,1)}',
+      '@keyframes lamp-slide-in{from{transform:translateX(20px);opacity:.5}to{transform:none;opacity:1}}',
+      '.lamp-sheet-head{display:flex;align-items:center;gap:10px;padding:16px 18px 12px;border-bottom:1px solid var(--lamp-line)}',
+      '.lamp-sheet-head h2{margin:0;font-size:15px;font-weight:600}',
+      '.lamp-sheet-head p{margin:2px 0 0;font-size:12px;color:var(--lamp-mute)}',
+      '.lamp-sheet-body{flex:1;min-height:0;overflow-y:auto;padding:14px 16px 26px;display:flex;flex-direction:column;gap:12px}',
+      '.lamp-prov{border:1px solid var(--lamp-line);border-radius:8px;background:var(--dsw-alias-bg-layer-2);padding:14px}',
+      '.lamp-prov-head{display:flex;align-items:center;gap:8px;margin:0 0 4px}',
+      '.lamp-prov-head h3{margin:0;font-size:13px;font-weight:600;flex:1}',
+      '.lamp-dot{width:6px;height:6px;border-radius:50%;background:var(--dsw-alias-state-idle-primary);flex:none}',
+      '.lamp-dot[data-on="1"]{background:var(--dsw-alias-state-success-primary)}',
+      '.lamp-prov-state{font-size:12px;color:var(--lamp-mute)}',
+      '.lamp-prov-row{display:flex;align-items:baseline;gap:8px;font-size:12px;color:var(--dsw-alias-label-secondary);margin:6px 0 0}',
+      '.lamp-prov-row b{color:var(--dsw-alias-label-primary);font-weight:600;overflow-wrap:anywhere}',
+      '.lamp-prov-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}',
+      '.lamp-prov-help{margin:10px 0 0;font-size:12px;line-height:1.6;color:var(--lamp-mute)}',
+      '.lamp-prov-field{display:flex;flex-direction:column;gap:6px;margin-top:10px}',
+      '.lamp-prov-label{font-size:12px;color:var(--dsw-alias-label-secondary)}',
+      '.lamp-prov-search{display:flex;gap:6px;margin-top:12px}',
+      '.lamp-results{display:flex;flex-direction:column;gap:2px;margin:8px 0 0;padding:0;list-style:none;max-height:220px;overflow-y:auto}',
+      '.lamp-result{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:4px;font-size:12px}',
+      '.lamp-result:hover{background:var(--dsw-alias-interactive-bg-hover)}',
+      '.lamp-result-main{flex:1;min-width:0}',
+      '.lamp-result-title{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+      '.lamp-result-author{display:block;font-size:12px;color:var(--lamp-mute)}',
+      '.lamp-note-msg{font-size:12px;color:var(--dsw-alias-state-error-primary);margin:8px 0 0;overflow-wrap:anywhere}',
+      '.lamp-toast{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);z-index:30;padding:6px 12px;border-radius:8px;',
       'background:var(--dsw-alias-toast-bg);color:var(--dsw-alias-toast-label);font-size:12px;',
-      'box-shadow:var(--dsw-elevation-panel);animation:pb-toast-in .18s ease;max-width:80%;text-align:center}',
-      '@keyframes pb-toast-in{from{opacity:0;transform:translate(-50%,6px)}to{opacity:1;transform:translate(-50%,0)}}',
+      'box-shadow:var(--dsw-elevation-panel);animation:lamp-toast-in .18s ease;max-width:80%;text-align:center}',
+      '@keyframes lamp-toast-in{from{opacity:0;transform:translate(-50%,6px)}to{opacity:1;transform:translate(-50%,0)}}',
 
       /* ---------- 封面（覆盖早期规则） ---------- */
-      '.pb-cover{position:absolute;inset:0;display:block;padding:0;overflow:hidden;background:var(--pb-panel2)}',
-      '.pb-cover img{width:100%;height:100%;object-fit:cover;display:block}',
-      '.pb-cover-t{position:absolute;inset:12px 10px 22px;display:flex;align-items:center;justify-content:center;',
+      '.lamp-cover{position:absolute;inset:0;display:block;padding:0;overflow:hidden;background:var(--lamp-panel2)}',
+      '.lamp-cover img{width:100%;height:100%;object-fit:cover;display:block}',
+      '.lamp-cover-t{position:absolute;inset:12px 10px 22px;display:flex;align-items:center;justify-content:center;',
       'font-family:' + SERIF + ';font-size:12px;line-height:1.15;letter-spacing:.1em;color:rgba(255,255,255,.92);',
       'writing-mode:vertical-rl;text-orientation:upright;overflow:hidden;text-shadow:0 1px 2px rgba(0,0,0,.22)}',
-      '.pb-cover-t[data-h="1"]{writing-mode:horizontal-tb;text-orientation:initial;letter-spacing:.01em;font-size:10.5px;',
+      '.lamp-cover-t[data-h="1"]{writing-mode:horizontal-tb;text-orientation:initial;letter-spacing:.01em;font-size:10.5px;',
       'line-height:1.45;text-align:center;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;padding:2px}',
-      '.pb-cover[data-size="xs"] .pb-cover-t{font-size:8px;inset:5px 3px 9px;letter-spacing:.02em}',
-      '.pb-cover[data-size="xs"] .pb-cover-badge{display:none}',
-      '.pb-cover[data-size="sm"] .pb-cover-t{font-size:9px;inset:7px 5px 12px}',
-      '.pb-cover[data-size="sm"] .pb-cover-badge{font-size:9px;padding:1px 4px}',
-      '.pb-cover[data-size="md"] .pb-cover-t{font-size:11px;inset:10px 8px 18px}',
-      '.pb-cover[data-size="lg"] .pb-cover-t{font-size:12px;inset:12px 9px 20px}',
-      '.pb-cover[data-size="xxs"] .pb-cover-t,.pb-cover[data-size="xxs"] .pb-cover-badge{display:none}',
-      '.pb-cover-badge{position:absolute;bottom:6px;right:6px;font-size:10px;line-height:1;padding:2px 5px;border-radius:4px;',
+      '.lamp-cover[data-size="xs"] .lamp-cover-t{font-size:8px;inset:5px 3px 9px;letter-spacing:.02em}',
+      '.lamp-cover[data-size="xs"] .lamp-cover-badge{display:none}',
+      '.lamp-cover[data-size="sm"] .lamp-cover-t{font-size:9px;inset:7px 5px 12px}',
+      '.lamp-cover[data-size="sm"] .lamp-cover-badge{font-size:9px;padding:1px 4px}',
+      '.lamp-cover[data-size="md"] .lamp-cover-t{font-size:11px;inset:10px 8px 18px}',
+      '.lamp-cover[data-size="lg"] .lamp-cover-t{font-size:12px;inset:12px 9px 20px}',
+      '.lamp-cover[data-size="xxs"] .lamp-cover-t,.lamp-cover[data-size="xxs"] .lamp-cover-badge{display:none}',
+      '.lamp-cover-badge{position:absolute;bottom:6px;right:6px;font-size:10px;line-height:1;padding:2px 5px;border-radius:4px;',
       'background:rgba(0,0,0,.5);color:#fff;letter-spacing:.02em}',
-      '.pb-reader{position:absolute;inset:0;display:flex;flex-direction:column;overflow:hidden;',
-      '--pb-paper:#fbfaf6;--pb-ink:#191713;--pb-font-size:19px;--pb-line-height:1.9;--pb-measure:34;',
-      '--pb-font:' + SERIF + ';background:var(--pb-paper);color:var(--pb-ink);z-index:3}',
-      '.pb-reader[data-theme="sepia"]{--pb-paper:#f2e5cc;--pb-ink:#3b2c1a}',
-      '.pb-reader[data-theme="ink"]{--pb-paper:#15171b;--pb-ink:#cbc7bc}',
-      '.pb-reader[data-theme="moss"]{--pb-paper:#e6ecdb;--pb-ink:#22301a}',
-      '.pb-reader[data-font="sans"]{--pb-font:' + SANS + '}',
-      '.pb-chrome{transition:opacity .32s ease,transform .32s ease}',
-      '.pb-reader[data-chrome="0"] .pb-topbar{opacity:0;transform:translateY(-8px);pointer-events:none}',
-      '.pb-reader[data-chrome="0"] .pb-footbar{opacity:0;pointer-events:none}',
-      '.pb-topbar{position:absolute;top:0;left:0;right:0;z-index:12;display:flex;align-items:center;gap:10px;',
+      '.lamp-reader{position:absolute;inset:0;display:flex;flex-direction:column;overflow:hidden;',
+      '--lamp-paper:#fbfaf6;--lamp-ink:#191713;--lamp-font-size:19px;--lamp-line-height:1.9;--lamp-measure:34;',
+      '--lamp-font:' + SERIF + ';background:var(--lamp-paper);color:var(--lamp-ink);z-index:3}',
+      '.lamp-reader[data-theme="sepia"]{--lamp-paper:#f2e5cc;--lamp-ink:#3b2c1a}',
+      '.lamp-reader[data-theme="ink"]{--lamp-paper:#15171b;--lamp-ink:#cbc7bc}',
+      '.lamp-reader[data-theme="moss"]{--lamp-paper:#e6ecdb;--lamp-ink:#22301a}',
+      '.lamp-reader[data-font="sans"]{--lamp-font:' + SANS + '}',
+      '.lamp-chrome{transition:opacity .32s ease,transform .32s ease}',
+      '.lamp-reader[data-chrome="0"] .lamp-topbar{opacity:0;transform:translateY(-8px);pointer-events:none}',
+      '.lamp-reader[data-chrome="0"] .lamp-footbar{opacity:0;pointer-events:none}',
+      '.lamp-topbar{position:absolute;top:0;left:0;right:0;z-index:12;display:flex;align-items:center;gap:10px;',
       'padding:9px clamp(12px,3vw,20px);background:color-mix(in srgb,var(--dsw-alias-bg-layer-1) 94%,transparent);',
-      'border-bottom:1px solid var(--pb-line-strong);color:var(--dsw-alias-label-primary);backdrop-filter:blur(10px)}',
-      '.pb-topbar-title{min-width:0;display:flex;flex-direction:column;gap:1px;flex:1}',
-      '.pb-topbar-title b{font-family:' + SERIF + ';font-size:13.5px;font-weight:600;line-height:1.2;',
+      'border-bottom:1px solid var(--lamp-line-strong);color:var(--dsw-alias-label-primary);backdrop-filter:blur(10px)}',
+      '.lamp-topbar-title{min-width:0;display:flex;flex-direction:column;gap:1px;flex:1}',
+      '.lamp-topbar-title b{font-family:' + SERIF + ';font-size:13.5px;font-weight:600;line-height:1.2;',
       'overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
-      '.pb-topbar-title span{font-size:11px;color:var(--pb-mute);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
-      '.pb-topbar-tools{display:flex;align-items:center;gap:2px;flex:none}',
-      '.pb-icon-count{min-width:15px;height:15px;padding:0 4px;border-radius:var(--pb-r-chip);background:color-mix(in srgb,var(--pb-accent) 16%,transparent);',
-      'color:var(--pb-accent);font-size:9.5px;line-height:15px;text-align:center;font-variant-numeric:tabular-nums;margin-left:-2px}',
-      '.pb-scroll-paper{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:74px 22px 128px;scrollbar-color:var(--dsw-alias-scrollbar-bg-l2) transparent}',
-      '.pb-paged{flex:1;min-height:0;display:flex;justify-content:center;padding:74px clamp(16px,3vw,32px) 112px}',
-      '.pb-paged-clip{position:relative;overflow:hidden;height:100%;width:min(calc(var(--pb-measure) * 1em),100%)}',
-      '.pb-paged-clip[data-overflow="1"]{overflow-y:auto}',
-      '.pb-columns{height:100%;width:100%;column-width:calc(var(--pb-measure) * 1em);column-gap:var(--pb-gap,72px);column-fill:auto;',
+      '.lamp-topbar-title span{font-size:11px;color:var(--lamp-mute);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+      '.lamp-topbar-tools{display:flex;align-items:center;gap:2px;flex:none}',
+      '.lamp-icon-count{min-width:15px;height:15px;padding:0 4px;border-radius:var(--lamp-r-chip);background:color-mix(in srgb,var(--lamp-accent) 16%,transparent);',
+      'color:var(--lamp-accent);font-size:9.5px;line-height:15px;text-align:center;font-variant-numeric:tabular-nums;margin-left:-2px}',
+      '.lamp-scroll-paper{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:74px 22px 128px;scrollbar-color:var(--dsw-alias-scrollbar-bg-l2) transparent}',
+      '.lamp-paged{flex:1;min-height:0;display:flex;justify-content:center;padding:74px clamp(16px,3vw,32px) 112px}',
+      '.lamp-paged-clip{position:relative;overflow:hidden;height:100%;width:min(calc(var(--lamp-measure) * 1em),100%)}',
+      '.lamp-paged-clip[data-overflow="1"]{overflow-y:auto}',
+      '.lamp-columns{height:100%;width:100%;column-width:calc(var(--lamp-measure) * 1em);column-gap:var(--lamp-gap,72px);column-fill:auto;',
       'transition:transform .3s cubic-bezier(.22,.7,.28,1);will-change:transform}',
-      '.pb-paged-clip[data-overflow="1"] .pb-columns{transform:none!important;height:auto;column-width:auto}',
-      '.pb-prose{font-family:var(--pb-font);font-size:var(--pb-font-size);line-height:var(--pb-line-height);',
-      'text-align:var(--pb-align,justify);overflow-wrap:break-word;hyphens:auto;max-inline-size:calc(var(--pb-measure) * 1em);margin-inline:auto}',
-      '.pb-columns .pb-prose{max-inline-size:none;margin:0;text-align:var(--pb-align,justify)}',
-      '.pb-p{text-indent:2em;margin:0 0 .82em}',
-      '.pb-li{text-indent:0;margin:0 0 .5em;padding-left:1.4em;position:relative}',
-      '.pb-li::before{content:"\\00B7";position:absolute;left:.5em;color:color-mix(in srgb,var(--pb-ink) 55%,var(--pb-paper))}',
-      '.pb-h1,.pb-h2,.pb-h3{font-family:var(--pb-font);text-indent:0;font-weight:600;line-height:1.45;margin:1.7em 0 .8em;text-align:center;letter-spacing:.02em}',
-      '.pb-h1{font-size:1.32em}.pb-h2{font-size:1.14em}.pb-h3{font-size:1.02em;text-align:start}',
-      '.pb-prose>:first-child{margin-top:0}',
-      '.pb-q{text-indent:0;margin:1em 0;padding:.1em 0 .1em 1.1em;border-left:2px solid color-mix(in srgb,var(--pb-ink) 22%,var(--pb-paper));',
-      'font-style:italic;color:color-mix(in srgb,var(--pb-ink) 82%,var(--pb-paper))}',
-      '.pb-pre{text-indent:0;margin:1em 0;padding:.7em .9em;border-radius:8px;overflow-x:auto;',
+      '.lamp-paged-clip[data-overflow="1"] .lamp-columns{transform:none!important;height:auto;column-width:auto}',
+      '.lamp-prose{font-family:var(--lamp-font);font-size:var(--lamp-font-size);line-height:var(--lamp-line-height);',
+      'text-align:var(--lamp-align,justify);overflow-wrap:break-word;hyphens:auto;max-inline-size:calc(var(--lamp-measure) * 1em);margin-inline:auto}',
+      '.lamp-columns .lamp-prose{max-inline-size:none;margin:0;text-align:var(--lamp-align,justify)}',
+      '.lamp-p{text-indent:2em;margin:0 0 .82em}',
+      '.lamp-li{text-indent:0;margin:0 0 .5em;padding-left:1.4em;position:relative}',
+      '.lamp-li::before{content:"\\00B7";position:absolute;left:.5em;color:color-mix(in srgb,var(--lamp-ink) 55%,var(--lamp-paper))}',
+      '.lamp-h1,.lamp-h2,.lamp-h3{font-family:var(--lamp-font);text-indent:0;font-weight:600;line-height:1.45;margin:1.7em 0 .8em;text-align:center;letter-spacing:.02em}',
+      '.lamp-h1{font-size:1.32em}.lamp-h2{font-size:1.14em}.lamp-h3{font-size:1.02em;text-align:start}',
+      '.lamp-prose>:first-child{margin-top:0}',
+      '.lamp-q{text-indent:0;margin:1em 0;padding:.1em 0 .1em 1.1em;border-left:2px solid color-mix(in srgb,var(--lamp-ink) 22%,var(--lamp-paper));',
+      'font-style:italic;color:color-mix(in srgb,var(--lamp-ink) 82%,var(--lamp-paper))}',
+      '.lamp-pre{text-indent:0;margin:1em 0;padding:.7em .9em;border-radius:8px;overflow-x:auto;',
       'font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.78em;line-height:1.6;white-space:pre-wrap;word-break:break-word;',
-      'background:color-mix(in srgb,var(--pb-ink) 7%,var(--pb-paper));color:color-mix(in srgb,var(--pb-ink) 92%,var(--pb-paper))}',
-      '.pb-hr{border:0;height:1px;background:color-mix(in srgb,var(--pb-ink) 18%,var(--pb-paper));margin:1.6em 0}',
-      '.pb-end{text-indent:0;color:color-mix(in srgb,var(--pb-ink) 50%,var(--pb-paper));text-align:center;font-size:.8em;',
+      'background:color-mix(in srgb,var(--lamp-ink) 7%,var(--lamp-paper));color:color-mix(in srgb,var(--lamp-ink) 92%,var(--lamp-paper))}',
+      '.lamp-hr{border:0;height:1px;background:color-mix(in srgb,var(--lamp-ink) 18%,var(--lamp-paper));margin:1.6em 0}',
+      '.lamp-end{text-indent:0;color:color-mix(in srgb,var(--lamp-ink) 50%,var(--lamp-paper));text-align:center;font-size:.8em;',
       'letter-spacing:.3em;margin:2.4em 0 1.2em}',
-      '.pb-end-actions{display:flex;gap:10px;justify-content:center;margin:0 0 2em;flex-wrap:wrap}',
-      '.pb-end-actions .pb-btn{background:color-mix(in srgb,var(--pb-ink) 6%,var(--pb-paper));border-color:color-mix(in srgb,var(--pb-ink) 16%,var(--pb-paper));color:var(--pb-ink)}',
-      '.pb-end-actions .pb-btn:hover{background:color-mix(in srgb,var(--pb-ink) 11%,var(--pb-paper))}',
-      '.pb-end-actions .pb-btn-primary{background:var(--pb-ink);color:var(--pb-paper);border-color:transparent}',
-      '.pb-chapter-loading{display:flex;align-items:center;justify-content:center;gap:8px;height:100%;color:var(--pb-mute);font-size:12.5px}',
-      '.pb-chapter-error{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;height:100%;padding:24px;text-align:center}',
-      '.pb-chapter-error p{margin:0;color:var(--dsw-alias-state-error-primary);font-size:12.5px;max-width:46ch;overflow-wrap:anywhere}',
-      '.pb-footbar{position:absolute;left:0;right:0;bottom:0;z-index:12;padding:6px clamp(14px,3vw,22px) 8px;',
+      '.lamp-end-actions{display:flex;gap:10px;justify-content:center;margin:0 0 2em;flex-wrap:wrap}',
+      '.lamp-end-actions .lamp-btn{background:color-mix(in srgb,var(--lamp-ink) 6%,var(--lamp-paper));border-color:color-mix(in srgb,var(--lamp-ink) 16%,var(--lamp-paper));color:var(--lamp-ink)}',
+      '.lamp-end-actions .lamp-btn:hover{background:color-mix(in srgb,var(--lamp-ink) 11%,var(--lamp-paper))}',
+      '.lamp-end-actions .lamp-btn-primary{background:var(--lamp-ink);color:var(--lamp-paper);border-color:transparent}',
+      '.lamp-chapter-loading{display:flex;align-items:center;justify-content:center;gap:8px;height:100%;color:var(--lamp-mute);font-size:12.5px}',
+      '.lamp-chapter-error{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;height:100%;padding:24px;text-align:center}',
+      '.lamp-chapter-error p{margin:0;color:var(--dsw-alias-state-error-primary);font-size:12.5px;max-width:46ch;overflow-wrap:anywhere}',
+      '.lamp-footbar{position:absolute;left:0;right:0;bottom:0;z-index:12;padding:6px clamp(14px,3vw,22px) 8px;',
       'background:linear-gradient(to top,color-mix(in srgb,var(--dsw-alias-bg-layer-1) 96%,transparent),transparent);',
       'color:var(--dsw-alias-label-primary);backdrop-filter:blur(6px)}',
-      '.pb-foot-track{position:relative;height:14px;display:flex;align-items:center;cursor:pointer}',
-      '.pb-foot-rail{position:relative;height:2px;width:100%;border-radius:2px;background:var(--dsw-alias-border-l2);overflow:hidden}',
-      '.pb-foot-rail i{display:block;height:100%;background:var(--dsw-alias-label-primary);border-radius:2px;transition:width .25s ease}',
-      '.pb-foot-track:hover .pb-foot-rail{height:3px}',
-      '.pb-foot-meta{display:flex;align-items:center;gap:8px;margin-top:2px;font-size:10.5px;color:var(--pb-mute);font-variant-numeric:tabular-nums}',
-      '.pb-foot-meta .pb-grow{flex:1}',
-      '.pb-foot-btn{border:0;background:transparent;color:var(--dsw-alias-label-secondary);font:inherit;font-size:10.5px;cursor:pointer;padding:2px 4px;border-radius:4px}',
-      '.pb-foot-btn:hover{color:var(--dsw-alias-label-primary);background:var(--dsw-alias-interactive-bg-hover)}',
-      '.pb-foot-btn:disabled{opacity:.4;cursor:default}',
-      '.pb-drawer{position:absolute;top:0;left:0;bottom:0;width:min(340px,86%);z-index:18;display:flex;flex-direction:column;',
-      'background:color-mix(in srgb,var(--dsw-alias-bg-layer-1) 97%,transparent);border-right:1px solid var(--pb-line-strong);',
+      '.lamp-foot-track{position:relative;height:14px;display:flex;align-items:center;cursor:pointer}',
+      '.lamp-foot-rail{position:relative;height:2px;width:100%;border-radius:2px;background:var(--dsw-alias-border-l2);overflow:hidden}',
+      '.lamp-foot-rail i{display:block;height:100%;background:var(--dsw-alias-label-primary);border-radius:2px;transition:width .25s ease}',
+      '.lamp-foot-track:hover .lamp-foot-rail{height:3px}',
+      '.lamp-foot-meta{display:flex;align-items:center;gap:8px;margin-top:2px;font-size:10.5px;color:var(--lamp-mute);font-variant-numeric:tabular-nums}',
+      '.lamp-foot-meta .lamp-grow{flex:1}',
+      '.lamp-foot-btn{border:0;background:transparent;color:var(--dsw-alias-label-secondary);font:inherit;font-size:10.5px;cursor:pointer;padding:2px 4px;border-radius:4px}',
+      '.lamp-foot-btn:hover{color:var(--dsw-alias-label-primary);background:var(--dsw-alias-interactive-bg-hover)}',
+      '.lamp-foot-btn:disabled{opacity:.4;cursor:default}',
+      '.lamp-drawer{position:absolute;top:0;left:0;bottom:0;width:min(340px,86%);z-index:18;display:flex;flex-direction:column;',
+      'background:color-mix(in srgb,var(--dsw-alias-bg-layer-1) 97%,transparent);border-right:1px solid var(--lamp-line-strong);',
       'color:var(--dsw-alias-label-primary);backdrop-filter:blur(14px);box-shadow:var(--dsw-elevation-panel);',
-      'animation:pb-drawer-in .22s cubic-bezier(.2,.7,.3,1)}',
-      '@keyframes pb-drawer-in{from{transform:translateX(-16px);opacity:.4}to{transform:none;opacity:1}}',
-      '.pb-drawer-head{padding:15px 16px 10px;border-bottom:1px solid var(--pb-line)}',
-      '.pb-drawer-head b{display:block;font-family:' + SERIF + ';font-size:15px;font-weight:600;',
+      'animation:lamp-drawer-in .22s cubic-bezier(.2,.7,.3,1)}',
+      '@keyframes lamp-drawer-in{from{transform:translateX(-16px);opacity:.4}to{transform:none;opacity:1}}',
+      '.lamp-drawer-head{padding:15px 16px 10px;border-bottom:1px solid var(--lamp-line)}',
+      '.lamp-drawer-head b{display:block;font-family:' + SERIF + ';font-size:15px;font-weight:600;',
       'overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
-      '.pb-drawer-head span{font-size:11px;color:var(--pb-mute)}',
-      '.pb-toc{flex:1;min-height:0;overflow-y:auto;padding:6px 8px 20px}',
-      '.pb-toc-item{position:relative;display:flex;align-items:baseline;gap:8px;width:100%;text-align:left;border:0;background:transparent;',
+      '.lamp-drawer-head span{font-size:11px;color:var(--lamp-mute)}',
+      '.lamp-toc{flex:1;min-height:0;overflow-y:auto;padding:6px 8px 20px}',
+      '.lamp-toc-item{position:relative;display:flex;align-items:baseline;gap:8px;width:100%;text-align:left;border:0;background:transparent;',
       'color:var(--dsw-alias-label-secondary);font:inherit;font-size:12.5px;line-height:1.5;padding:7px 9px;border-radius:8px;cursor:pointer}',
-      '.pb-toc-item:hover{background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary)}',
-      '.pb-toc-item[data-on="1"]{background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary);font-weight:500}',
-      '.pb-toc-item[data-on="1"]::before{content:"";position:absolute;left:0;width:2px;height:14px;border-radius:2px;background:var(--pb-accent)}',
-      '.pb-toc-item[data-read="1"]{color:var(--pb-mute)}',
-      '.pb-toc-idx{width:22px;flex:none;font-variant-numeric:tabular-nums;color:var(--pb-mute);font-size:10.5px}',
-      '.pb-toc-title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+      '.lamp-toc-item:hover{background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary)}',
+      '.lamp-toc-item[data-on="1"]{background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary);font-weight:500}',
+      '.lamp-toc-item[data-on="1"]::before{content:"";position:absolute;left:0;width:2px;height:14px;border-radius:2px;background:var(--lamp-accent)}',
+      '.lamp-toc-item[data-read="1"]{color:var(--lamp-mute)}',
+      '.lamp-toc-idx{width:22px;flex:none;font-variant-numeric:tabular-nums;color:var(--lamp-mute);font-size:10.5px}',
+      '.lamp-toc-title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
 
-      '.pb-settings{position:absolute;top:0;right:0;bottom:0;width:min(320px,88%);z-index:19;display:flex;flex-direction:column;',
-      'background:color-mix(in srgb,var(--dsw-alias-bg-layer-1) 97%,transparent);border-left:1px solid var(--pb-line-strong);',
-      'color:var(--dsw-alias-label-primary);backdrop-filter:blur(14px);box-shadow:var(--dsw-elevation-panel);animation:pb-slide-in .2s cubic-bezier(.2,.7,.3,1)}',
-      '.pb-settings-body{flex:1;min-height:0;overflow-y:auto;padding:4px 16px 24px}',
-      '.pb-set{padding:13px 0;border-bottom:1px solid var(--pb-line)}',
-      '.pb-set:last-child{border-bottom:0}',
-      '.pb-set-label{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px;margin:0 0 9px}',
-      '.pb-set-label span{color:var(--dsw-alias-label-secondary)}',
-      '.pb-set-value{color:var(--pb-mute);font-variant-numeric:tabular-nums;font-size:11px}',
-      '.pb-swatches{display:flex;gap:6px}',
-      '.pb-swatch{flex:1;height:34px;border-radius:8px;border:1px solid var(--pb-line-strong);cursor:pointer;font:inherit;font-size:10px;',
+      '.lamp-settings{position:absolute;top:0;right:0;bottom:0;width:min(320px,88%);z-index:19;display:flex;flex-direction:column;',
+      'background:color-mix(in srgb,var(--dsw-alias-bg-layer-1) 97%,transparent);border-left:1px solid var(--lamp-line-strong);',
+      'color:var(--dsw-alias-label-primary);backdrop-filter:blur(14px);box-shadow:var(--dsw-elevation-panel);animation:lamp-slide-in .2s cubic-bezier(.2,.7,.3,1)}',
+      '.lamp-settings-body{flex:1;min-height:0;overflow-y:auto;padding:4px 16px 24px}',
+      '.lamp-set{padding:13px 0;border-bottom:1px solid var(--lamp-line)}',
+      '.lamp-set:last-child{border-bottom:0}',
+      '.lamp-set-label{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px;margin:0 0 9px}',
+      '.lamp-set-label span{color:var(--dsw-alias-label-secondary)}',
+      '.lamp-set-value{color:var(--lamp-mute);font-variant-numeric:tabular-nums;font-size:11px}',
+      '.lamp-swatches{display:flex;gap:6px}',
+      '.lamp-swatch{flex:1;height:34px;border-radius:8px;border:1px solid var(--lamp-line-strong);cursor:pointer;font:inherit;font-size:10px;',
       'display:grid;place-items:center;padding:0;position:relative;overflow:hidden}',
-      '.pb-swatch[data-on="1"]{border-color:var(--pb-accent);box-shadow:inset 0 0 0 1px var(--pb-accent)}',
-      '.pb-range{width:100%;height:18px;accent-color:var(--pb-accent);cursor:pointer;margin:0}',
-      '.pb-switch{width:34px;height:20px;border-radius:var(--pb-r-chip);border:1px solid var(--pb-line-strong);background:var(--dsw-alias-bg-layer-3);',
+      '.lamp-swatch[data-on="1"]{border-color:var(--lamp-accent);box-shadow:inset 0 0 0 1px var(--lamp-accent)}',
+      '.lamp-range{width:100%;height:18px;accent-color:var(--lamp-accent);cursor:pointer;margin:0}',
+      '.lamp-switch{width:34px;height:20px;border-radius:var(--lamp-r-chip);border:1px solid var(--lamp-line-strong);background:var(--dsw-alias-bg-layer-3);',
       'position:relative;cursor:pointer;padding:0;transition:background .15s}',
-      '.pb-switch i{position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:var(--dsw-alias-label-tertiary);transition:transform .16s,background .15s}',
-      '.pb-switch[data-on="1"]{background:var(--dsw-alias-button-primary-fill);border-color:transparent}',
-      '.pb-switch[data-on="1"] i{transform:translateX(14px);background:var(--dsw-alias-label-primary-foreground)}',
-      '.pb-fontpop{position:absolute;top:50px;right:14px;z-index:20;padding:10px;display:flex;flex-direction:column;gap:8px;',
-      'background:var(--dsw-alias-bg-layer-2);border:1px solid var(--pb-line-strong);border-radius:var(--pb-r-btn);',
-      'box-shadow:var(--dsw-elevation-panel);color:var(--dsw-alias-label-primary);min-width:172px;animation:pb-rise .14s ease}',
-      '.pb-fontpop-row{display:flex;align-items:center;gap:8px;justify-content:space-between}',
-      '.pb-fontpop-row b{width:30px;text-align:center;font-variant-numeric:tabular-nums;font-size:12.5px}',
-      '.pb-fontpop-sizes{display:flex;gap:4px}',
-      '.pb-fontpop-sizes button{width:26px;height:24px;border-radius:8px;border:1px solid var(--pb-line-strong);',
+      '.lamp-switch i{position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:var(--dsw-alias-label-tertiary);transition:transform .16s,background .15s}',
+      '.lamp-switch[data-on="1"]{background:var(--dsw-alias-button-primary-fill);border-color:transparent}',
+      '.lamp-switch[data-on="1"] i{transform:translateX(14px);background:var(--dsw-alias-label-primary-foreground)}',
+      '.lamp-fontpop{position:absolute;top:50px;right:14px;z-index:20;padding:10px;display:flex;flex-direction:column;gap:8px;',
+      'background:var(--dsw-alias-bg-layer-2);border:1px solid var(--lamp-line-strong);border-radius:var(--lamp-r-btn);',
+      'box-shadow:var(--dsw-elevation-panel);color:var(--dsw-alias-label-primary);min-width:172px;animation:lamp-rise .14s ease}',
+      '.lamp-fontpop-row{display:flex;align-items:center;gap:8px;justify-content:space-between}',
+      '.lamp-fontpop-row b{width:30px;text-align:center;font-variant-numeric:tabular-nums;font-size:12.5px}',
+      '.lamp-fontpop-sizes{display:flex;gap:4px}',
+      '.lamp-fontpop-sizes button{width:26px;height:24px;border-radius:8px;border:1px solid var(--lamp-line-strong);',
       'background:transparent;color:var(--dsw-alias-label-secondary);font:inherit;font-size:11px;cursor:pointer;padding:0}',
-      '.pb-fontpop-sizes button[data-on="1"]{background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary)}',
+      '.lamp-fontpop-sizes button[data-on="1"]{background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary)}',
 
       /* ---------- 划词 / AI / 笔记抽屉 ---------- */
-      '.pb-selectbar{position:fixed;z-index:60;display:flex;align-items:center;gap:2px;padding:4px;border-radius:var(--pb-r-btn);',
-      'background:var(--dsw-alias-bg-layer-2);border:1px solid var(--pb-line-strong);box-shadow:var(--dsw-elevation-prominent);animation:pb-rise .14s ease}',
-      '.pb-selectbar button{border:0;background:transparent;color:var(--dsw-alias-label-primary);font:inherit;font-size:12px;height:26px;padding:0 9px;',
+      '.lamp-selectbar{position:fixed;z-index:60;display:flex;align-items:center;gap:2px;padding:4px;border-radius:var(--lamp-r-btn);',
+      'background:var(--dsw-alias-bg-layer-2);border:1px solid var(--lamp-line-strong);box-shadow:var(--dsw-elevation-prominent);animation:lamp-rise .14s ease}',
+      '.lamp-selectbar button{border:0;background:transparent;color:var(--dsw-alias-label-primary);font:inherit;font-size:12px;height:26px;padding:0 9px;',
       'border-radius:8px;cursor:pointer;white-space:nowrap}',
-      '.pb-selectbar button:hover{background:var(--dsw-alias-interactive-bg-hover)}',
-      '.pb-selectbar-sep{width:1px;height:14px;background:var(--pb-line-strong);margin:0 2px}',
-      '.pb-ai{position:fixed;z-index:62;left:50%;transform:translateX(-50%);top:12vh;width:min(560px,calc(100vw - 32px));max-height:min(66vh,560px);',
-      'display:flex;flex-direction:column;background:var(--dsw-alias-bg-layer-1);border:1px solid var(--pb-line-strong);',
-      'border-radius:var(--pb-r-card);box-shadow:var(--dsw-elevation-prominent);animation:pb-rise .16s ease;overflow:hidden}',
-      '.pb-ai-head{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--pb-line)}',
-      '.pb-ai-head b{font-size:12.5px;font-weight:600;flex:1}',
-      '.pb-ai-quote{margin:0;padding:10px 14px;font-family:' + SERIF + ';font-size:12.5px;line-height:1.7;color:var(--dsw-alias-label-secondary);',
-      'background:var(--dsw-alias-bg-layer-2);border-bottom:1px solid var(--pb-line);max-height:96px;overflow-y:auto;white-space:pre-wrap;overflow-wrap:anywhere}',
-      '.pb-ai-body{flex:1;min-height:0;overflow-y:auto;padding:14px;font-size:13px;line-height:1.8;white-space:pre-wrap;',
+      '.lamp-selectbar button:hover{background:var(--dsw-alias-interactive-bg-hover)}',
+      '.lamp-selectbar-sep{width:1px;height:14px;background:var(--lamp-line-strong);margin:0 2px}',
+      '.lamp-ai{position:fixed;z-index:62;left:50%;transform:translateX(-50%);top:12vh;width:min(560px,calc(100vw - 32px));max-height:min(66vh,560px);',
+      'display:flex;flex-direction:column;background:var(--dsw-alias-bg-layer-1);border:1px solid var(--lamp-line-strong);',
+      'border-radius:var(--lamp-r-card);box-shadow:var(--dsw-elevation-prominent);animation:lamp-rise .16s ease;overflow:hidden}',
+      '.lamp-ai-head{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--lamp-line)}',
+      '.lamp-ai-head b{font-size:12.5px;font-weight:600;flex:1}',
+      '.lamp-ai-quote{margin:0;padding:10px 14px;font-family:' + SERIF + ';font-size:12.5px;line-height:1.7;color:var(--dsw-alias-label-secondary);',
+      'background:var(--dsw-alias-bg-layer-2);border-bottom:1px solid var(--lamp-line);max-height:96px;overflow-y:auto;white-space:pre-wrap;overflow-wrap:anywhere}',
+      '.lamp-ai-body{flex:1;min-height:0;overflow-y:auto;padding:14px;font-size:13px;line-height:1.8;white-space:pre-wrap;',
       'overflow-wrap:anywhere;color:var(--dsw-alias-label-primary)}',
-      '.pb-ai-foot{display:flex;gap:8px;justify-content:flex-end;padding:10px 14px;border-top:1px solid var(--pb-line)}',
-      '.pb-ai-skel{display:flex;flex-direction:column;gap:8px}',
-      '.pb-ai-skel i{display:block;height:10px;border-radius:4px;background:var(--dsw-alias-bg-skeleton);animation:pb-pulse 1.2s ease-in-out infinite}',
-      '@keyframes pb-pulse{0%,100%{opacity:1}50%{opacity:.42}}',
-      '.pb-ai-err{color:var(--dsw-alias-state-error-primary);font-size:12.5px;line-height:1.7;margin:0;overflow-wrap:anywhere}',
-      '.pb-notes{position:absolute;top:0;right:0;bottom:0;width:min(360px,90%);z-index:19;display:flex;flex-direction:column;',
-      'background:color-mix(in srgb,var(--dsw-alias-bg-layer-1) 97%,transparent);border-left:1px solid var(--pb-line-strong);',
-      'color:var(--dsw-alias-label-primary);backdrop-filter:blur(14px);box-shadow:var(--dsw-elevation-panel);animation:pb-slide-in .2s cubic-bezier(.2,.7,.3,1)}',
-      '.pb-note-list{flex:1;min-height:0;overflow-y:auto;padding:8px 12px 24px;display:flex;flex-direction:column;gap:8px}',
-      '.pb-notes .pb-note{border:1px solid var(--pb-line);border-radius:var(--pb-r-btn);background:var(--dsw-alias-bg-layer-2);padding:10px 12px;display:flex;flex-direction:column;gap:6px}',
-      '.pb-notes .pb-note-quote{margin:0;font-family:' + SERIF + ';font-size:12.5px;line-height:1.7;color:var(--dsw-alias-label-primary);white-space:pre-wrap;',
+      '.lamp-ai-foot{display:flex;gap:8px;justify-content:flex-end;padding:10px 14px;border-top:1px solid var(--lamp-line)}',
+      '.lamp-ai-skel{display:flex;flex-direction:column;gap:8px}',
+      '.lamp-ai-skel i{display:block;height:10px;border-radius:4px;background:var(--dsw-alias-bg-skeleton);animation:lamp-pulse 1.2s ease-in-out infinite}',
+      '@keyframes lamp-pulse{0%,100%{opacity:1}50%{opacity:.42}}',
+      '.lamp-ai-err{color:var(--dsw-alias-state-error-primary);font-size:12.5px;line-height:1.7;margin:0;overflow-wrap:anywhere}',
+      '.lamp-notes{position:absolute;top:0;right:0;bottom:0;width:min(360px,90%);z-index:19;display:flex;flex-direction:column;',
+      'background:color-mix(in srgb,var(--dsw-alias-bg-layer-1) 97%,transparent);border-left:1px solid var(--lamp-line-strong);',
+      'color:var(--dsw-alias-label-primary);backdrop-filter:blur(14px);box-shadow:var(--dsw-elevation-panel);animation:lamp-slide-in .2s cubic-bezier(.2,.7,.3,1)}',
+      '.lamp-note-list{flex:1;min-height:0;overflow-y:auto;padding:8px 12px 24px;display:flex;flex-direction:column;gap:8px}',
+      '.lamp-notes .lamp-note{border:1px solid var(--lamp-line);border-radius:var(--lamp-r-btn);background:var(--dsw-alias-bg-layer-2);padding:10px 12px;display:flex;flex-direction:column;gap:6px}',
+      '.lamp-notes .lamp-note-quote{margin:0;font-family:' + SERIF + ';font-size:12.5px;line-height:1.7;color:var(--dsw-alias-label-primary);white-space:pre-wrap;',
       'overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer}',
-      '.pb-notes .pb-note-text{margin:0;font-size:12.5px;line-height:1.7;color:var(--dsw-alias-label-secondary);white-space:pre-wrap;overflow-wrap:anywhere}',
-      '.pb-notes .pb-note-foot{display:flex;align-items:center;gap:8px;font-size:10.5px;color:var(--pb-mute)}',
-      '.pb-note-foot .pb-grow{flex:1}',
-      '.pb-note-empty{padding:32px 20px;text-align:center;color:var(--pb-mute);font-size:12.5px;line-height:1.8}',
-      '.pb-drawer-foot{flex:none;padding:10px 16px 14px;border-top:1px solid var(--pb-line)}',
+      '.lamp-notes .lamp-note-text{margin:0;font-size:12.5px;line-height:1.7;color:var(--dsw-alias-label-secondary);white-space:pre-wrap;overflow-wrap:anywhere}',
+      '.lamp-notes .lamp-note-foot{display:flex;align-items:center;gap:8px;font-size:10.5px;color:var(--lamp-mute)}',
+      '.lamp-note-foot .lamp-grow{flex:1}',
+      '.lamp-note-empty{padding:32px 20px;text-align:center;color:var(--lamp-mute);font-size:12.5px;line-height:1.8}',
+      '.lamp-drawer-foot{flex:none;padding:10px 16px 14px;border-top:1px solid var(--lamp-line)}',
 
       /* ---------- 正文笔记标记 ---------- */
-      '.pb-block{position:relative}',
-      '.pb-block[data-mark="1"]{padding-inline-end:14px}',
-      '.pb-block[data-mark="1"]::before{content:"";position:absolute;left:-1.15em;top:.5em;bottom:.5em;width:2px;border-radius:2px;',
-      'background:color-mix(in srgb,var(--pb-ink) 16%,var(--pb-paper))}',
-      '.pb-note-dot{position:absolute;right:-2px;top:.55em;width:7px;height:7px;padding:0;border-radius:50%;border:0;cursor:pointer;',
-      'background:color-mix(in srgb,var(--pb-ink) 30%,var(--pb-paper));transition:transform .15s ease,background .15s ease}',
-      '.pb-note-dot:hover{transform:scale(1.35);background:var(--pb-ink)}',
-      '.pb-block[data-focus="1"]{border-radius:4px;background:color-mix(in srgb,var(--pb-ink) 6%,var(--pb-paper));',
-      'box-shadow:0 0 0 6px color-mix(in srgb,var(--pb-ink) 6%,var(--pb-paper))}',
+      '.lamp-block{position:relative}',
+      '.lamp-block[data-mark="1"]{padding-inline-end:14px}',
+      '.lamp-block[data-mark="1"]::before{content:"";position:absolute;left:-1.15em;top:.5em;bottom:.5em;width:2px;border-radius:2px;',
+      'background:color-mix(in srgb,var(--lamp-ink) 16%,var(--lamp-paper))}',
+      '.lamp-note-dot{position:absolute;right:-2px;top:.55em;width:7px;height:7px;padding:0;border-radius:50%;border:0;cursor:pointer;',
+      'background:color-mix(in srgb,var(--lamp-ink) 30%,var(--lamp-paper));transition:transform .15s ease,background .15s ease}',
+      '.lamp-note-dot:hover{transform:scale(1.35);background:var(--lamp-ink)}',
+      '.lamp-block[data-focus="1"]{border-radius:4px;background:color-mix(in srgb,var(--lamp-ink) 6%,var(--lamp-paper));',
+      'box-shadow:0 0 0 6px color-mix(in srgb,var(--lamp-ink) 6%,var(--lamp-paper))}',
 
       /* ---------- 影印 ---------- */
-      '.pb-scan{position:absolute;left:0;right:0;top:58px;bottom:44px;display:flex;background:var(--pb-paper)}',
-      '.pb-scan-frame{width:100%;height:100%;border:0;background:var(--pb-paper)}',
-      '.pb-footbar-scan{background:var(--pb-paper);border-top:1px solid color-mix(in srgb,var(--pb-ink) 12%,var(--pb-paper))}',
-      '.pb-scan-hint{margin:0;font-size:11px;line-height:1.5;text-align:center;color:color-mix(in srgb,var(--pb-ink) 58%,var(--pb-paper))}',
+      '.lamp-scan{position:absolute;left:0;right:0;top:58px;bottom:44px;display:flex;background:var(--lamp-paper)}',
+      '.lamp-scan-frame{width:100%;height:100%;border:0;background:var(--lamp-paper)}',
+      '.lamp-footbar-scan{background:var(--lamp-paper);border-top:1px solid color-mix(in srgb,var(--lamp-ink) 12%,var(--lamp-paper))}',
+      '.lamp-scan-hint{margin:0;font-size:11px;line-height:1.5;text-align:center;color:color-mix(in srgb,var(--lamp-ink) 58%,var(--lamp-paper))}',
 
       /* ---------- 平台适配 ---------- */
       '@media (max-width:980px){',
-      '.pb-appbar{padding:0 20px;gap:14px}',
-      '.pb-tabs{gap:16px}',
-      '.pb-search input{width:150px}',
-      '.pb-shell{padding:0 20px}',
-      '.pb-scroll{padding:20px 0 40px}',
+      '.lamp-appbar{padding:0 20px;gap:14px}',
+      '.lamp-tabs{gap:16px}',
+      '.lamp-search input{width:150px}',
+      '.lamp-shell{padding:0 20px}',
+      '.lamp-scroll{padding:20px 0 40px}',
       '}',
       '@media (max-width:680px){',
-      '.pb-appbar{padding:0 16px;gap:12px}',
-      '.pb-wordmark,.pb-wordmark-rule{display:none}',
-      '.pb-tabs{gap:14px}',
-      '.pb-tab{font-size:13px}',
-      '.pb-search{display:none}',
-      '.pb-shell{padding:0 16px}',
-      '.pb-continue{gap:16px}',
-      '.pb-continue-cover{width:72px;height:96px}',
-      '.pb-continue-title{font-size:18px}',
-      '.pb-cards{gap:14px}',
-      '.pb-strip{gap:14px;overflow-x:auto}',
-      '.pb-settings{max-width:none}',
-      '.pb-srow{flex-wrap:wrap;gap:8px}',
-      '.pb-srow .pb-ctl{width:100%;justify-content:flex-start}',
+      '.lamp-appbar{padding:0 16px;gap:12px}',
+      '.lamp-wordmark,.lamp-wordmark-rule{display:none}',
+      '.lamp-tabs{gap:14px}',
+      '.lamp-tab{font-size:13px}',
+      '.lamp-search{display:none}',
+      '.lamp-shell{padding:0 16px}',
+      '.lamp-continue{gap:16px}',
+      '.lamp-continue-cover{width:72px;height:96px}',
+      '.lamp-continue-title{font-size:18px}',
+      '.lamp-cards{gap:14px}',
+      '.lamp-strip{gap:14px;overflow-x:auto}',
+      '.lamp-settings{max-width:none}',
+      '.lamp-srow{flex-wrap:wrap;gap:8px}',
+      '.lamp-srow .lamp-ctl{width:100%;justify-content:flex-start}',
       '}',
       '@media (prefers-reduced-motion:reduce){',
-      '.pb-root *,.pb-root *::before,.pb-root *::after{animation-duration:.001ms!important;transition-duration:.001ms!important}',
+      '.lamp-root *,.lamp-root *::before,.lamp-root *::after{animation-duration:.001ms!important;transition-duration:.001ms!important}',
       '}',
     ].join('\n');
 
@@ -1796,7 +1791,7 @@ window.__ModuleLoader__.load({
       const value = clamp(props.value || 0, 0, 100);
       return h(
         'svg',
-        { className: 'pb-ring', width: size, height: size, viewBox: '0 0 ' + size + ' ' + size, 'aria-hidden': true },
+        { className: 'lamp-ring', width: size, height: size, viewBox: '0 0 ' + size + ' ' + size, 'aria-hidden': true },
         h('circle', {
           cx: size / 2,
           cy: size / 2,
@@ -1939,7 +1934,7 @@ window.__ModuleLoader__.load({
 
       return h(
         'div',
-        { className: 'pb-cover', 'data-img': useImage ? '1' : '0', 'data-size': size, style: useImage ? undefined : { background: coverArt(title) } },
+        { className: 'lamp-cover', 'data-img': useImage ? '1' : '0', 'data-size': size, style: useImage ? undefined : { background: coverArt(title) } },
         useImage
           ? h('img', {
               src: source,
@@ -1950,10 +1945,10 @@ window.__ModuleLoader__.load({
             })
           : h(
               'span',
-              { className: 'pb-cover-t', 'data-h': vertical ? '0' : '1' },
+              { className: 'lamp-cover-t', 'data-h': vertical ? '0' : '1' },
               vertical ? verticalLabel(title).slice(0, maxChars) : title,
             ),
-        badge ? h('span', { className: 'pb-cover-badge' }, badge) : null,
+        badge ? h('span', { className: 'lamp-cover-badge' }, badge) : null,
       );
     }
 
@@ -1973,7 +1968,7 @@ window.__ModuleLoader__.load({
         if (!importOpen) return undefined;
         const onDown = (event) => {
           const node = event.target;
-          if (node && typeof node.closest === 'function' && (node.closest('.pb-pop') || node.closest('.pb-menu-anchor'))) return;
+          if (node && typeof node.closest === 'function' && (node.closest('.lamp-pop') || node.closest('.lamp-menu-anchor'))) return;
           setImportOpen(false);
         };
         window.addEventListener('mousedown', onDown, true);
@@ -1984,30 +1979,30 @@ window.__ModuleLoader__.load({
 
       return h(
         'header',
-        { className: 'pb-appbar' },
-        h('span', { className: 'pb-wordmark' }, t('app.title')),
-        h('span', { className: 'pb-wordmark-rule', 'aria-hidden': true }),
+        { className: 'lamp-appbar' },
+        h('span', { className: 'lamp-wordmark' }, t('app.title')),
+        h('span', { className: 'lamp-wordmark-rule', 'aria-hidden': true }),
         secondary
           ? h(
               'div',
-              { className: 'pb-pagehead' },
+              { className: 'lamp-pagehead' },
               h(
                 'button',
-                { type: 'button', className: 'pb-back', onClick: props.onBack, 'aria-label': t('nav.back'), title: t('nav.back') },
+                { type: 'button', className: 'lamp-back', onClick: props.onBack, 'aria-label': t('nav.back'), title: t('nav.back') },
                 h(IconBack, { size: 14 }),
               ),
               h('h1', null, props.view === 'notes' ? t('view.notes') : t('view.stats')),
             )
           : h(
               'nav',
-              { className: 'pb-tabs', 'aria-label': t('view.label') },
+              { className: 'lamp-tabs', 'aria-label': t('view.label') },
               TABS.map((key) =>
                 h(
                   'button',
                   {
                     key,
                     type: 'button',
-                    className: 'pb-tab',
+                    className: 'lamp-tab',
                     'data-on': props.view === key ? '1' : '0',
                     onClick: () => props.onView(key),
                   },
@@ -2017,12 +2012,12 @@ window.__ModuleLoader__.load({
             ),
         h(
           'div',
-          { className: 'pb-actions' },
+          { className: 'lamp-actions' },
           secondary || props.view === 'plaza' || props.view === 'settings'
             ? null
             : h(
                 'label',
-                { className: 'pb-search' },
+                { className: 'lamp-search' },
                 h(IconSearch, { size: 14 }),
                 h('input', {
                   ref: props.searchRef,
@@ -2035,12 +2030,12 @@ window.__ModuleLoader__.load({
               ),
           h(
             'div',
-            { className: 'pb-menu-anchor', style: { position: 'relative' } },
+            { className: 'lamp-menu-anchor', style: { position: 'relative' } },
             h(
               'button',
               {
                 type: 'button',
-                className: 'pb-btn pb-btn-primary',
+                className: 'lamp-btn lamp-btn-primary',
                 onClick: () => setImportOpen((open) => !open),
                 'aria-expanded': importOpen ? 'true' : 'false',
               },
@@ -2049,12 +2044,12 @@ window.__ModuleLoader__.load({
             importOpen
               ? h(
                   'div',
-                  { className: 'pb-pop', style: { right: 0, top: 38 } },
+                  { className: 'lamp-pop', style: { right: 0, top: 38 } },
                   h(
                     'button',
                     {
                       type: 'button',
-                      className: 'pb-pop-item',
+                      className: 'lamp-pop-item',
                       onClick: () => {
                         setImportOpen(false);
                         props.onImport();
@@ -2065,16 +2060,16 @@ window.__ModuleLoader__.load({
                   ),
                   h(
                     'button',
-                    { type: 'button', className: 'pb-pop-item', onClick: () => setPathOpen((open) => !open) },
+                    { type: 'button', className: 'lamp-pop-item', onClick: () => setPathOpen((open) => !open) },
                     h(IconFolder, { size: 13 }),
                     t('nav.importPath'),
                   ),
                   pathOpen
                     ? h(
                         'div',
-                        { className: 'pb-pop-path' },
+                        { className: 'lamp-pop-path' },
                         h('input', {
-                          className: 'pb-input',
+                          className: 'lamp-input',
                           style: { flex: 1, width: 220 },
                           value: path,
                           placeholder: t('nav.importPathHint'),
@@ -2093,7 +2088,7 @@ window.__ModuleLoader__.load({
                           'button',
                           {
                             type: 'button',
-                            className: 'pb-btn',
+                            className: 'lamp-btn',
                             onClick: () => {
                               props.onImportPath(path);
                               setPath('');
@@ -2134,25 +2129,25 @@ window.__ModuleLoader__.load({
 
       return h(
         'button',
-        { type: 'button', className: 'pb-continue', onClick: () => props.onOpen(book) },
-        h('div', { className: 'pb-continue-cover' }, h(Cover, { book, t, size: 'lg' })),
+        { type: 'button', className: 'lamp-continue', onClick: () => props.onOpen(book) },
+        h('div', { className: 'lamp-continue-cover' }, h(Cover, { book, t, size: 'lg' })),
         h(
           'div',
-          { className: 'pb-continue-body' },
-          h('p', { className: 'pb-eyebrow' }, t('home.continue')),
-          h('p', { className: 'pb-continue-title', title: book.title }, book.title),
-          h('p', { className: 'pb-continue-sub' }, chapter),
+          { className: 'lamp-continue-body' },
+          h('p', { className: 'lamp-eyebrow' }, t('home.continue')),
+          h('p', { className: 'lamp-continue-title', title: book.title }, book.title),
+          h('p', { className: 'lamp-continue-sub' }, chapter),
           h(
             'div',
-            { className: 'pb-progress-row' },
-            h('div', { className: 'pb-progress' }, h('i', { style: { width: percent + '%' } })),
-            h('span', { className: 'pb-progress-label' }, t('shelf.readPercent', { n: percent })),
+            { className: 'lamp-progress-row' },
+            h('div', { className: 'lamp-progress' }, h('i', { style: { width: percent + '%' } })),
+            h('span', { className: 'lamp-progress-label' }, t('shelf.readPercent', { n: percent })),
           ),
           remote.progress !== undefined && remote.progress !== null
-            ? h('p', { className: 'pb-continue-note' }, t('home.wechatLine', { percent: remotePercent, minutes }))
+            ? h('p', { className: 'lamp-continue-note' }, t('home.wechatLine', { percent: remotePercent, minutes }))
             : null,
         ),
-        h('span', { className: 'pb-btn pb-btn-primary' }, t('home.continue')),
+        h('span', { className: 'lamp-btn lamp-btn-primary' }, t('home.continue')),
       );
     }
 
@@ -2166,7 +2161,7 @@ window.__ModuleLoader__.load({
         if (!menu) return undefined;
         const onDown = (event) => {
           const node = event.target;
-          if (node && typeof node.closest === 'function' && node.closest('.pb-book')) return;
+          if (node && typeof node.closest === 'function' && node.closest('.lamp-book')) return;
           setMenu(false);
         };
         window.addEventListener('mousedown', onDown, true);
@@ -2179,7 +2174,7 @@ window.__ModuleLoader__.load({
         h(
           'div',
           {
-            className: 'pb-book',
+            className: 'lamp-book',
             role: 'button',
             tabIndex: 0,
             'aria-label': book.title,
@@ -2193,26 +2188,26 @@ window.__ModuleLoader__.load({
           },
           h(
             'div',
-            { className: 'pb-book-cover' },
+            { className: 'lamp-book-cover' },
             h(Cover, { book, t, size: 'md' }),
-            book.finished ? h('span', { className: 'pb-done-dot', 'aria-hidden': true }, h(IconCheck, { size: 8 })) : null,
+            book.finished ? h('span', { className: 'lamp-done-dot', 'aria-hidden': true }, h(IconCheck, { size: 8 })) : null,
           ),
           h(
             'div',
-            { className: 'pb-book-body' },
-            h('h3', { className: 'pb-book-title', title: book.title }, book.title),
+            { className: 'lamp-book-body' },
+            h('h3', { className: 'lamp-book-title', title: book.title }, book.title),
             h(
               'p',
-              { className: 'pb-book-meta' },
+              { className: 'lamp-book-meta' },
               h('em', null, subtitle),
-              h('b', { className: 'pb-num' }, book.finished ? t('shelf.finished') : t('shelf.percent', { n: percent })),
+              h('b', { className: 'lamp-num' }, book.finished ? t('shelf.finished') : t('shelf.percent', { n: percent })),
             ),
           ),
           h(
             'button',
             {
               type: 'button',
-              className: 'pb-book-menu',
+              className: 'lamp-book-menu',
               'data-open': menu ? '1' : '0',
               'aria-label': t('shelf.menu'),
               title: t('shelf.menu'),
@@ -2226,10 +2221,10 @@ window.__ModuleLoader__.load({
           menu
             ? h(
                 'div',
-                { className: 'pb-pop', style: { right: 0, top: 30 }, onClick: (event) => event.stopPropagation() },
+                { className: 'lamp-pop', style: { right: 0, top: 30 }, onClick: (event) => event.stopPropagation() },
                 h(
                   'button',
-                  { type: 'button', className: 'pb-pop-item', onClick: () => { setMenu(false); props.onOpen(book); } },
+                  { type: 'button', className: 'lamp-pop-item', onClick: () => { setMenu(false); props.onOpen(book); } },
                   h(IconBook, { size: 13 }),
                   book.finished ? t('shelf.reread') : t('shelf.continue'),
                 ),
@@ -2237,7 +2232,7 @@ window.__ModuleLoader__.load({
                   'button',
                   {
                     type: 'button',
-                    className: 'pb-pop-item',
+                    className: 'lamp-pop-item',
                     onClick: () => {
                       setMenu(false);
                       props.onFinish(book, !book.finished);
@@ -2250,7 +2245,7 @@ window.__ModuleLoader__.load({
                   'button',
                   {
                     type: 'button',
-                    className: 'pb-pop-item',
+                    className: 'lamp-pop-item',
                     'data-danger': '1',
                     onClick: () => {
                       setMenu(false);
@@ -2270,7 +2265,7 @@ window.__ModuleLoader__.load({
       const t = props.t;
       return h(
         'div',
-        { className: 'pb-empty' },
+        { className: 'lamp-empty' },
         h(
           'svg',
           { width: 96, height: 96, viewBox: '0 0 96 96', fill: 'none', stroke: 'currentColor', strokeWidth: 1.4, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true },
@@ -2283,10 +2278,10 @@ window.__ModuleLoader__.load({
         h('p', null, t('shelf.emptyBody')),
         h(
           'div',
-          { className: 'pb-empty-actions' },
-          h('button', { type: 'button', className: 'pb-btn pb-btn-primary', onClick: props.onImport }, t('shelf.emptyImport')),
-          h('button', { type: 'button', className: 'pb-btn', onClick: props.onConnect }, t('shelf.emptyConnect')),
-          h('button', { type: 'button', className: 'pb-btn pb-btn-quiet', onClick: props.onPlaza }, t('shelf.emptyPlaza')),
+          { className: 'lamp-empty-actions' },
+          h('button', { type: 'button', className: 'lamp-btn lamp-btn-primary', onClick: props.onImport }, t('shelf.emptyImport')),
+          h('button', { type: 'button', className: 'lamp-btn', onClick: props.onConnect }, t('shelf.emptyConnect')),
+          h('button', { type: 'button', className: 'lamp-btn lamp-btn-quiet', onClick: props.onPlaza }, t('shelf.emptyPlaza')),
         ),
       );
     }
@@ -2310,20 +2305,20 @@ window.__ModuleLoader__.load({
 
       return h(
         'section',
-        { className: 'pb-view' },
+        { className: 'lamp-view' },
         h(
           'div',
-          { className: 'pb-scroll' },
+          { className: 'lamp-scroll' },
           h(
             'div',
-            { className: 'pb-shell' },
+            { className: 'lamp-shell' },
             h(
               'div',
-              { className: 'pb-main' },
+              { className: 'lamp-main' },
               h(
                 'div',
                 {
-                  className: 'pb-onboard',
+                  className: 'lamp-onboard',
                   'data-show':
                     weread && weread.connected && weread.sessionValid !== false && !/登录|失效|expired/i.test(String(weread.error || ''))
                       ? '0'
@@ -2331,7 +2326,7 @@ window.__ModuleLoader__.load({
                 },
                 h(
                   'div',
-                  { className: 'pb-onboard-main' },
+                  { className: 'lamp-onboard-main' },
                   h('b', null, weread && weread.connected ? t('onboard.expiredTitle') : t('onboard.connectTitle')),
                   h('p', null, weread && weread.connected ? t('onboard.expiredBody') : t('onboard.connectBody')),
                 ),
@@ -2339,7 +2334,7 @@ window.__ModuleLoader__.load({
                   'button',
                   {
                     type: 'button',
-                    className: 'pb-btn pb-btn-primary',
+                    className: 'lamp-btn lamp-btn-primary',
                     onClick: () => props.onConnect && props.onConnect(),
                   },
                   weread && weread.connected ? t('onboard.reconnect') : t('onboard.connect'),
@@ -2356,19 +2351,19 @@ window.__ModuleLoader__.load({
 
               h(
                 'div',
-                { className: 'pb-cards' },
+                { className: 'lamp-cards' },
                 h(
                   'div',
-                  { className: 'pb-card pb-card-click', role: 'button', tabIndex: 0, onClick: props.onOpenStats },
+                  { className: 'lamp-card lamp-card-click', role: 'button', tabIndex: 0, onClick: props.onOpenStats },
                   h('h3', null, t('home.weekCard')),
-                  h('p', { className: 'pb-big' }, formatDuration(stats.week, t)),
+                  h('p', { className: 'lamp-big' }, formatDuration(stats.week, t)),
                   h(
                     'div',
-                    { className: 'pb-bars', 'aria-hidden': true },
+                    { className: 'lamp-bars', 'aria-hidden': true },
                     days.map((day) =>
                       h('span', {
                         key: day.key,
-                        className: 'pb-bar',
+                        className: 'lamp-bar',
                         'data-on': day.isToday ? '1' : '0',
                         style: { height: Math.max(3, Math.round((day.seconds / max) * 56)) + 'px' },
                       }),
@@ -2376,57 +2371,57 @@ window.__ModuleLoader__.load({
                   ),
                   h(
                     'div',
-                    { className: 'pb-rowline' },
+                    { className: 'lamp-rowline' },
                     h('span', null, t('home.weekdays')),
-                    h('span', { className: 'pb-num' }, t('rail.streak', { n: Math.max(0, stats.streak || 0) })),
+                    h('span', { className: 'lamp-num' }, t('rail.streak', { n: Math.max(0, stats.streak || 0) })),
                   ),
                 ),
                 h(
                   'div',
-                  { className: 'pb-card pb-card-click', role: 'button', tabIndex: 0, onClick: () => props.onView('shelf') },
+                  { className: 'lamp-card lamp-card-click', role: 'button', tabIndex: 0, onClick: () => props.onView('shelf') },
                   h('h3', null, t('home.shelfCard')),
                   h(
                     'div',
-                    { className: 'pb-kv' },
-                    h('div', null, h('b', { className: 'pb-num' }, fmtNumber(counts.all)), h('span', null, t('home.unitBooks'))),
-                    h('div', null, h('b', { className: 'pb-num' }, fmtNumber(counts.reading)), h('span', null, t('filter.reading'))),
-                    h('div', null, h('b', { className: 'pb-num' }, fmtNumber(counts.finished)), h('span', null, t('filter.finished'))),
-                    h('div', null, h('b', { className: 'pb-num' }, fmtNumber(counts.notes)), h('span', null, t('home.unitNotes'))),
+                    { className: 'lamp-kv' },
+                    h('div', null, h('b', { className: 'lamp-num' }, fmtNumber(counts.all)), h('span', null, t('home.unitBooks'))),
+                    h('div', null, h('b', { className: 'lamp-num' }, fmtNumber(counts.reading)), h('span', null, t('filter.reading'))),
+                    h('div', null, h('b', { className: 'lamp-num' }, fmtNumber(counts.finished)), h('span', null, t('filter.finished'))),
+                    h('div', null, h('b', { className: 'lamp-num' }, fmtNumber(counts.notes)), h('span', null, t('home.unitNotes'))),
                   ),
                   h(
                     'div',
                     { style: { marginTop: 14 } },
-                    h('div', { className: 'pb-rowline' }, h('span', null, t('filter.weread')), h('b', { className: 'pb-num' }, t('home.booksCount', { n: counts.weread }))),
-                    h('div', { className: 'pb-rowline' }, h('span', null, t('filter.local')), h('b', { className: 'pb-num' }, t('home.booksCount', { n: counts.local }))),
+                    h('div', { className: 'lamp-rowline' }, h('span', null, t('filter.weread')), h('b', { className: 'lamp-num' }, t('home.booksCount', { n: counts.weread }))),
+                    h('div', { className: 'lamp-rowline' }, h('span', null, t('filter.local')), h('b', { className: 'lamp-num' }, t('home.booksCount', { n: counts.local }))),
                   ),
                 ),
                 h(
                   'div',
-                  { className: 'pb-card' },
+                  { className: 'lamp-card' },
                   h('h3', null, t('filter.weread')),
                   h(
                     'div',
-                    { className: 'pb-rowline' },
+                    { className: 'lamp-rowline' },
                     h('span', null, t('home.account')),
-                    h('b', { className: 'pb-num' }, weread && weread.connected ? weread.account || '—' : t('home.notConnected')),
+                    h('b', { className: 'lamp-num' }, weread && weread.connected ? weread.account || '—' : t('home.notConnected')),
                   ),
                   h(
                     'div',
-                    { className: 'pb-rowline' },
+                    { className: 'lamp-rowline' },
                     h('span', null, t('home.lastSync')),
-                    h('b', { className: 'pb-num' }, weread && weread.lastSyncAt ? fmtWhen(weread.lastSyncAt, t) : '—'),
+                    h('b', { className: 'lamp-num' }, weread && weread.lastSyncAt ? fmtWhen(weread.lastSyncAt, t) : '—'),
                   ),
                   h(
                     'div',
-                    { className: 'pb-rowline' },
+                    { className: 'lamp-rowline' },
                     h('span', null, t('home.totalRead')),
-                    h('b', { className: 'pb-num' }, t('home.hours', { n: wereadHours })),
+                    h('b', { className: 'lamp-num' }, t('home.hours', { n: wereadHours })),
                   ),
                   h(
                     'button',
                     {
                       type: 'button',
-                      className: 'pb-btn',
+                      className: 'lamp-btn',
                       style: { marginTop: 12, width: '100%', justifyContent: 'center' },
                       onClick: props.onSync,
                       disabled: !weread || !weread.connected,
@@ -2442,18 +2437,18 @@ window.__ModuleLoader__.load({
                     null,
                     h(
                       'div',
-                      { className: 'pb-sec' },
+                      { className: 'lamp-sec' },
                       h('h2', null, t('home.recentReading')),
-                      h('button', { type: 'button', className: 'pb-link', onClick: () => props.onView('shelf') }, t('home.allBooks') + ' →'),
+                      h('button', { type: 'button', className: 'lamp-link', onClick: () => props.onView('shelf') }, t('home.allBooks') + ' →'),
                     ),
                     h(
                       'div',
-                      { className: 'pb-strip' },
+                      { className: 'lamp-strip' },
                       recent.slice(0, 5).map((book) =>
                         h(
                           'button',
-                          { key: book.id, type: 'button', className: 'pb-mini', onClick: () => props.onOpen(book), title: book.title },
-                          h('div', { className: 'pb-cover-box' }, h(Cover, { book, t, size: 'sm' })),
+                          { key: book.id, type: 'button', className: 'lamp-mini', onClick: () => props.onOpen(book), title: book.title },
+                          h('div', { className: 'lamp-cover-box' }, h(Cover, { book, t, size: 'sm' })),
                           h('p', null, book.title),
                         ),
                       ),
@@ -2467,9 +2462,9 @@ window.__ModuleLoader__.load({
                     null,
                     h(
                       'div',
-                      { className: 'pb-sec' },
+                      { className: 'lamp-sec' },
                       h('h2', null, t('home.recentNotes')),
-                      h('button', { type: 'button', className: 'pb-link', onClick: () => props.onOpenNotes() }, t('home.allNotes') + ' →'),
+                      h('button', { type: 'button', className: 'lamp-link', onClick: () => props.onOpenNotes() }, t('home.allNotes') + ' →'),
                     ),
                     h(
                       'div',
@@ -2477,15 +2472,15 @@ window.__ModuleLoader__.load({
                       recentNotes.slice(0, 3).map((note) =>
                         h(
                           'button',
-                          { key: String(note.id), type: 'button', className: 'pb-note', onClick: () => props.onOpenNote(note) },
-                          h('span', { className: 'pb-note-line', 'aria-hidden': true }),
+                          { key: String(note.id), type: 'button', className: 'lamp-note', onClick: () => props.onOpenNote(note) },
+                          h('span', { className: 'lamp-note-line', 'aria-hidden': true }),
                           h(
                             'span',
-                            { className: 'pb-note-body' },
+                            { className: 'lamp-note-body' },
                             h('p', null, note.quote),
                             h(
                               'p',
-                              { className: 'pb-note-sub' },
+                              { className: 'lamp-note-sub' },
                               t('rail.noteMeta', { book: note.bookTitle || t('notes.untitled'), n: (Number(note.chapterIndex) || 0) + 1 }),
                             ),
                           ),
@@ -2497,7 +2492,7 @@ window.__ModuleLoader__.load({
 
               h(
                 'p',
-                { className: 'pb-foot' },
+                { className: 'lamp-foot' },
                 t('home.footer', {
                   notes: counts.notes || 0,
                   books: counts.all || 0,
@@ -2522,7 +2517,7 @@ window.__ModuleLoader__.load({
         if (!sortOpen) return undefined;
         const onDown = (event) => {
           const node = event.target;
-          if (node && typeof node.closest === 'function' && node.closest('.pb-menu-anchor')) return;
+          if (node && typeof node.closest === 'function' && node.closest('.lamp-menu-anchor')) return;
           setSortOpen(false);
         };
         window.addEventListener('mousedown', onDown, true);
@@ -2533,20 +2528,20 @@ window.__ModuleLoader__.load({
 
       return h(
         'section',
-        { className: 'pb-view' },
+        { className: 'lamp-view' },
         h(
           'div',
-          { className: 'pb-scroll' },
+          { className: 'lamp-scroll' },
           h(
             'div',
-            { className: 'pb-shell' },
+            { className: 'lamp-shell' },
             h(
               'div',
-              { className: 'pb-main' },
+              { className: 'lamp-main' },
               props.shelf.length > 0
                 ? h(
                     'div',
-                    { className: 'pb-toolbar' },
+                    { className: 'lamp-toolbar' },
                     [
                       ['all', counts.all],
                       ['weread', counts.weread],
@@ -2557,58 +2552,58 @@ window.__ModuleLoader__.load({
                         {
                           key,
                           type: 'button',
-                          className: 'pb-chip',
+                          className: 'lamp-chip',
                           'data-on': props.sourceFilter === key ? '1' : '0',
                           onClick: () => props.onSource(key),
                         },
-                        key === 'weread' ? h('span', { className: 'pb-chip-dot', 'aria-hidden': true }) : null,
+                        key === 'weread' ? h('span', { className: 'lamp-chip-dot', 'aria-hidden': true }) : null,
                         key === 'all' ? t('shelf.sourceAll') : t('filter.' + key),
-                        h('i', { className: 'pb-num' }, fmtNumber(count || 0)),
+                        h('i', { className: 'lamp-num' }, fmtNumber(count || 0)),
                       ),
                     ),
-                    h('span', { className: 'pb-grow' }),
+                    h('span', { className: 'lamp-grow' }),
                     h(
                       'button',
                       {
                         type: 'button',
-                        className: 'pb-chip',
+                        className: 'lamp-chip',
                         'data-on': props.filter === 'reading' ? '1' : '0',
                         onClick: () => props.onFilter(props.filter === 'reading' ? 'all' : 'reading'),
                       },
                       t('filter.reading'),
-                      h('i', { className: 'pb-num' }, fmtNumber(counts.reading || 0)),
+                      h('i', { className: 'lamp-num' }, fmtNumber(counts.reading || 0)),
                     ),
                     h(
                       'button',
                       {
                         type: 'button',
-                        className: 'pb-chip',
+                        className: 'lamp-chip',
                         'data-on': props.filter === 'finished' ? '1' : '0',
                         onClick: () => props.onFilter(props.filter === 'finished' ? 'all' : 'finished'),
                       },
                       t('filter.finished'),
-                      h('i', { className: 'pb-num' }, fmtNumber(counts.finished || 0)),
+                      h('i', { className: 'lamp-num' }, fmtNumber(counts.finished || 0)),
                     ),
                     h(
                       'div',
-                      { className: 'pb-menu-anchor', style: { position: 'relative' } },
+                      { className: 'lamp-menu-anchor', style: { position: 'relative' } },
                       h(
                         'button',
-                        { type: 'button', className: 'pb-sortbtn', onClick: () => setSortOpen((open) => !open) },
+                        { type: 'button', className: 'lamp-sortbtn', onClick: () => setSortOpen((open) => !open) },
                         t('sort.' + props.sort),
                         h(IconChevron, { size: 12 }),
                       ),
                       sortOpen
                         ? h(
                             'div',
-                            { className: 'pb-pop', style: { right: 0, top: 32 } },
+                            { className: 'lamp-pop', style: { right: 0, top: 32 } },
                             ['recent', 'added', 'title'].map((key) =>
                               h(
                                 'button',
                                 {
                                   key,
                                   type: 'button',
-                                  className: 'pb-pop-item',
+                                  className: 'lamp-pop-item',
                                   'data-on': props.sort === key ? '1' : '0',
                                   onClick: () => {
                                     props.onSort(key);
@@ -2625,7 +2620,7 @@ window.__ModuleLoader__.load({
                       'button',
                       {
                         type: 'button',
-                        className: 'pb-chip',
+                        className: 'lamp-chip',
                         onClick: () => props.onDensity(props.density === 'grid' ? 'list' : 'grid'),
                       },
                       props.density === 'grid' ? t('density.grid') : t('density.list'),
@@ -2643,17 +2638,17 @@ window.__ModuleLoader__.load({
                 : props.books.length === 0
                   ? h(
                       'div',
-                      { className: 'pb-empty' },
+                      { className: 'lamp-empty' },
                       h('h2', null, t('shelf.noMatch')),
                       h('p', null, t('shelf.noMatchHint')),
                       h(
                         'div',
-                        { className: 'pb-empty-actions' },
+                        { className: 'lamp-empty-actions' },
                         h(
                           'button',
                           {
                             type: 'button',
-                            className: 'pb-btn',
+                            className: 'lamp-btn',
                             onClick: () => {
                               props.onQuery('');
                               props.onFilter('all');
@@ -2666,7 +2661,7 @@ window.__ModuleLoader__.load({
                     )
                   : h(
                       'ul',
-                      { className: 'pb-grid', 'data-density': props.density },
+                      { className: 'lamp-grid', 'data-density': props.density },
                       props.books.map((book) =>
                         h(BookCard, {
                           key: book.id,
@@ -2682,7 +2677,7 @@ window.__ModuleLoader__.load({
               props.shelf.length > 0
                 ? h(
                     'p',
-                    { className: 'pb-foot' },
+                    { className: 'lamp-foot' },
                     t('shelf.footer', {
                       books: counts.all || 0,
                       weread: counts.weread || 0,
@@ -2713,25 +2708,25 @@ window.__ModuleLoader__.load({
 
       return h(
         'div',
-        { className: 'pb-note-item' },
-        h('span', { className: 'pb-note-rail', 'aria-hidden': true }),
+        { className: 'lamp-note-item' },
+        h('span', { className: 'lamp-note-rail', 'aria-hidden': true }),
         h(
           'div',
-          { className: 'pb-note-main' },
+          { className: 'lamp-note-main' },
           h(
             'p',
-            { className: 'pb-note-quote', 'data-open': open ? '1' : '0', onClick: () => props.onOpen(note), title: t('notes.jump') },
+            { className: 'lamp-note-quote', 'data-open': open ? '1' : '0', onClick: () => props.onOpen(note), title: t('notes.jump') },
             note.quote,
           ),
-          open ? null : h('button', { type: 'button', className: 'pb-more', onClick: () => setOpen(true) }, t('notes.expand')),
-          note.note ? h('p', { className: 'pb-note-text' }, note.note) : null,
-          h('p', { className: 'pb-note-meta' }, t('notes.meta', { n: (Number(note.chapterIndex) || 0) + 1, time: fmtTime(note.createdAt) })),
+          open ? null : h('button', { type: 'button', className: 'lamp-more', onClick: () => setOpen(true) }, t('notes.expand')),
+          note.note ? h('p', { className: 'lamp-note-text' }, note.note) : null,
+          h('p', { className: 'lamp-note-meta' }, t('notes.meta', { n: (Number(note.chapterIndex) || 0) + 1, time: fmtTime(note.createdAt) })),
         ),
         h(
           'button',
           {
             type: 'button',
-            className: 'pb-note-del',
+            className: 'lamp-note-del',
             'data-armed': armed ? '1' : '0',
             onClick: () => {
               if (!armed) {
@@ -2764,34 +2759,34 @@ window.__ModuleLoader__.load({
 
       const body =
         status === 'loading'
-          ? [0, 1, 2].map((index) => h('div', { key: index, className: 'pb-skel', style: { height: 96, marginBottom: 12 } }))
+          ? [0, 1, 2].map((index) => h('div', { key: index, className: 'lamp-skel', style: { height: 96, marginBottom: 12 } }))
           : status === 'error'
             ? h(
                 'div',
-                { className: 'pb-error' },
+                { className: 'lamp-error' },
                 h(IconAlert, { size: 16 }),
                 h(
                   'div',
                   null,
                   h('h3', null, t('notes.error')),
                   h('p', null, error),
-                  h('button', { type: 'button', className: 'pb-btn', style: { marginTop: 8 }, onClick: props.onReload }, t('shelf.retry')),
+                  h('button', { type: 'button', className: 'lamp-btn', style: { marginTop: 8 }, onClick: props.onReload }, t('shelf.retry')),
                 ),
               )
             : (notes || []).length === 0
-              ? h('div', { className: 'pb-empty-note' }, t('notes.empty'))
+              ? h('div', { className: 'lamp-empty-note' }, t('notes.empty'))
               : groups.map((group) =>
                   h(
                     'section',
-                    { className: 'pb-group', key: group.id },
+                    { className: 'lamp-group', key: group.id },
                     h(
                       'div',
-                      { className: 'pb-group-head' },
-                      h('span', { className: 'pb-group-cover' }, h(Cover, { book: props.bookOf(group.id, group.title), t, size: 'xxs' })),
-                      h('h2', { className: 'pb-group-title', title: group.title }, group.title),
-                      h('span', { className: 'pb-group-count' }, t('notes.count', { n: group.notes.length })),
-                      h('span', { className: 'pb-grow' }),
-                      h('button', { type: 'button', className: 'pb-textlink', onClick: () => props.onExportBook(group.id) }, t('notes.exportBook')),
+                      { className: 'lamp-group-head' },
+                      h('span', { className: 'lamp-group-cover' }, h(Cover, { book: props.bookOf(group.id, group.title), t, size: 'xxs' })),
+                      h('h2', { className: 'lamp-group-title', title: group.title }, group.title),
+                      h('span', { className: 'lamp-group-count' }, t('notes.count', { n: group.notes.length })),
+                      h('span', { className: 'lamp-grow' }),
+                      h('button', { type: 'button', className: 'lamp-textlink', onClick: () => props.onExportBook(group.id) }, t('notes.exportBook')),
                     ),
                     group.notes.map((note) => h(NoteEntry, { key: String(note.id), t, note, onOpen: props.onOpen, onDelete: props.onDelete })),
                   ),
@@ -2799,34 +2794,34 @@ window.__ModuleLoader__.load({
 
       return h(
         'section',
-        { className: 'pb-view' },
+        { className: 'lamp-view' },
         h(
           'div',
-          { className: 'pb-scroll' },
+          { className: 'lamp-scroll' },
           h(
             'div',
-            { className: 'pb-shell' },
+            { className: 'lamp-shell' },
             h(
               'div',
-              { className: 'pb-main' },
+              { className: 'lamp-main' },
               h(
                 'div',
-                { className: 'pb-filterbar' },
-                h('button', { type: 'button', className: 'pb-scope', 'data-on': props.scope === 'all' ? '1' : '0', onClick: () => props.onScope('all') }, t('notes.scopeAll')),
+                { className: 'lamp-filterbar' },
+                h('button', { type: 'button', className: 'lamp-scope', 'data-on': props.scope === 'all' ? '1' : '0', onClick: () => props.onScope('all') }, t('notes.scopeAll')),
                 h(
                   'button',
                   {
                     type: 'button',
-                    className: 'pb-scope',
+                    className: 'lamp-scope',
                     'data-on': props.scope === 'book' ? '1' : '0',
                     disabled: !props.scopeBookId,
                     onClick: () => props.onScope('book'),
                   },
                   t('notes.scopeBook'),
                 ),
-                h('span', { className: 'pb-grow' }),
+                h('span', { className: 'lamp-grow' }),
                 h('input', {
-                  className: 'pb-input',
+                  className: 'lamp-input',
                   type: 'search',
                   value: props.query,
                   placeholder: t('notes.search'),
@@ -2834,8 +2829,8 @@ window.__ModuleLoader__.load({
                   onChange: (event) => props.onQuery(event.target.value),
                   style: { width: 220 },
                 }),
-                h('button', { type: 'button', className: 'pb-btn pb-btn-quiet', onClick: props.onExportAll, disabled: (notes || []).length === 0 }, t('notes.exportAll')),
-                h('button', { type: 'button', className: 'pb-btn pb-btn-quiet', onClick: props.onCopy, disabled: (notes || []).length === 0 }, t('notes.copy')),
+                h('button', { type: 'button', className: 'lamp-btn lamp-btn-quiet', onClick: props.onExportAll, disabled: (notes || []).length === 0 }, t('notes.exportAll')),
+                h('button', { type: 'button', className: 'lamp-btn lamp-btn-quiet', onClick: props.onCopy, disabled: (notes || []).length === 0 }, t('notes.copy')),
               ),
               body,
             ),
@@ -2863,51 +2858,51 @@ window.__ModuleLoader__.load({
 
       return h(
         'section',
-        { className: 'pb-view' },
+        { className: 'lamp-view' },
         h(
           'div',
-          { className: 'pb-scroll' },
+          { className: 'lamp-scroll' },
           h(
             'div',
-            { className: 'pb-shell' },
+            { className: 'lamp-shell' },
             h(
               'div',
-              { className: 'pb-main pb-page' },
+              { className: 'lamp-main lamp-page' },
               h(
                 'div',
-                { className: 'pb-stat-row' },
-                cells.map((cell) => h('div', { className: 'pb-stat', key: cell.key }, h('b', null, cell.value), h('span', null, cell.label))),
+                { className: 'lamp-stat-row' },
+                cells.map((cell) => h('div', { className: 'lamp-stat', key: cell.key }, h('b', null, cell.value), h('span', null, cell.label))),
                 h(
                   'div',
-                  { className: 'pb-stat-goal' },
+                  { className: 'lamp-stat-goal' },
                   h(
                     'div',
-                    { className: 'pb-goal-ring' },
+                    { className: 'lamp-goal-ring' },
                     h(Ring, { value: goal, size: 56, stroke: 3 }),
-                    h('span', { className: 'pb-goal-num pb-num' }, goal + '%'),
+                    h('span', { className: 'lamp-goal-num lamp-num' }, goal + '%'),
                   ),
-                  h('span', { className: 'pb-goal-label' }, t('stats.goal')),
+                  h('span', { className: 'lamp-goal-label' }, t('stats.goal')),
                 ),
               ),
               h(
                 'div',
-                { className: 'pb-chart', role: 'img', 'aria-label': t('stats.chartTitle') },
+                { className: 'lamp-chart', role: 'img', 'aria-label': t('stats.chartTitle') },
                 days.map((day) =>
                   h(
                     'div',
                     {
-                      className: 'pb-chart-day',
+                      className: 'lamp-chart-day',
                       key: day.key,
                       'data-today': day.isToday ? '1' : '0',
                       'data-zero': day.seconds === 0 ? '1' : '0',
                       title: t('stats.barTitle', { day: day.label, minutes: Math.round(day.seconds / 60) }),
                     },
-                    h('div', { className: 'pb-chart-track' }, h('div', { className: 'pb-chart-bar', style: { height: Math.max(2, Math.round((day.seconds / max) * 100)) + '%' } })),
-                    h('span', { className: 'pb-chart-label' }, day.label),
+                    h('div', { className: 'lamp-chart-track' }, h('div', { className: 'lamp-chart-bar', style: { height: Math.max(2, Math.round((day.seconds / max) * 100)) + '%' } })),
+                    h('span', { className: 'lamp-chart-label' }, day.label),
                   ),
                 ),
               ),
-              h('p', { className: 'pb-page-foot' }, t('stats.footer', { notes: props.noteCount || 0, books: props.bookCount || 0 })),
+              h('p', { className: 'lamp-page-foot' }, t('stats.footer', { notes: props.noteCount || 0, books: props.bookCount || 0 })),
             ),
           ),
         ),
@@ -3026,11 +3021,11 @@ window.__ModuleLoader__.load({
 
       const cookieField = h(
         'div',
-        { className: 'pb-prov-field' },
-        h('label', { className: 'pb-prov-label', htmlFor: 'pb-cookie-' + provider.id }, t('source.cookieLabel')),
+        { className: 'lamp-prov-field' },
+        h('label', { className: 'lamp-prov-label', htmlFor: 'lamp-cookie-' + provider.id }, t('source.cookieLabel')),
         h('input', {
-          id: 'pb-cookie-' + provider.id,
-          className: 'pb-input',
+          id: 'lamp-cookie-' + provider.id,
+          className: 'lamp-input',
           type: 'password',
           autoComplete: 'off',
           spellCheck: false,
@@ -3041,16 +3036,16 @@ window.__ModuleLoader__.load({
             if (event.key === 'Enter') connect();
           },
         }),
-        h('span', { className: 'pb-prov-help', style: { margin: 0 } }, t('source.cookieHelp')),
-        h('p', { className: 'pb-prov-help' }, t(howKey)),
+        h('span', { className: 'lamp-prov-help', style: { margin: 0 } }, t('source.cookieHelp')),
+        h('p', { className: 'lamp-prov-help' }, t(howKey)),
         h(
           'div',
-          { className: 'pb-prov-actions' },
+          { className: 'lamp-prov-actions' },
           h(
             'button',
             {
               type: 'button',
-              className: 'pb-btn',
+              className: 'lamp-btn',
               disabled: !!busy || cookie.trim() === '',
               onClick: connect,
             },
@@ -3063,21 +3058,21 @@ window.__ModuleLoader__.load({
         ? h(
             'div',
             null,
-            h('p', { className: 'pb-prov-row' }, t('source.account'), h('b', null, provider.account || t('source.anonymous'))),
-            h('p', { className: 'pb-prov-row' }, t('source.books', { n: fmtNumber(provider.shelfCount) })),
+            h('p', { className: 'lamp-prov-row' }, t('source.account'), h('b', null, provider.account || t('source.anonymous'))),
+            h('p', { className: 'lamp-prov-row' }, t('source.books', { n: fmtNumber(provider.shelfCount) })),
             h(
               'p',
-              { className: 'pb-prov-row' },
+              { className: 'lamp-prov-row' },
               provider.lastSyncAt ? t('source.lastSync', { time: fmtTime(provider.lastSyncAt) }) : t('source.never'),
             ),
             h(
               'div',
-              { className: 'pb-prov-actions' },
+              { className: 'lamp-prov-actions' },
               h(
                 'button',
                 {
                   type: 'button',
-                  className: 'pb-btn',
+                  className: 'lamp-btn',
                   disabled: !!busy,
                   onClick: () =>
                     run('sync', async () => {
@@ -3093,7 +3088,7 @@ window.__ModuleLoader__.load({
                 'button',
                 {
                   type: 'button',
-                  className: 'pb-btn pb-btn-quiet',
+                  className: 'lamp-btn lamp-btn-quiet',
                   disabled: !!busy,
                   onClick: () => run('logout', () => props.onDisconnect(provider.id)),
                 },
@@ -3103,9 +3098,9 @@ window.__ModuleLoader__.load({
             provider.id === 'weread'
               ? h(
                   'div',
-                  { className: 'pb-prov-search' },
+                  { className: 'lamp-prov-search' },
                   h('input', {
-                    className: 'pb-input',
+                    className: 'lamp-input',
                     type: 'search',
                     value: query,
                     placeholder: t('source.searchPlaceholder'),
@@ -3120,32 +3115,32 @@ window.__ModuleLoader__.load({
                   }),
                   h(
                     'button',
-                    { type: 'button', className: 'pb-btn', disabled: !!busy, onClick: search },
+                    { type: 'button', className: 'lamp-btn', disabled: !!busy, onClick: search },
                     busy === 'search' ? t('source.openning') : t('source.searchLabel'),
                   ),
                 )
               : null,
             results
               ? results.length === 0
-                ? h('p', { className: 'pb-prov-help' }, t('source.searchEmpty'))
+                ? h('p', { className: 'lamp-prov-help' }, t('source.searchEmpty'))
                 : h(
                     'ul',
-                    { className: 'pb-results' },
+                    { className: 'lamp-results' },
                     results.map((item) =>
                       h(
                         'li',
-                        { className: 'pb-result', key: String(item.bookId) },
+                        { className: 'lamp-result', key: String(item.bookId) },
                         h(
                           'span',
-                          { className: 'pb-result-main' },
-                          h('span', { className: 'pb-result-title' }, item.title),
-                          h('span', { className: 'pb-result-author' }, item.author || ''),
+                          { className: 'lamp-result-main' },
+                          h('span', { className: 'lamp-result-title' }, item.title),
+                          h('span', { className: 'lamp-result-author' }, item.author || ''),
                         ),
                         h(
                           'button',
                           {
                             type: 'button',
-                            className: 'pb-btn',
+                            className: 'lamp-btn',
                             onClick: () =>
                               run('open:' + item.bookId, () =>
                                 props.onOpenResult(provider.id, item).then(() => {
@@ -3168,16 +3163,16 @@ window.__ModuleLoader__.load({
               qr
                 ? h(
                     'div',
-                    { className: 'pb-qr' },
-                    h('div', { className: 'pb-qr-art', dangerouslySetInnerHTML: { __html: qr.svg } }),
+                    { className: 'lamp-qr' },
+                    h('div', { className: 'lamp-qr-art', dangerouslySetInnerHTML: { __html: qr.svg } }),
                     h(
                       'p',
-                      { className: 'pb-qr-note' },
+                      { className: 'lamp-qr-note' },
                       qrState === 'waiting' ? t('source.qrWaiting') : t('source.qrHint'),
                     ),
                     h(
                       'button',
-                      { type: 'button', className: 'pb-btn pb-btn-quiet', disabled: !!busy, onClick: startQr },
+                      { type: 'button', className: 'lamp-btn lamp-btn-quiet', disabled: !!busy, onClick: startQr },
                       t('source.qrRefresh'),
                     ),
                   )
@@ -3186,14 +3181,14 @@ window.__ModuleLoader__.load({
                     null,
                     h(
                       'button',
-                      { type: 'button', className: 'pb-btn pb-btn-primary pb-btn-wide', disabled: !!busy, onClick: startQr },
+                      { type: 'button', className: 'lamp-btn lamp-btn-primary lamp-btn-wide', disabled: !!busy, onClick: startQr },
                       busy === 'qr' ? t('source.connecting') : t('source.qrLogin'),
                     ),
-                    h('p', { className: 'pb-prov-help' }, t('source.qrHint')),
+                    h('p', { className: 'lamp-prov-help' }, t('source.qrHint')),
                   ),
               h(
                 'button',
-                { type: 'button', className: 'pb-btn pb-btn-quiet', onClick: () => setAdvanced((open) => !open) },
+                { type: 'button', className: 'lamp-btn lamp-btn-quiet', onClick: () => setAdvanced((open) => !open) },
                 advanced ? '▾ ' + t('source.otherWays') : '▸ ' + t('source.otherWays'),
               ),
               advanced ? cookieField : null,
@@ -3203,14 +3198,14 @@ window.__ModuleLoader__.load({
               null,
               h(
                 'div',
-                { className: 'pb-prov-field' },
-                h('label', { className: 'pb-prov-label', htmlFor: 'pb-link-' + provider.id }, t('source.addByLink')),
+                { className: 'lamp-prov-field' },
+                h('label', { className: 'lamp-prov-label', htmlFor: 'lamp-link-' + provider.id }, t('source.addByLink')),
                 h(
                   'div',
-                  { className: 'pb-prov-linkrow' },
+                  { className: 'lamp-prov-linkrow' },
                   h('input', {
-                    id: 'pb-link-' + provider.id,
-                    className: 'pb-input',
+                    id: 'lamp-link-' + provider.id,
+                    className: 'lamp-input',
                     type: 'url',
                     value: link,
                     placeholder: t('source.addByLinkPlaceholder'),
@@ -3219,13 +3214,13 @@ window.__ModuleLoader__.load({
                       if (event.key === 'Enter') addByLink();
                     },
                   }),
-                  h('button', { type: 'button', className: 'pb-btn pb-btn-primary', disabled: !!busy || link.trim() === '', onClick: addByLink }, t('source.add')),
+                  h('button', { type: 'button', className: 'lamp-btn lamp-btn-primary', disabled: !!busy || link.trim() === '', onClick: addByLink }, t('source.add')),
                 ),
-                h('p', { className: 'pb-prov-help' }, t('source.addHint')),
+                h('p', { className: 'lamp-prov-help' }, t('source.addHint')),
               ),
               h(
                 'button',
-                { type: 'button', className: 'pb-btn pb-btn-quiet', onClick: () => setAdvanced((open) => !open) },
+                { type: 'button', className: 'lamp-btn lamp-btn-quiet', onClick: () => setAdvanced((open) => !open) },
                 advanced ? '▾ ' + t('source.advanced') : '▸ ' + t('source.advanced'),
               ),
               advanced ? cookieField : null,
@@ -3233,18 +3228,18 @@ window.__ModuleLoader__.load({
 
       return h(
         'section',
-        { className: 'pb-prov' },
+        { className: 'lamp-prov' },
         h(
           'div',
-          { className: 'pb-prov-head' },
-          h('span', { className: 'pb-dot', 'data-on': provider.connected ? '1' : '0' }),
+          { className: 'lamp-prov-head' },
+          h('span', { className: 'lamp-dot', 'data-on': provider.connected ? '1' : '0' }),
           h('h3', null, label),
-          h('span', { className: 'pb-prov-state' }, t(provider.connected ? 'source.connected' : 'source.disconnected')),
+          h('span', { className: 'lamp-prov-state' }, t(provider.connected ? 'source.connected' : 'source.disconnected')),
         ),
-        provider.error ? h('p', { className: 'pb-note-msg' }, t('source.errorPrefix') + provider.error) : null,
-        notice ? h('p', { className: 'pb-prov-help' }, notice) : null,
+        provider.error ? h('p', { className: 'lamp-note-msg' }, t('source.errorPrefix') + provider.error) : null,
+        notice ? h('p', { className: 'lamp-prov-help' }, notice) : null,
         sheetBody,
-        error ? h('p', { className: 'pb-note-msg' }, error) : null,
+        error ? h('p', { className: 'lamp-note-msg' }, error) : null,
       );
     }
 
@@ -3255,20 +3250,20 @@ window.__ModuleLoader__.load({
         : [{ id: 'weread', connected: false, account: '', shelfCount: 0, lastSyncAt: 0, error: null }];
       return h(
         'div',
-        { className: 'pb-sheet', role: 'dialog', 'aria-modal': 'true', 'aria-label': t('source.title') },
+        { className: 'lamp-sheet', role: 'dialog', 'aria-modal': 'true', 'aria-label': t('source.title') },
         h(
           'div',
-          { className: 'pb-sheet-head' },
+          { className: 'lamp-sheet-head' },
           h('div', { style: { flex: 1, minWidth: 0 } }, h('h2', null, t('source.title')), h('p', null, t('source.subtitle'))),
           h(
             'button',
-            { type: 'button', className: 'pb-btn pb-icon-btn', onClick: props.onClose, 'aria-label': t('source.close') },
+            { type: 'button', className: 'lamp-btn lamp-icon-btn', onClick: props.onClose, 'aria-label': t('source.close') },
             h(IconClose, { size: 15 }),
           ),
         ),
         h(
           'div',
-          { className: 'pb-sheet-body' },
+          { className: 'lamp-sheet-body' },
           list.map((provider) =>
             h(ProviderCard, {
               key: provider.id,
@@ -3355,46 +3350,46 @@ window.__ModuleLoader__.load({
 
       return h(
         'section',
-        { className: 'pb-repo-block' },
+        { className: 'lamp-repo-block' },
         h(
           'div',
-          { className: 'pb-filerow' },
-          h('span', { className: 'pb-hint', style: { margin: 0 } }, t('plaza.fileCount', { n: fmtNumber(files.length) })),
+          { className: 'lamp-filerow' },
+          h('span', { className: 'lamp-hint', style: { margin: 0 } }, t('plaza.fileCount', { n: fmtNumber(files.length) })),
           h(
             'div',
-            { className: 'pb-filerow-actions' },
-            h('button', { type: 'button', className: 'pb-textlink', onClick: load }, t('plaza.refresh')),
+            { className: 'lamp-filerow-actions' },
+            h('button', { type: 'button', className: 'lamp-textlink', onClick: load }, t('plaza.refresh')),
             h(
               'div',
-              { className: 'pb-pager' },
-              h('button', { type: 'button', className: 'pb-pagebtn', disabled: current <= 1, onClick: () => setPage(current - 1), 'aria-label': t('plaza.prevPage') }, '‹'),
-              h('span', { className: 'pb-num' }, current + ' / ' + totalPages),
-              h('button', { type: 'button', className: 'pb-pagebtn', disabled: current >= totalPages, onClick: () => setPage(current + 1), 'aria-label': t('plaza.nextPage') }, '›'),
+              { className: 'lamp-pager' },
+              h('button', { type: 'button', className: 'lamp-pagebtn', disabled: current <= 1, onClick: () => setPage(current - 1), 'aria-label': t('plaza.prevPage') }, '‹'),
+              h('span', { className: 'lamp-num' }, current + ' / ' + totalPages),
+              h('button', { type: 'button', className: 'lamp-pagebtn', disabled: current >= totalPages, onClick: () => setPage(current + 1), 'aria-label': t('plaza.nextPage') }, '›'),
             ),
           ),
         ),
         status === 'loading'
           ? h(
               'ul',
-              { className: 'pb-list pb-plaza-list' },
+              { className: 'lamp-list lamp-plaza-list' },
               [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((index) =>
-                h('li', { key: 'sk' + index, className: 'pb-skel-row' }, h('span', { className: 'pb-skel pb-skel-cover' }), h('span', { className: 'pb-skel pb-skel-line' })),
+                h('li', { key: 'sk' + index, className: 'lamp-skel-row' }, h('span', { className: 'lamp-skel lamp-skel-cover' }), h('span', { className: 'lamp-skel lamp-skel-line' })),
               ),
             )
           : null,
-        status === 'error' ? h('p', { className: 'pb-repo-empty' }, t('plaza.filesError') + error) : null,
-        status === 'ready' && shown.length === 0 ? h('p', { className: 'pb-repo-empty' }, t('plaza.noFiles')) : null,
+        status === 'error' ? h('p', { className: 'lamp-repo-empty' }, t('plaza.filesError') + error) : null,
+        status === 'ready' && shown.length === 0 ? h('p', { className: 'lamp-repo-empty' }, t('plaza.noFiles')) : null,
         status === 'ready' && shown.length > 0
           ? h(
               'ul',
-              { className: 'pb-list' },
+              { className: 'lamp-list' },
               shown.slice(0, 200).map((file) =>
                 h(
                   'li',
-                  { className: 'pb-item', key: file.path },
+                  { className: 'lamp-item', key: file.path },
                   h(
                     'span',
-                    { className: 'pb-mini-cover' },
+                    { className: 'lamp-mini-cover' },
                     h(Cover, {
                       book: {
                         title: String(file.name || file.path || '').replace(/\.[^.]+$/, '').slice(0, 2),
@@ -3406,20 +3401,20 @@ window.__ModuleLoader__.load({
                   ),
                   h(
                     'div',
-                    { className: 'pb-item-main' },
-                    h('p', { className: 'pb-item-title', title: file.path }, file.name || file.path),
-                    h('p', { className: 'pb-item-sub' }, file.path + ' · ' + formatBytes(file.size)),
+                    { className: 'lamp-item-main' },
+                    h('p', { className: 'lamp-item-title', title: file.path }, file.name || file.path),
+                    h('p', { className: 'lamp-item-sub' }, file.path + ' · ' + formatBytes(file.size)),
                   ),
                   h(
                     'button',
-                    { type: 'button', className: 'pb-btn', onClick: () => grab(file), disabled: busy === file.path },
+                    { type: 'button', className: 'lamp-btn', onClick: () => grab(file), disabled: busy === file.path },
                     busy === file.path ? t('plaza.downloading') : t('plaza.download'),
                   ),
                 ),
               ),
             )
           : null,
-        error && status === 'ready' ? h('p', { className: 'pb-repo-empty' }, error) : null,
+        error && status === 'ready' ? h('p', { className: 'lamp-repo-empty' }, error) : null,
       );
     }
 
@@ -3577,11 +3572,11 @@ window.__ModuleLoader__.load({
       const weread = wereadBroken
         ? h(
             'div',
-            { className: 'pb-plaza-broken' },
+            { className: 'lamp-plaza-broken' },
             h('p', null, t('plaza.needLogin')),
             h(
               'button',
-              { type: 'button', className: 'pb-btn pb-btn-primary', onClick: () => props.onReconnect && props.onReconnect() },
+              { type: 'button', className: 'lamp-btn lamp-btn-primary', onClick: () => props.onReconnect && props.onReconnect() },
               t('reader.reconnect'),
             ),
           )
@@ -3590,10 +3585,10 @@ window.__ModuleLoader__.load({
         null,
         h(
           'div',
-          { className: 'pb-srch' },
+          { className: 'lamp-srch' },
           h(
             'label',
-            { className: 'pb-field' },
+            { className: 'lamp-field' },
             h(IconSearch, { size: 14 }),
             h('input', {
               value: query,
@@ -3605,58 +3600,58 @@ window.__ModuleLoader__.load({
               },
             }),
           ),
-          h('button', { type: 'button', className: 'pb-btn pb-btn-primary', onClick: search }, t('plaza.search')),
+          h('button', { type: 'button', className: 'lamp-btn lamp-btn-primary', onClick: search }, t('plaza.search')),
         ),
         h(
           'div',
-          { className: 'pb-hintrow' },
-          h('p', { className: 'pb-hint', style: { margin: 0 } }, t('plaza.wereadHint')),
+          { className: 'lamp-hintrow' },
+          h('p', { className: 'lamp-hint', style: { margin: 0 } }, t('plaza.wereadHint')),
           h(
             'button',
             {
               type: 'button',
-              className: 'pb-textlink',
+              className: 'lamp-textlink',
               onClick: () => setShuffleSeed((n) => (n + 1) * 10 >= browse.length ? 0 : n + 1),
               disabled: status === 'ready' || browse.length <= 10,
             },
             t('plaza.shuffle'),
           ),
         ),
-        error ? h('p', { className: 'pb-repo-empty' }, t('plaza.error') + error) : null,
+        error ? h('p', { className: 'lamp-repo-empty' }, t('plaza.error') + error) : null,
         browseStatus === 'loading'
           ? h(
               'ul',
-              { className: 'pb-list pb-plaza-list' },
+              { className: 'lamp-list lamp-plaza-list' },
               [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((index) =>
-                h('li', { key: 'sk' + index, className: 'pb-skel-row' }, h('span', { className: 'pb-skel pb-skel-cover' }), h('span', { className: 'pb-skel pb-skel-line' })),
+                h('li', { key: 'sk' + index, className: 'lamp-skel-row' }, h('span', { className: 'lamp-skel lamp-skel-cover' }), h('span', { className: 'lamp-skel lamp-skel-line' })),
               ),
             )
           : null,
-        browseStatus === 'error' ? h('p', { className: 'pb-repo-empty' }, t('plaza.error') + browseError) : null,
-        status === 'ready' && results.length === 0 ? h('p', { className: 'pb-repo-empty' }, t('plaza.noResult')) : null,
-        status === 'loading' ? h('p', { className: 'pb-repo-empty' }, t('plaza.searching')) : null,
+        browseStatus === 'error' ? h('p', { className: 'lamp-repo-empty' }, t('plaza.error') + browseError) : null,
+        status === 'ready' && results.length === 0 ? h('p', { className: 'lamp-repo-empty' }, t('plaza.noResult')) : null,
+        status === 'loading' ? h('p', { className: 'lamp-repo-empty' }, t('plaza.searching')) : null,
         shownBooks.length > 0
           ? h(
               'ul',
-              { className: 'pb-list pb-plaza-list' },
+              { className: 'lamp-list lamp-plaza-list' },
               shownBooks.map((item) => {
                 const id = String(item.bookId || item.id || item.title);
                 const local = shelfWeread.get(String(item.bookId || '')) || null;
                 return h(
                   'li',
-                  { className: 'pb-item', key: id },
-                  h('span', { className: 'pb-mini-cover' }, h(Cover, { book: { title: item.title, author: item.author, cover: item.cover }, t, size: 'xs' })),
+                  { className: 'lamp-item', key: id },
+                  h('span', { className: 'lamp-mini-cover' }, h(Cover, { book: { title: item.title, author: item.author, cover: item.cover }, t, size: 'xs' })),
                   h(
                     'div',
-                    { className: 'pb-item-main' },
-                    h('p', { className: 'pb-item-title' }, item.title),
-                    h('p', { className: 'pb-item-sub' }, [item.author, item.words ? t('plaza.words', { n: fmtNumber(item.words) }) : ''].filter(Boolean).join(' · ')),
+                    { className: 'lamp-item-main' },
+                    h('p', { className: 'lamp-item-title' }, item.title),
+                    h('p', { className: 'lamp-item-sub' }, [item.author, item.words ? t('plaza.words', { n: fmtNumber(item.words) }) : ''].filter(Boolean).join(' · ')),
                   ),
                   h(
                     'button',
                     {
                       type: 'button',
-                      className: local ? 'pb-btn' : 'pb-btn pb-btn-primary',
+                      className: local ? 'lamp-btn' : 'lamp-btn lamp-btn-primary',
                       onClick: () => (local ? props.onOpen && props.onOpen(local) : add(item)),
                       disabled: !local && busy === id,
                     },
@@ -3673,10 +3668,10 @@ window.__ModuleLoader__.load({
         null,
         h(
           'div',
-          { className: 'pb-srch' },
+          { className: 'lamp-srch' },
           h(
             'label',
-            { className: 'pb-field' },
+            { className: 'lamp-field' },
             h(IconSearch, { size: 14 }),
             h('input', {
               value: filter,
@@ -3686,18 +3681,18 @@ window.__ModuleLoader__.load({
             }),
           ),
         ),
-        repoError ? h('p', { className: 'pb-repo-empty' }, repoError) : null,
+        repoError ? h('p', { className: 'lamp-repo-empty' }, repoError) : null,
         repoStatus === 'loading'
           ? h(
               'ul',
-              { className: 'pb-list pb-plaza-list' },
+              { className: 'lamp-list lamp-plaza-list' },
               [0, 1, 2, 3, 4].map((index) =>
-                h('li', { key: 'skr' + index, className: 'pb-skel-row' }, h('span', { className: 'pb-skel pb-skel-cover' }), h('span', { className: 'pb-skel pb-skel-line' })),
+                h('li', { key: 'skr' + index, className: 'lamp-skel-row' }, h('span', { className: 'lamp-skel lamp-skel-cover' }), h('span', { className: 'lamp-skel lamp-skel-line' })),
               ),
             )
           : null,
         repoStatus === 'ready' && (repos || []).length === 0
-          ? h('p', { className: 'pb-repo-empty' }, t('plaza.noRepo'))
+          ? h('p', { className: 'lamp-repo-empty' }, t('plaza.noRepo'))
           : (repos || [])
               .filter((repo) => activeRepo === '' || repo.spec === activeRepo)
               .map((repo) =>
@@ -3709,29 +3704,29 @@ window.__ModuleLoader__.load({
                 onAdded: props.onAdded,
               }),
             ),
-        h('p', { className: 'pb-hint', style: { marginTop: 24 } }, t('plaza.githubFoot')),
+        h('p', { className: 'lamp-hint', style: { marginTop: 24 } }, t('plaza.githubFoot')),
       );
 
       return h(
         'section',
-        { className: 'pb-view' },
+        { className: 'lamp-view' },
         h(
           'div',
-          { className: 'pb-scroll' },
+          { className: 'lamp-scroll' },
           h(
             'div',
-            { className: 'pb-shell' },
+            { className: 'lamp-shell' },
             h(
               'div',
-              { className: 'pb-main' },
+              { className: 'lamp-main' },
               h(
                 'div',
-                { className: 'pb-srcbar pb-srcbar-flat' },
+                { className: 'lamp-srcbar lamp-srcbar-flat' },
                 h(
                   'button',
                   {
                     type: 'button',
-                    className: 'pb-srcchip',
+                    className: 'lamp-srcchip',
                     'data-on': source === 'weread' ? '1' : '0',
                     onClick: () => setSource('weread'),
                   },
@@ -3743,7 +3738,7 @@ window.__ModuleLoader__.load({
                     {
                       key: repo.spec,
                       type: 'button',
-                      className: 'pb-srcchip',
+                      className: 'lamp-srcchip',
                       'data-on': source === 'github' && activeRepo === repo.spec ? '1' : '0',
                       title: repo.spec,
                       onClick: () => {
@@ -3844,22 +3839,22 @@ window.__ModuleLoader__.load({
       const row = (key, label, desc, control) =>
         h(
           'div',
-          { className: 'pb-srow', key },
-          h('div', { className: 'pb-lbl' }, h('b', null, label), desc ? h('span', null, desc) : null),
-          h('div', { className: 'pb-ctl' }, control),
+          { className: 'lamp-srow', key },
+          h('div', { className: 'lamp-lbl' }, h('b', null, label), desc ? h('span', null, desc) : null),
+          h('div', { className: 'lamp-ctl' }, control),
         );
 
       const seg = (key, options, value, onPick) =>
         h(
           'div',
-          { className: 'pb-cfg-seg', key },
+          { className: 'lamp-cfg-seg', key },
           options.map((option) =>
             h(
               'button',
               {
                 key: option.value,
                 type: 'button',
-                className: 'pb-cfg-seg-opt',
+                className: 'lamp-cfg-seg-opt',
                 'data-on': value === option.value ? '1' : '0',
                 onClick: () => onPick(option.value),
               },
@@ -3870,36 +3865,36 @@ window.__ModuleLoader__.load({
 
       return h(
         'section',
-        { className: 'pb-view' },
+        { className: 'lamp-view' },
         h(
           'div',
-          { className: 'pb-scroll' },
+          { className: 'lamp-scroll' },
           h(
             'div',
-            { className: 'pb-shell' },
+            { className: 'lamp-shell' },
             h(
               'div',
-              { className: 'pb-main pb-settings-page' },
+              { className: 'lamp-main lamp-settings-page' },
 
               h(
                 'section',
-                { className: 'pb-sect' },
+                { className: 'lamp-sect' },
                 h('h2', null, t('settings.sources')),
-                h('p', { className: 'pb-desc' }, t('settings.sourcesDesc')),
+                h('p', { className: 'lamp-desc' }, t('settings.sourcesDesc')),
                 h(
                   'div',
-                  { className: 'pb-source-row' },
-                  h('span', { className: 'pb-source-mark' }, '微'),
+                  { className: 'lamp-source-row' },
+                  h('span', { className: 'lamp-source-mark' }, '微'),
                   h(
                     'div',
-                    { className: 'pb-source-main' },
+                    { className: 'lamp-source-main' },
                     h(
                       'b',
                       null,
                       t('filter.weread'),
                       h(
                         'span',
-                        { className: 'pb-state', 'data-on': weread && weread.connected && weread.sessionValid !== false ? '1' : '0' },
+                        { className: 'lamp-state', 'data-on': weread && weread.connected && weread.sessionValid !== false ? '1' : '0' },
                         weread && weread.connected
                           ? weread.sessionValid === false
                             ? t('settings.expired')
@@ -3921,41 +3916,41 @@ window.__ModuleLoader__.load({
                     weread && weread.connected
                       ? h(
                           'p',
-                          { className: 'pb-hint', style: { margin: '2px 0 0' } },
+                          { className: 'lamp-hint', style: { margin: '2px 0 0' } },
                           weread.refreshToken ? t('settings.wereadLongSession') : t('settings.wereadShortSession'),
                         )
                       : null,
                   ),
                   h(
                     'div',
-                    { className: 'pb-ctl' },
-                    h('button', { type: 'button', className: 'pb-btn', onClick: props.onSync, disabled: !weread || !weread.connected }, t('home.sync')),
-                    h('button', { type: 'button', className: 'pb-btn pb-btn-quiet', onClick: props.onConnect }, t('settings.rescan')),
+                    { className: 'lamp-ctl' },
+                    h('button', { type: 'button', className: 'lamp-btn', onClick: props.onSync, disabled: !weread || !weread.connected }, t('home.sync')),
+                    h('button', { type: 'button', className: 'lamp-btn lamp-btn-quiet', onClick: props.onConnect }, t('settings.rescan')),
                     h(
                       'button',
-                      { type: 'button', className: 'pb-btn pb-btn-quiet', onClick: props.onDisconnect, disabled: !weread || !weread.connected },
+                      { type: 'button', className: 'lamp-btn lamp-btn-quiet', onClick: props.onDisconnect, disabled: !weread || !weread.connected },
                       t('settings.disconnect'),
                     ),
                   ),
                 ),
                 h(
                   'div',
-                  { className: 'pb-source-row' },
-                  h('span', { className: 'pb-source-mark' }, 'GH'),
+                  { className: 'lamp-source-row' },
+                  h('span', { className: 'lamp-source-mark' }, 'GH'),
                   h(
                     'div',
-                    { className: 'pb-source-main' },
+                    { className: 'lamp-source-main' },
                     h('b', null, t('settings.github')),
                     h('p', null, t('settings.githubSummary', { n: fmtNumber((repos || []).length), token: hasToken ? t('settings.tokenOn') : t('settings.tokenOff') })),
                   ),
                   h(
                     'div',
-                    { className: 'pb-ctl' },
+                    { className: 'lamp-ctl' },
                     h(
                       'button',
                       {
                         type: 'button',
-                        className: 'pb-btn',
+                        className: 'lamp-btn',
                         onClick: () => {
                           setRepoModal(true);
                           if (repos === null) loadGithub();
@@ -3967,31 +3962,31 @@ window.__ModuleLoader__.load({
                   repoModal
                     ? h(
                         'div',
-                        { className: 'pb-scrim', onClick: () => (adding || savingToken ? null : setRepoModal(false)) },
+                        { className: 'lamp-scrim', onClick: () => (adding || savingToken ? null : setRepoModal(false)) },
                         h(
                           'div',
-                          { className: 'pb-modal', onClick: (event) => event.stopPropagation(), role: 'dialog', 'aria-modal': 'true' },
+                          { className: 'lamp-modal', onClick: (event) => event.stopPropagation(), role: 'dialog', 'aria-modal': 'true' },
                           h('h3', null, t('settings.repoModalTitle')),
-                          h('p', { className: 'pb-hint' }, t('settings.repoModalHint')),
+                          h('p', { className: 'lamp-hint' }, t('settings.repoModalHint')),
                           h(
                             'div',
-                            { className: 'pb-modal-list' },
+                            { className: 'lamp-modal-list' },
                             (repos || []).length === 0
-                              ? h('p', { className: 'pb-hint' }, t('plaza.noRepo'))
+                              ? h('p', { className: 'lamp-hint' }, t('plaza.noRepo'))
                               : (repos || []).map((repo) =>
                                   h(
                                     'div',
-                                    { className: 'pb-modal-row', key: repo.spec + (repo.path || '') },
+                                    { className: 'lamp-modal-row', key: repo.spec + (repo.path || '') },
                                     h('code', null, repo.spec + (repo.path ? '#' + repo.path : '')),
-                                    h('button', { type: 'button', className: 'pb-textlink', onClick: () => removeRepo(repo) }, t('settings.removeRepo')),
+                                    h('button', { type: 'button', className: 'lamp-textlink', onClick: () => removeRepo(repo) }, t('settings.removeRepo')),
                                   ),
                                 ),
                           ),
                           h(
                             'div',
-                            { className: 'pb-modal-add' },
+                            { className: 'lamp-modal-add' },
                             h('input', {
-                              className: 'pb-input',
+                              className: 'lamp-input',
                               style: { flex: 1, minWidth: 0 },
                               value: spec,
                               placeholder: t('plaza.repoPlaceholder'),
@@ -4001,14 +3996,14 @@ window.__ModuleLoader__.load({
                                 if (event.key === 'Enter') addRepo();
                               },
                             }),
-                            h('button', { type: 'button', className: 'pb-btn pb-btn-primary', onClick: addRepo, disabled: adding }, adding ? t('plaza.adding') : t('settings.addRepo')),
+                            h('button', { type: 'button', className: 'lamp-btn lamp-btn-primary', onClick: addRepo, disabled: adding }, adding ? t('plaza.adding') : t('settings.addRepo')),
                           ),
-                          h('p', { className: 'pb-hint', style: { margin: '14px 0 6px' } }, t('settings.tokenDesc')),
+                          h('p', { className: 'lamp-hint', style: { margin: '14px 0 6px' } }, t('settings.tokenDesc')),
                           h(
                             'div',
-                            { className: 'pb-modal-add' },
+                            { className: 'lamp-modal-add' },
                             h('input', {
-                              className: 'pb-input',
+                              className: 'lamp-input',
                               type: 'password',
                               autoComplete: 'off',
                               style: { flex: 1, minWidth: 0 },
@@ -4017,13 +4012,13 @@ window.__ModuleLoader__.load({
                               'aria-label': t('settings.tokenPlaceholder'),
                               onChange: (event) => setToken(event.target.value),
                             }),
-                            h('button', { type: 'button', className: 'pb-btn', onClick: saveToken, disabled: savingToken }, t('settings.saveToken')),
+                            h('button', { type: 'button', className: 'lamp-btn', onClick: saveToken, disabled: savingToken }, t('settings.saveToken')),
                           ),
-                          repoError ? h('p', { className: 'pb-note-msg' }, repoError) : null,
+                          repoError ? h('p', { className: 'lamp-note-msg' }, repoError) : null,
                           h(
                             'div',
-                            { className: 'pb-modal-actions' },
-                            h('button', { type: 'button', className: 'pb-btn pb-btn-quiet', onClick: () => setRepoModal(false) }, t('settings.close')),
+                            { className: 'lamp-modal-actions' },
+                            h('button', { type: 'button', className: 'lamp-btn lamp-btn-quiet', onClick: () => setRepoModal(false) }, t('settings.close')),
                           ),
                         ),
                       )
@@ -4033,23 +4028,23 @@ window.__ModuleLoader__.load({
 
               h(
                 'section',
-                { className: 'pb-sect' },
+                { className: 'lamp-sect' },
                 h('h2', null, t('settings.reading')),
-                h('p', { className: 'pb-desc' }, t('settings.readingDesc')),
+                h('p', { className: 'lamp-desc' }, t('settings.readingDesc')),
                 row(
                   'theme',
                   t('settings.paper'),
                   t('settings.paperDesc'),
                   h(
                     'div',
-                    { className: 'pb-cfg-swatches' },
+                    { className: 'lamp-cfg-swatches' },
                     THEMES.map((theme) =>
                       h(
                         'button',
                         {
                           key: theme,
                           type: 'button',
-                          className: 'pb-cfg-swatch',
+                          className: 'lamp-cfg-swatch',
                           'data-on': settings.theme === theme ? '1' : '0',
                           onClick: () => set({ theme }),
                           title: t('reader.theme' + theme.charAt(0).toUpperCase() + theme.slice(1)),
@@ -4084,7 +4079,7 @@ window.__ModuleLoader__.load({
                   [
                     h('input', {
                       key: 'size',
-                      className: 'pb-cfg-range',
+                      className: 'lamp-cfg-range',
                       type: 'range',
                       min: 15,
                       max: 32,
@@ -4094,7 +4089,7 @@ window.__ModuleLoader__.load({
                     }),
                     h('input', {
                       key: 'leading',
-                      className: 'pb-cfg-range',
+                      className: 'lamp-cfg-range',
                       type: 'range',
                       min: 1.4,
                       max: 2.4,
@@ -4105,7 +4100,7 @@ window.__ModuleLoader__.load({
                     }),
                     h('input', {
                       key: 'measure',
-                      className: 'pb-cfg-range',
+                      className: 'lamp-cfg-range',
                       type: 'range',
                       min: 24,
                       max: 52,
@@ -4135,7 +4130,7 @@ window.__ModuleLoader__.load({
                   t('settings.autohideDesc'),
                   h('button', {
                     type: 'button',
-                    className: 'pb-cfg-switch',
+                    className: 'lamp-cfg-switch',
                     'data-on': settings.chromeAutoHide ? '1' : '0',
                     role: 'switch',
                     'aria-checked': settings.chromeAutoHide ? 'true' : 'false',
@@ -4146,33 +4141,33 @@ window.__ModuleLoader__.load({
 
               h(
                 'section',
-                { className: 'pb-sect' },
+                { className: 'lamp-sect' },
                 h('h2', null, t('settings.data')),
-                h('p', { className: 'pb-desc' }, t('settings.dataDesc')),
+                h('p', { className: 'lamp-desc' }, t('settings.dataDesc')),
                 row(
                   'path',
                   t('settings.libraryPath'),
                   props.storage || t('settings.libraryPathUnknown'),
                   [
-                    h('button', { key: 'copy', type: 'button', className: 'pb-btn pb-btn-quiet', onClick: props.onCopyPath, disabled: !props.storage }, t('settings.copyPath')),
+                    h('button', { key: 'copy', type: 'button', className: 'lamp-btn lamp-btn-quiet', onClick: props.onCopyPath, disabled: !props.storage }, t('settings.copyPath')),
                   ],
                 ),
                 row('export', t('settings.export'), t('settings.exportDesc'), [
-                  h('button', { key: 'shelf', type: 'button', className: 'pb-btn pb-btn-quiet', onClick: props.onExportShelf }, t('settings.exportShelf')),
-                  h('button', { key: 'notes', type: 'button', className: 'pb-btn pb-btn-quiet', onClick: props.onExportNotes }, t('settings.exportNotes')),
+                  h('button', { key: 'shelf', type: 'button', className: 'lamp-btn lamp-btn-quiet', onClick: props.onExportShelf }, t('settings.exportShelf')),
+                  h('button', { key: 'notes', type: 'button', className: 'lamp-btn lamp-btn-quiet', onClick: props.onExportNotes }, t('settings.exportNotes')),
                 ]),
                 row('backup', t('settings.backup'), t('settings.backupDesc'), [
-                  h('button', { key: 'save', type: 'button', className: 'pb-btn pb-btn-quiet', onClick: props.onBackup }, t('settings.backupSave')),
-                  h('button', { key: 'restore', type: 'button', className: 'pb-btn pb-btn-quiet', disabled: true, title: t('settings.pending') }, t('settings.backupRestore')),
+                  h('button', { key: 'save', type: 'button', className: 'lamp-btn lamp-btn-quiet', onClick: props.onBackup }, t('settings.backupSave')),
+                  h('button', { key: 'restore', type: 'button', className: 'lamp-btn lamp-btn-quiet', disabled: true, title: t('settings.pending') }, t('settings.backupRestore')),
                 ]),
                 row('cache', t('settings.cache'), t('settings.cacheDesc'), [
-                  h('button', { key: 'clear', type: 'button', className: 'pb-btn pb-btn-quiet', disabled: true, title: t('settings.pending') }, t('settings.cacheClear')),
+                  h('button', { key: 'clear', type: 'button', className: 'lamp-btn lamp-btn-quiet', disabled: true, title: t('settings.pending') }, t('settings.cacheClear')),
                 ]),
               ),
 
               h(
                 'section',
-                { className: 'pb-sect' },
+                { className: 'lamp-sect' },
                 h('h2', null, t('settings.about')),
                 row(
                   'about',
@@ -4181,14 +4176,14 @@ window.__ModuleLoader__.load({
                   [
                     h(
                       'button',
-                      { key: 'check', type: 'button', className: 'pb-btn pb-btn-quiet', onClick: props.onCheckUpdate },
+                      { key: 'check', type: 'button', className: 'lamp-btn lamp-btn-quiet', onClick: props.onCheckUpdate },
                       t('settings.checkUpdate'),
                     ),
                     h(
                       'a',
                       {
                         key: 'repo',
-                        className: 'pb-btn pb-btn-quiet',
+                        className: 'lamp-btn lamp-btn-quiet',
                         href: 'https://github.com/lysforge/dsh-lamplit',
                         target: '_blank',
                         rel: 'noopener noreferrer',
@@ -4212,18 +4207,18 @@ window.__ModuleLoader__.load({
       switch (block.t) {
         case 'h': {
           const level = clamp(block.l || 2, 1, 3);
-          return h('h' + (level + 2), { key, className: 'pb-h' + level }, value);
+          return h('h' + (level + 2), { key, className: 'lamp-h' + level }, value);
         }
         case 'q':
-          return h('blockquote', { key, className: 'pb-q' }, value);
+          return h('blockquote', { key, className: 'lamp-q' }, value);
         case 'li':
-          return h('p', { key, className: 'pb-li' }, value);
+          return h('p', { key, className: 'lamp-li' }, value);
         case 'code':
-          return h('pre', { key, className: 'pb-pre' }, h('code', null, value));
+          return h('pre', { key, className: 'lamp-pre' }, h('code', null, value));
         case 'hr':
-          return h('hr', { key, className: 'pb-hr' });
+          return h('hr', { key, className: 'lamp-hr' });
         default:
-          return h('p', { key, className: 'pb-p' }, value);
+          return h('p', { key, className: 'lamp-p' }, value);
       }
     }
 
@@ -4231,30 +4226,30 @@ window.__ModuleLoader__.load({
       const { t, toc, current, book } = props;
       return h(
         'div',
-        { className: 'pb-drawer', role: 'dialog', 'aria-modal': 'true', 'aria-label': t('reader.toc') },
+        { className: 'lamp-drawer', role: 'dialog', 'aria-modal': 'true', 'aria-label': t('reader.toc') },
         h(
           'div',
-          { className: 'pb-drawer-head' },
+          { className: 'lamp-drawer-head' },
           h('b', { title: book.title }, book.title),
           h('span', null, t('reader.contents', { n: fmtNumber(toc.length) })),
         ),
         h(
           'div',
-          { className: 'pb-toc' },
+          { className: 'lamp-toc' },
           toc.map((entry) =>
             h(
               'button',
               {
                 key: 'toc' + entry.index,
                 type: 'button',
-                className: 'pb-toc-item',
+                className: 'lamp-toc-item',
                 'data-on': entry.index === current ? '1' : '0',
                 'data-read': entry.index < current ? '1' : '0',
                 onClick: () => props.onJump(entry.index),
                 title: entry.title,
               },
-              h('span', { className: 'pb-toc-idx' }, String(entry.index + 1).padStart(2, '0')),
-              h('span', { className: 'pb-toc-title' }, entry.title || t('reader.chapterCount', { i: entry.index + 1, n: toc.length })),
+              h('span', { className: 'lamp-toc-idx' }, String(entry.index + 1).padStart(2, '0')),
+              h('span', { className: 'lamp-toc-title' }, entry.title || t('reader.chapterCount', { i: entry.index + 1, n: toc.length })),
             ),
           ),
         ),
@@ -4268,22 +4263,22 @@ window.__ModuleLoader__.load({
       const row = (label, value, control) =>
         h(
           'div',
-          { className: 'pb-set' },
-          h('p', { className: 'pb-set-label' }, h('span', null, label), value ? h('span', { className: 'pb-set-value' }, value) : null),
+          { className: 'lamp-set' },
+          h('p', { className: 'lamp-set-label' }, h('span', null, label), value ? h('span', { className: 'lamp-set-value' }, value) : null),
           control,
         );
 
       const seg = (options, value, onChange) =>
         h(
           'div',
-          { className: 'pb-cfg-seg', role: 'group' },
+          { className: 'lamp-cfg-seg', role: 'group' },
           options.map((option) =>
             h(
               'button',
               {
                 key: option.value,
                 type: 'button',
-                className: 'pb-cfg-seg-opt',
+                className: 'lamp-cfg-seg-opt',
                 'data-on': option.value === value ? '1' : '0',
                 onClick: () => onChange(option.value),
               },
@@ -4297,7 +4292,7 @@ window.__ModuleLoader__.load({
           'button',
           {
             type: 'button',
-            className: 'pb-cfg-switch',
+            className: 'lamp-cfg-switch',
             'data-on': value ? '1' : '0',
             role: 'switch',
             'aria-checked': value ? 'true' : 'false',
@@ -4308,33 +4303,33 @@ window.__ModuleLoader__.load({
 
       return h(
         'aside',
-        { className: 'pb-drawer-settings', role: 'dialog', 'aria-modal': 'false', 'aria-label': t('reader.settings') },
+        { className: 'lamp-drawer-settings', role: 'dialog', 'aria-modal': 'false', 'aria-label': t('reader.settings') },
         h(
           'div',
-          { className: 'pb-drawer-head', style: { display: 'flex', alignItems: 'center', gap: 8 } },
+          { className: 'lamp-drawer-head', style: { display: 'flex', alignItems: 'center', gap: 8 } },
           h('b', { style: { flex: 1 } }, t('reader.settings')),
           h(
             'button',
-            { type: 'button', className: 'pb-btn pb-icon-btn', onClick: props.onClose, 'aria-label': t('reader.back') },
+            { type: 'button', className: 'lamp-btn lamp-icon-btn', onClick: props.onClose, 'aria-label': t('reader.back') },
             h(IconClose, { size: 15 }),
           ),
         ),
         h(
           'div',
-          { className: 'pb-drawer-settings-body' },
+          { className: 'lamp-drawer-settings-body' },
           row(
             t('reader.theme'),
             null,
             h(
               'div',
-              { className: 'pb-cfg-swatches' },
+              { className: 'lamp-cfg-swatches' },
               THEMES.map((theme) =>
                 h(
                   'button',
                   {
                     key: theme,
                     type: 'button',
-                    className: 'pb-cfg-swatch',
+                    className: 'lamp-cfg-swatch',
                     'data-on': settings.theme === theme ? '1' : '0',
                     onClick: () => set({ theme }),
                     title: t('reader.theme' + theme.charAt(0).toUpperCase() + theme.slice(1)),
@@ -4365,7 +4360,7 @@ window.__ModuleLoader__.load({
             t('reader.size'),
             settings.fontSize + ' px',
             h('input', {
-              className: 'pb-cfg-range',
+              className: 'lamp-cfg-range',
               type: 'range',
               min: 15,
               max: 32,
@@ -4379,7 +4374,7 @@ window.__ModuleLoader__.load({
             t('reader.leading'),
             settings.lineHeight.toFixed(1),
             h('input', {
-              className: 'pb-cfg-range',
+              className: 'lamp-cfg-range',
               type: 'range',
               min: 1.4,
               max: 2.4,
@@ -4393,7 +4388,7 @@ window.__ModuleLoader__.load({
             t('reader.measure'),
             String(settings.measure),
             h('input', {
-              className: 'pb-cfg-range',
+              className: 'lamp-cfg-range',
               type: 'range',
               min: 24,
               max: 52,
@@ -4432,10 +4427,10 @@ window.__ModuleLoader__.load({
     /** 影印 / EPUB 的格式徽标，和来源徽标并排但不抢主次。 */
     function formatBadge(t, format) {
       if (format === 'pdf-scan') {
-        return h('span', { className: 'pb-badge pb-badge-format', 'data-format': 'scan' }, t('shelf.scanBadge'));
+        return h('span', { className: 'lamp-badge lamp-badge-format', 'data-format': 'scan' }, t('shelf.scanBadge'));
       }
       if (format === 'epub') {
-        return h('span', { className: 'pb-badge pb-badge-format', 'data-format': 'epub' }, t('shelf.epubBadge'));
+        return h('span', { className: 'lamp-badge lamp-badge-format', 'data-format': 'epub' }, t('shelf.epubBadge'));
       }
       return null;
     }
@@ -4449,7 +4444,7 @@ window.__ModuleLoader__.load({
       return h(
         'div',
         {
-          className: 'pb-selectbar',
+          className: 'lamp-selectbar',
           role: 'toolbar',
           'aria-label': t('select.explain'),
           style: { left: selection.x + 'px', top: selection.y + 'px', width: selection.width + 'px', justifyContent: 'center' },
@@ -4458,7 +4453,7 @@ window.__ModuleLoader__.load({
         h('button', { type: 'button', onClick: () => props.onAsk('explain', selection.text) }, t('select.explain')),
         h('button', { type: 'button', onClick: () => props.onAsk('expand', selection.text) }, t('select.expand')),
         h('button', { type: 'button', onClick: () => props.onNote(selection.text) }, t('select.note')),
-        h('span', { className: 'pb-selectbar-sep' }),
+        h('span', { className: 'lamp-selectbar-sep' }),
         h('button', { type: 'button', onClick: () => props.onCopy(selection.text) }, t('select.copy')),
       );
     }
@@ -4468,44 +4463,44 @@ window.__ModuleLoader__.load({
       const title = ai.mode === 'expand' ? t('ai.expandTitle') : t('ai.explainTitle');
       return h(
         'div',
-        { className: 'pb-ai', role: 'dialog', 'aria-label': title, 'aria-busy': ai.status === 'loading' ? 'true' : 'false' },
+        { className: 'lamp-ai', role: 'dialog', 'aria-label': title, 'aria-busy': ai.status === 'loading' ? 'true' : 'false' },
         h(
           'div',
-          { className: 'pb-ai-head' },
+          { className: 'lamp-ai-head' },
           h('b', null, title),
           h(
             'button',
-            { type: 'button', className: 'pb-btn pb-icon-btn', onClick: props.onClose, 'aria-label': t('ai.close') },
+            { type: 'button', className: 'lamp-btn lamp-icon-btn', onClick: props.onClose, 'aria-label': t('ai.close') },
             h(IconClose, { size: 15 }),
           ),
         ),
-        h('p', { className: 'pb-ai-quote' }, ai.text),
+        h('p', { className: 'lamp-ai-quote' }, ai.text),
         h(
           'div',
-          { className: 'pb-ai-body' },
+          { className: 'lamp-ai-body' },
           ai.status === 'loading'
             ? h(
                 'div',
-                { className: 'pb-ai-skel' },
+                { className: 'lamp-ai-skel' },
                 h('span', { style: { fontSize: 12, color: 'var(--dsw-alias-label-tertiary)' } }, t('ai.thinking')),
                 [92, 86, 97, 64, 78].map((width, index) =>
                   h('i', { key: 'skel' + index, style: { width: width + '%' } }),
                 ),
               )
             : ai.status === 'error'
-              ? h('p', { className: 'pb-ai-err' }, t('ai.errorTitle') + '：' + ai.error)
+              ? h('p', { className: 'lamp-ai-err' }, t('ai.errorTitle') + '：' + ai.error)
               : ai.answer,
         ),
         h(
           'div',
-          { className: 'pb-ai-foot' },
+          { className: 'lamp-ai-foot' },
           ai.status === 'ready'
-            ? h('button', { type: 'button', className: 'pb-btn', onClick: props.onCopyAnswer }, t('select.copy'))
+            ? h('button', { type: 'button', className: 'lamp-btn', onClick: props.onCopyAnswer }, t('select.copy'))
             : null,
           ai.status === 'ready'
-            ? h('button', { type: 'button', className: 'pb-btn pb-btn-primary', onClick: props.onSaveAnswer }, t('ai.saveNote'))
+            ? h('button', { type: 'button', className: 'lamp-btn lamp-btn-primary', onClick: props.onSaveAnswer }, t('ai.saveNote'))
             : null,
-          h('button', { type: 'button', className: 'pb-btn', onClick: props.onClose }, t('ai.close')),
+          h('button', { type: 'button', className: 'lamp-btn', onClick: props.onClose }, t('ai.close')),
         ),
       );
     }
@@ -4513,51 +4508,51 @@ window.__ModuleLoader__.load({
     function NoteDrawer(props) {
       const { t, notes, status, error } = props;
       const body = status === 'loading'
-        ? h('div', { className: 'pb-note-empty' }, t('notes.loading'))
+        ? h('div', { className: 'lamp-note-empty' }, t('notes.loading'))
         : status === 'error'
           ? h(
               'div',
-              { className: 'pb-note-empty' },
-              h('p', { className: 'pb-ai-err' }, t('notes.error') + '：' + error),
+              { className: 'lamp-note-empty' },
+              h('p', { className: 'lamp-ai-err' }, t('notes.error') + '：' + error),
               h(
                 'button',
-                { type: 'button', className: 'pb-btn', style: { marginTop: 12 }, onClick: props.onReload },
+                { type: 'button', className: 'lamp-btn', style: { marginTop: 12 }, onClick: props.onReload },
                 t('shelf.retry'),
               ),
             )
           : notes.length === 0
-            ? h('div', { className: 'pb-note-empty' }, t('notes.empty'))
+            ? h('div', { className: 'lamp-note-empty' }, t('notes.empty'))
             : h(
                 'div',
-                { className: 'pb-note-list' },
+                { className: 'lamp-note-list' },
                 notes.map((note) =>
                   h(
                     'article',
-                    { key: String(note.id), className: 'pb-note' },
+                    { key: String(note.id), className: 'lamp-note' },
                     h(
                       'p',
                       {
-                        className: 'pb-note-quote',
+                        className: 'lamp-note-quote',
                         title: t('notes.jump'),
                         onClick: () => props.onJump(note),
                       },
                       note.quote,
                     ),
                     note.note
-                      ? h('p', { className: 'pb-note-text' }, note.note)
-                      : h('p', { className: 'pb-note-text', style: { opacity: 0.7 } }, t('notes.quoteOnly')),
+                      ? h('p', { className: 'lamp-note-text' }, note.note)
+                      : h('p', { className: 'lamp-note-text', style: { opacity: 0.7 } }, t('notes.quoteOnly')),
                     h(
                       'div',
-                      { className: 'pb-note-foot' },
+                      { className: 'lamp-note-foot' },
                       h(
                         'span',
                         null,
                         [note.chapterTitle, fmtTime(note.createdAt)].filter(Boolean).join(' · '),
                       ),
-                      h('span', { className: 'pb-grow' }),
+                      h('span', { className: 'lamp-grow' }),
                       h(
                         'button',
-                        { type: 'button', className: 'pb-note-del', onClick: () => props.onDelete(note) },
+                        { type: 'button', className: 'lamp-note-del', onClick: () => props.onDelete(note) },
                         t('notes.delete'),
                       ),
                     ),
@@ -4567,10 +4562,10 @@ window.__ModuleLoader__.load({
 
       return h(
         'aside',
-        { className: 'pb-notes', role: 'dialog', 'aria-label': t('notes.title') },
+        { className: 'lamp-notes', role: 'dialog', 'aria-label': t('notes.title') },
         h(
           'div',
-          { className: 'pb-drawer-head', style: { display: 'flex', alignItems: 'center', gap: 8 } },
+          { className: 'lamp-drawer-head', style: { display: 'flex', alignItems: 'center', gap: 8 } },
           h(
             'div',
             { style: { flex: 1, minWidth: 0 } },
@@ -4579,7 +4574,7 @@ window.__ModuleLoader__.load({
           ),
           h(
             'button',
-            { type: 'button', className: 'pb-btn pb-icon-btn', onClick: props.onClose, 'aria-label': t('ai.close') },
+            { type: 'button', className: 'lamp-btn lamp-icon-btn', onClick: props.onClose, 'aria-label': t('ai.close') },
             h(IconClose, { size: 15 }),
           ),
         ),
@@ -4587,8 +4582,8 @@ window.__ModuleLoader__.load({
         props.onOpenAll
           ? h(
               'div',
-              { className: 'pb-drawer-foot' },
-              h('button', { type: 'button', className: 'pb-textlink', onClick: props.onOpenAll }, t('notes.openPage') + ' →'),
+              { className: 'lamp-drawer-foot' },
+              h('button', { type: 'button', className: 'lamp-textlink', onClick: props.onOpenAll }, t('notes.openPage') + ' →'),
             )
           : null,
       );
@@ -5125,7 +5120,7 @@ window.__ModuleLoader__.load({
         if (!selection) return undefined;
         const onDown = (event) => {
           const target = event.target;
-          if (target && typeof target.closest === 'function' && target.closest('.pb-selectbar')) return;
+          if (target && typeof target.closest === 'function' && target.closest('.lamp-selectbar')) return;
           setSelection(null);
         };
         window.addEventListener('mousedown', onDown, true);
@@ -5255,7 +5250,7 @@ window.__ModuleLoader__.load({
             'div',
             {
               key: 'wrap' + index,
-              className: 'pb-block',
+              className: 'lamp-block',
               'data-mark': marked ? '1' : '0',
               'data-focus': focused ? '1' : '0',
             },
@@ -5263,7 +5258,7 @@ window.__ModuleLoader__.load({
             marked
               ? h('button', {
                   type: 'button',
-                  className: 'pb-note-dot',
+                  className: 'lamp-note-dot',
                   'aria-label': t('notes.jump'),
                   title: t('notes.jump'),
                   onClick: () => setOverlay('notes'),
@@ -5273,22 +5268,22 @@ window.__ModuleLoader__.load({
         });
         const end = h(
           'div',
-          { className: 'pb-end-wrap', key: 'end' },
-          h('p', { className: 'pb-end' }, t('reader.end')),
+          { className: 'lamp-end-wrap', key: 'end' },
+          h('p', { className: 'lamp-end' }, t('reader.end')),
           h(
             'div',
-            { className: 'pb-end-actions' },
+            { className: 'lamp-end-actions' },
             hasNext(chapter)
               ? h(
                   'button',
-                  { type: 'button', className: 'pb-btn', onClick: () => loadChapter(chapter.next, 0) },
+                  { type: 'button', className: 'lamp-btn', onClick: () => loadChapter(chapter.next, 0) },
                   t('reader.next'),
                 )
               : h(
                   'button',
                   {
                     type: 'button',
-                    className: 'pb-btn' + (finished ? '' : ' pb-btn-primary'),
+                    className: 'lamp-btn' + (finished ? '' : ' lamp-btn-primary'),
                     onClick: () => props.onToggleFinished(!finished),
                   },
                   h(IconCheck, { size: 14 }),
@@ -5306,15 +5301,15 @@ window.__ModuleLoader__.load({
       const chapterTitle = chapter && chapter.chapter && chapter.chapter.title ? chapter.chapter.title : '';
 
       const readerStyle = {
-        '--pb-font-size': settings.fontSize + 'px',
-        '--pb-line-height': String(settings.lineHeight),
-        '--pb-measure': String(settings.measure),
-        '--pb-align': settings.justify ? 'justify' : 'start',
-        '--pb-gap': settings.measure >= 40 ? '88px' : '72px',
+        '--lamp-font-size': settings.fontSize + 'px',
+        '--lamp-line-height': String(settings.lineHeight),
+        '--lamp-measure': String(settings.measure),
+        '--lamp-align': settings.justify ? 'justify' : 'start',
+        '--lamp-gap': settings.measure >= 40 ? '88px' : '72px',
       };
 
       const rootProps = {
-        className: 'pb-reader',
+        className: 'lamp-reader',
         'data-theme': settings.theme,
         'data-font': settings.fontFamily,
         'data-chrome': chrome ? '1' : '0',
@@ -5325,12 +5320,12 @@ window.__ModuleLoader__.load({
 
       const topbar = h(
         'header',
-        { className: 'pb-topbar pb-chrome' },
+        { className: 'lamp-topbar lamp-chrome' },
         h(
           'button',
           {
             type: 'button',
-            className: 'pb-btn pb-btn-quiet',
+            className: 'lamp-btn lamp-btn-quiet',
             onClick: () => {
               flush(true).then(() => props.onExit());
             },
@@ -5340,18 +5335,18 @@ window.__ModuleLoader__.load({
         ),
         h(
           'div',
-          { className: 'pb-topbar-title' },
+          { className: 'lamp-topbar-title' },
           h('b', { title: currentBook.title }, currentBook.title),
           h('span', { title: chapterTitle }, chapterTitle || t('reader.loading')),
         ),
         h(
           'div',
-          { className: 'pb-topbar-tools' },
+          { className: 'lamp-topbar-tools' },
           h(
             'button',
             {
               type: 'button',
-              className: 'pb-btn pb-icon-btn',
+              className: 'lamp-btn lamp-icon-btn',
               'data-on': overlay === 'toc' ? '1' : '0',
               onClick: () => setOverlay(overlay === 'toc' ? null : 'toc'),
               title: t('reader.toc'),
@@ -5368,7 +5363,7 @@ window.__ModuleLoader__.load({
                   'button',
                   {
                     type: 'button',
-                    className: 'pb-btn pb-icon-btn',
+                    className: 'lamp-btn lamp-icon-btn',
                     'data-on': fontOpen ? '1' : '0',
                     onClick: () => setFontOpen((open) => !open),
                     title: t('reader.fontSize'),
@@ -5379,16 +5374,16 @@ window.__ModuleLoader__.load({
                 fontOpen
                   ? h(
                   'div',
-                  { className: 'pb-fontpop', onPointerDown: (event) => event.stopPropagation() },
+                  { className: 'lamp-fontpop', onPointerDown: (event) => event.stopPropagation() },
                   h(
                     'div',
-                    { className: 'pb-fontpop-row' },
+                    { className: 'lamp-fontpop-row' },
                     h('span', { style: { fontSize: 12, color: 'var(--dsw-alias-label-secondary)' } }, t('reader.size')),
                     h(
                       'button',
                       {
                         type: 'button',
-                        className: 'pb-btn pb-icon-btn',
+                        className: 'lamp-btn lamp-icon-btn',
                         onClick: () => applySettings({ fontSize: clamp(settings.fontSize - 1, 15, 32) }),
                         'aria-label': '-',
                       },
@@ -5399,7 +5394,7 @@ window.__ModuleLoader__.load({
                       'button',
                       {
                         type: 'button',
-                        className: 'pb-btn pb-icon-btn',
+                        className: 'lamp-btn lamp-icon-btn',
                         onClick: () => applySettings({ fontSize: clamp(settings.fontSize + 1, 15, 32) }),
                         'aria-label': '+',
                       },
@@ -5408,7 +5403,7 @@ window.__ModuleLoader__.load({
                   ),
                   h(
                     'div',
-                    { className: 'pb-fontpop-sizes' },
+                    { className: 'lamp-fontpop-sizes' },
                     [16, 18, 20, 22, 24].map((size) =>
                       h(
                         'button',
@@ -5429,20 +5424,20 @@ window.__ModuleLoader__.load({
             'button',
             {
               type: 'button',
-              className: 'pb-btn pb-icon-btn',
+              className: 'lamp-btn lamp-icon-btn',
               'data-on': overlay === 'notes' ? '1' : '0',
               onClick: () => (overlay === 'notes' ? setOverlay(null) : openNotes()),
               title: t('reader.notes'),
               'aria-label': t('reader.notes'),
             },
             h(IconNote, { size: 16 }),
-            chapterNotes.length > 0 ? h('span', { className: 'pb-icon-count pb-num' }, chapterNotes.length) : null,
+            chapterNotes.length > 0 ? h('span', { className: 'lamp-icon-count lamp-num' }, chapterNotes.length) : null,
           ),
           h(
             'button',
             {
               type: 'button',
-              className: 'pb-btn pb-icon-btn',
+              className: 'lamp-btn lamp-icon-btn',
               'data-on': overlay === 'settings' ? '1' : '0',
               onClick: () => setOverlay(overlay === 'settings' ? null : 'settings'),
               title: t('reader.settings'),
@@ -5456,16 +5451,16 @@ window.__ModuleLoader__.load({
       const footbar = isScan
         ? h(
             'footer',
-            { className: 'pb-footbar pb-footbar-scan pb-chrome' },
-            h('p', { className: 'pb-scan-hint' }, t('reader.scanHint')),
+            { className: 'lamp-footbar lamp-footbar-scan lamp-chrome' },
+            h('p', { className: 'lamp-scan-hint' }, t('reader.scanHint')),
           )
         : h(
         'footer',
-        { className: 'pb-footbar pb-chrome' },
+        { className: 'lamp-footbar lamp-chrome' },
         h(
           'div',
           {
-            className: 'pb-foot-track',
+            className: 'lamp-foot-track',
             role: 'slider',
             tabIndex: 0,
             'aria-label': t('reader.jump'),
@@ -5484,23 +5479,23 @@ window.__ModuleLoader__.load({
               if (event.key === 'ArrowRight' && hasNext(chapter)) jumpChapter(chapter.next);
             },
           },
-          h('div', { className: 'pb-foot-rail' }, h('i', { style: { width: overall + '%' } })),
+          h('div', { className: 'lamp-foot-rail' }, h('i', { style: { width: overall + '%' } })),
         ),
         h(
           'div',
-          { className: 'pb-foot-meta' },
+          { className: 'lamp-foot-meta' },
           h('span', null, t('reader.chapterCount', { i: Math.min(chapterIndex + 1, total), n: total })),
-          h('span', { className: 'pb-grow' }),
+          h('span', { className: 'lamp-grow' }),
           settings.mode === 'paged'
             ? h('span', null, t('reader.pageLabel', { i: Math.min(page + 1, layout.pages), n: layout.pages }))
             : null,
           h('span', null, t('reader.percent', { n: overall })),
-          h('span', { className: 'pb-grow' }),
+          h('span', { className: 'lamp-grow' }),
           h(
             'button',
             {
               type: 'button',
-              className: 'pb-foot-btn',
+              className: 'lamp-foot-btn',
               disabled: !hasPrev(chapter),
               onClick: () => hasPrev(chapter) && loadChapter(chapter.prev, 1),
             },
@@ -5510,7 +5505,7 @@ window.__ModuleLoader__.load({
             'button',
             {
               type: 'button',
-              className: 'pb-foot-btn',
+              className: 'lamp-foot-btn',
               disabled: !hasNext(chapter),
               onClick: () => hasNext(chapter) && loadChapter(chapter.next, 0),
             },
@@ -5521,7 +5516,7 @@ window.__ModuleLoader__.load({
                 'button',
                 {
                   type: 'button',
-                  className: 'pb-foot-btn',
+                  className: 'lamp-foot-btn',
                   onClick: () => props.onToggleFinished(!finished),
                 },
                 finished ? t('reader.finished') : t('reader.markFinished'),
@@ -5534,9 +5529,9 @@ window.__ModuleLoader__.load({
       if (isScan) {
         body = h(
           'div',
-          { className: 'pb-scan' },
+          { className: 'lamp-scan' },
           h('embed', {
-            className: 'pb-scan-frame',
+            className: 'lamp-scan-frame',
             type: 'application/pdf',
             src: '/lamplit/api/book/' + encodeURIComponent(book.id) + '/file',
             title: currentBook.title,
@@ -5545,8 +5540,8 @@ window.__ModuleLoader__.load({
       } else if (status === 'loading') {
         body = h(
           'div',
-          { className: 'pb-chapter-loading' },
-          h('span', { className: 'pb-spin' }),
+          { className: 'lamp-chapter-loading' },
+          h('span', { className: 'lamp-spin' }),
           t('reader.loading'),
         );
       } else if (status === 'error') {
@@ -5554,7 +5549,7 @@ window.__ModuleLoader__.load({
         const authIssue = errorCode === 'AUTH' || /登录|Cookie|失效|expired/i.test(String(error));
         body = h(
           'div',
-          { className: 'pb-chapter-error' },
+          { className: 'lamp-chapter-error' },
           h(
             'p',
             null,
@@ -5564,7 +5559,7 @@ window.__ModuleLoader__.load({
                 ? t('reader.expired')
                 : t('reader.chapterError') + '：' + error,
           ),
-          authIssue && !missing ? h('p', { className: 'pb-hint', style: { marginTop: -6 } }, t('reader.expiredHint')) : null,
+          authIssue && !missing ? h('p', { className: 'lamp-hint', style: { marginTop: -6 } }, t('reader.expiredHint')) : null,
           h(
             'div',
             { style: { display: 'flex', gap: 8, justifyContent: 'center' } },
@@ -5572,20 +5567,20 @@ window.__ModuleLoader__.load({
               ? null
               : h(
                   'button',
-                  { type: 'button', className: 'pb-btn', onClick: () => loadChapter(chapterIndex, null) },
+                  { type: 'button', className: 'lamp-btn', onClick: () => loadChapter(chapterIndex, null) },
                   t('reader.retry'),
                 ),
             authIssue && !missing
               ? h(
                   'button',
-                  { type: 'button', className: 'pb-btn pb-btn-primary', onClick: () => props.onReconnect && props.onReconnect() },
+                  { type: 'button', className: 'lamp-btn lamp-btn-primary', onClick: () => props.onReconnect && props.onReconnect() },
                   t('reader.reconnect'),
                 )
               : null,
             missing
               ? h(
                   'button',
-                  { type: 'button', className: 'pb-btn pb-btn-primary', onClick: () => props.onExit && props.onExit() },
+                  { type: 'button', className: 'lamp-btn lamp-btn-primary', onClick: () => props.onExit && props.onExit() },
                   t('reader.backToShelf'),
                 )
               : null,
@@ -5594,24 +5589,24 @@ window.__ModuleLoader__.load({
       } else if (blocks.length === 0) {
         body = h(
           'div',
-          { className: 'pb-chapter-error' },
+          { className: 'lamp-chapter-error' },
           h('p', { style: { color: 'var(--dsw-alias-label-tertiary)' } }, t('reader.chapterMissing')),
         );
       } else if (settings.mode === 'paged') {
         body = h(
           'div',
-          { className: 'pb-paged', ref: contentRef, onMouseUp: captureSelection, onTouchEnd: captureSelection },
+          { className: 'lamp-paged', ref: contentRef, onMouseUp: captureSelection, onTouchEnd: captureSelection },
           h(
             'div',
-            { className: 'pb-paged-clip', ref: clipRef, 'data-overflow': overflowFallback ? '1' : '0' },
+            { className: 'lamp-paged-clip', ref: clipRef, 'data-overflow': overflowFallback ? '1' : '0' },
             h(
               'div',
               {
-                className: 'pb-columns',
+                className: 'lamp-columns',
                 ref: colsRef,
                 style: { transform: overflowFallback ? 'none' : 'translate3d(' + -page * layout.stride + 'px,0,0)' },
               },
-              h('div', { className: 'pb-prose' }, prose),
+              h('div', { className: 'lamp-prose' }, prose),
             ),
           ),
         );
@@ -5619,7 +5614,7 @@ window.__ModuleLoader__.load({
         body = h(
           'div',
           {
-            className: 'pb-scroll-paper',
+            className: 'lamp-scroll-paper',
             ref: (node) => {
               scrollRef.current = node;
               contentRef.current = node;
@@ -5628,7 +5623,7 @@ window.__ModuleLoader__.load({
             onMouseUp: captureSelection,
             onTouchEnd: captureSelection,
           },
-          h('div', { className: 'pb-prose' }, prose),
+          h('div', { className: 'lamp-prose' }, prose),
         );
       }
 
@@ -5640,7 +5635,7 @@ window.__ModuleLoader__.load({
         footbar,
         overlay === 'toc'
           ? [
-              h('div', { key: 'scrim', className: 'pb-scrim', onClick: () => setOverlay(null) }),
+              h('div', { key: 'scrim', className: 'lamp-scrim', onClick: () => setOverlay(null) }),
               h(TocDrawer, {
                 key: 'toc',
                 t,
@@ -5653,7 +5648,7 @@ window.__ModuleLoader__.load({
           : null,
         overlay === 'settings'
           ? [
-              h('div', { key: 'scrim2', className: 'pb-scrim', onClick: () => setOverlay(null) }),
+              h('div', { key: 'scrim2', className: 'lamp-scrim', onClick: () => setOverlay(null) }),
               h(SettingsPanel, {
                 key: 'settings',
                 t,
@@ -5665,7 +5660,7 @@ window.__ModuleLoader__.load({
           : null,
         overlay === 'notes'
           ? [
-              h('div', { key: 'scrim3', className: 'pb-scrim', onClick: () => setOverlay(null) }),
+              h('div', { key: 'scrim3', className: 'lamp-scrim', onClick: () => setOverlay(null) }),
               h(NoteDrawer, {
                 key: 'notes',
                 t,
@@ -5738,16 +5733,16 @@ window.__ModuleLoader__.load({
 
         return h(
           'div',
-          { className: 'pb-root' },
+          { className: 'lamp-root' },
           h(
             'div',
-            { className: 'pb-boundary' },
+            { className: 'lamp-boundary' },
             h('h2', null, '灯下这一屏出错了'),
             h('p', null, '把下面这段发给我，我据此修。界面其它部分还能用：刷新一次可回到书架。'),
             h('pre', null, this.state.message.slice(0, 1200)),
             h(
               'button',
-              { type: 'button', className: 'pb-btn pb-btn-primary', onClick: () => location.reload() },
+              { type: 'button', className: 'lamp-btn lamp-btn-primary', onClick: () => location.reload() },
               '重新加载',
             ),
           ),
@@ -5777,14 +5772,6 @@ window.__ModuleLoader__.load({
         const [importing, setImporting] = useState(null);
         const [importError, setImportError] = useState('');
         const [sheet, setSheet] = useState(false);
-        const rootRef = useRef(null);
-        const [dropForOverlay, setDropForOverlay] = useState(false);
-        useEffect(() => {
-          const node = rootRef.current;
-          if (!node || !node.parentElement) return;
-          const layer = node.parentElement.closest('[class*="overlayLayer"],[class*="OverlayLayer"]');
-          if (layer) setDropForOverlay(true);
-        }, []);
         const [toast, setToast] = useState('');
         const [session, setSession] = useState(null);
         const [dragDepth, setDragDepth] = useState(0);
@@ -6421,7 +6408,7 @@ window.__ModuleLoader__.load({
                   onConnect: () => setSheet(true),
                   onView: setView,
                 }),
-                dragging ? h('div', { className: 'pb-drop' }, h('strong', null, tr('shelf.dropTitle')), h('span', null, tr('shelf.dropHint'))) : null,
+                dragging ? h('div', { className: 'lamp-drop' }, h('strong', null, tr('shelf.dropTitle')), h('span', null, tr('shelf.dropHint'))) : null,
               )
             : view === 'plaza'
               ? h(PlazaPage, {
@@ -6496,11 +6483,9 @@ window.__ModuleLoader__.load({
                         onConnect: () => setSheet(true),
                       });
 
-        if (dropForOverlay) return null;
-
         return h(
           'div',
-          { className: 'pb-root', ref: rootRef },
+          { className: 'lamp-root' },
           h('style', null, CSS),
           session
             ? null
@@ -6520,7 +6505,7 @@ window.__ModuleLoader__.load({
               }),
           h(
             'div',
-            { className: 'pb-stage' },
+            { className: 'lamp-stage' },
             body,
             session
               ? h(MemoReader, {
@@ -6542,7 +6527,7 @@ window.__ModuleLoader__.load({
               : null,
             sheet
               ? [
-                  h('div', { key: 'scrim', className: 'pb-scrim', onClick: () => setSheet(false) }),
+                  h('div', { key: 'scrim', className: 'lamp-scrim', onClick: () => setSheet(false) }),
                   h(SourceSheet, {
                     key: 'sheet',
                     t: tr,
@@ -6557,8 +6542,7 @@ window.__ModuleLoader__.load({
                   }),
                 ]
               : null,
-            toast ? h('div', { className: 'pb-toast', role: 'status', 'aria-live': 'polite' }, toast) : null,
-            h(DebugBox),
+            toast ? h('div', { className: 'lamp-toast', role: 'status', 'aria-live': 'polite' }, toast) : null,
             h('input', {
               ref: fileRef,
               type: 'file',
@@ -6570,65 +6554,6 @@ window.__ModuleLoader__.load({
           ),
         );
       };
-    }
-
-    /* TEMP DEBUG (remove after diagnosing the stray top-right block) */
-    function DebugBox() {
-      const ref = useRef(null)
-      const pair = useState('')
-      const text = pair[0]
-      const setText = pair[1]
-      useEffect(() => {
-        function fmt(el) {
-          if (!el) return 'none'
-          const r = el.getBoundingClientRect()
-          const cs = getComputedStyle(el)
-          const parent = el.parentElement
-          return Math.round(r.top) + ',' + Math.round(r.left) + ' ' + Math.round(r.width) + 'x' + Math.round(r.height) +
-            ' pos=' + cs.position + ' z=' + cs.zIndex + ' pe=' + cs.pointerEvents + ' parent=' + (parent ? String(parent.className || parent.tagName) : '-')
-        }
-        function tick() {
-          const node = ref.current
-          const root = node && node.closest ? node.closest('.pb-root') : null
-          const out = []
-          out.push('win ' + window.innerWidth + 'x' + window.innerHeight + ' dpr=' + window.devicePixelRatio)
-          if (root) {
-            const chain = []
-            let up = root
-            for (let i = 0; i < 4 && up; i += 1) { chain.push(String(up.className || up.tagName)); up = up.parentElement }
-            out.push('root-chain: ' + chain.join(' < '))
-          }
-          ;['.pb-root', '.pb-stage', '.pb-appbar', '.pb-scrim', '.pb-sheet', '.pb-cards', '.pb-shell', '.pb-scroll'].forEach((sel) => {
-            const el = root ? root.querySelector(sel) : null
-            out.push(sel + ': ' + fmt(el))
-            if (sel === '.pb-sheet' && el) {
-              out.push('  sheet offsetTop=' + el.offsetTop + ' offsetParent=' + (el.offsetParent ? String(el.offsetParent.className || el.offsetParent.tagName) : 'null'))
-            }
-          })
-          const doc = root ? root.ownerDocument : null
-          if (doc) {
-            const all = doc.querySelectorAll('.pb-root')
-            out.push('pb-root count: ' + all.length)
-            for (let i = 0; i < all.length; i += 1) {
-              let up = all[i]
-              const chain = []
-              for (let k = 0; k < 3 && up; k += 1) { chain.push(String(up.className || up.tagName)); up = up.parentElement }
-              out.push('  root[' + i + '] ' + fmt(all[i]) + ' chain=' + chain.join(' < '))
-            }
-            ;[[0.5, 0.5], [0.5, 0.18], [0.82, 0.25], [0.3, 0.45], [0.975, 0.42], [0.9, 0.07]].forEach((pairXY) => {
-              const px = Math.round(window.innerWidth * pairXY[0])
-              const py = Math.round(window.innerHeight * pairXY[1])
-              const stack = doc.elementsFromPoint(px, py)
-              out.push('at ' + px + ',' + py + ' -> ' + stack.slice(0, 4).map((el) => String(el.className || el.tagName) + '[' + getComputedStyle(el).pointerEvents + ']').join(' > '))
-            })
-          }
-          setText(out.join('\n'))
-        }
-        tick()
-        const timer = setInterval(tick, 900)
-        return () => clearInterval(timer)
-      }, [])
-      return h('div', { ref: ref, style: { position: 'fixed', left: '50%', bottom: '10px', transform: 'translateX(-50%)', zIndex: 2147483000, padding: '8px 10px', borderRadius: '8px', background: 'rgba(0,0,0,.9)', color: '#8f8', font: '11px/1.45 ui-monospace, Menlo, monospace', whiteSpace: 'pre-wrap', maxWidth: '900px', pointerEvents: 'none' } }, 'DEBUG\n' + text)
     }
 
     function apply(ctx) {
@@ -6653,10 +6578,10 @@ window.__ModuleLoader__.load({
         if (bootError !== '') {
           return h(
             'div',
-            { className: 'pb-root' },
+            { className: 'lamp-root' },
             h(
               'div',
-              { className: 'pb-boundary' },
+              { className: 'lamp-boundary' },
               h('h2', null, '灯下没能启动'),
               h('p', null, '把下面这段发给我。'),
               h('pre', null, bootError.slice(0, 1200)),
