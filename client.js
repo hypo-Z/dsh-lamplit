@@ -866,6 +866,11 @@ window.__ModuleLoader__.load({
 
       /* ---------- 首页卡片 ---------- */
       '.pb-cards{display:grid;grid-template-columns:1.15fr 1fr .95fr;gap:20px;margin:0 0 32px}',
+      /* 2026-11 local fix: the dashboard cards were being pinned to the window's
+         top-right corner (out of flow) by an external rule. Keep them static and
+         give the panel an opaque surface so it does not float over the wallpaper. */
+      '.pb-cards{position:static!important;inset:auto!important;width:auto!important;max-width:100%!important}',
+      '.pb-root{background-color:#141519;background-image:linear-gradient(var(--dsw-alias-bg-base,#141519),var(--dsw-alias-bg-base,#141519))}',
       '@media (max-width:980px){.pb-cards{grid-template-columns:1fr 1fr}.pb-cards>.pb-card:last-child{grid-column:1/-1}}',
       '@media (max-width:680px){.pb-cards{grid-template-columns:1fr}.pb-cards>.pb-card:last-child{grid-column:auto}}',
       '.pb-card{border:1px solid var(--pb-line);border-radius:10px;padding:16px 18px;background:var(--pb-panel);min-width:0}',
