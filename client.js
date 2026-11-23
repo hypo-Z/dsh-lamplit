@@ -4915,6 +4915,8 @@ window.__ModuleLoader__.load({
     function openLampTtsWindow(show) {
       const win = ensureLampTtsWindow()
       if (show) {
+        const ball = document.getElementById('lamp-tts-ball')
+        if (ball) ball.style.display = 'none'
         win.style.display = ''
         win.style.fontSize = (localStorage.getItem('lamp.ttsFont') || '13') + 'px'
       }
