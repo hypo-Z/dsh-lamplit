@@ -3595,7 +3595,8 @@ window.__ModuleLoader__.load({
           .map((book) => [String(book.sourceId), book]),
       );
       const wereadProvider = (props.providers || []).find((item) => item.id === 'weread') || null;
-      const wereadBroken = wereadProvider && wereadProvider.connected && wereadProvider.sessionValid === false;
+      // 登录失效时 host 会写 error，但 sessionValid 可能仍为 true：两者都要判
+      const wereadBroken = wereadProvider && wereadProvider.connected && (wereadProvider.sessionValid === false || Boolean(wereadProvider.error));
 
       const weread = wereadBroken
         ? h(
