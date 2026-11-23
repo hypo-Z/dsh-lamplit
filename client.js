@@ -4976,6 +4976,14 @@ window.__ModuleLoader__.load({
         }
       }, [ttsVoice])
 
+      // 进入阅读页时，如果引擎正在读同一本书，立即同步高亮（不必等下一次 emit）
+      useEffect(() => {
+        if (lampTts.bookId !== book.id || !lampTts.playing) return
+        if (lampTts.chapterIndex !== chapterIndex) return
+        const blockIndex = lampTts.segmentBlocks[lampTts.index] ?? 0
+        setTts({ index: blockIndex, paused: false })
+      }, [book.id, chapterIndex, status])
+
       useEffect(() => {
         const unsubscribe = lampTts.subscribe(() => {
           if (!lampTts.playing) { setTts(null); return }
