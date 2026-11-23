@@ -4760,6 +4760,19 @@ window.__ModuleLoader__.load({
       try { if (lampLayout && typeof lampLayout.selectPanel === 'function') lampLayout.selectPanel(panelId) } catch (err) {}
     }
 
+    // 兜底：窗口与小球绝不共存（多个插件实例时也能收敛）
+    function ensureLampUiSync() {
+      if (window.__lampUiSync) return
+      window.__lampUiSync = setInterval(() => {
+        const win = document.getElementById('lamp-tts-window')
+        const ball = document.getElementById('lamp-tts-ball')
+        if (!win || !ball) return
+        const winOn = win.style.display !== 'none'
+        const ballOn = ball.style.display !== 'none'
+        if (winOn && ballOn) ball.style.display = 'none'
+      }, 400)
+    }
+
     function ensureLampTtsWindow() {
       const existing = document.getElementById('lamp-tts-window')
       if (existing) { lampTtsWindow = existing; return existing }
@@ -4939,6 +4952,8 @@ window.__ModuleLoader__.load({
       win.style.display = ''
       renderLampTts()
     }
+
+    ensureLampUiSync()
 
     function openLampTtsWindow(show) {
       const win = ensureLampTtsWindow()
