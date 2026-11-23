@@ -4658,6 +4658,7 @@ window.__ModuleLoader__.load({
         this.utter = null
       },
       speechFallback(text, onend) {
+        console.log('[lamp-tts] fallback speech', String(text).slice(0, 24))
         if (typeof window === 'undefined' || !window.SpeechSynthesisUtterance || !window.speechSynthesis) return false
         const utter = new window.SpeechSynthesisUtterance(text)
         utter.lang = 'zh-CN'
@@ -4674,6 +4675,13 @@ window.__ModuleLoader__.load({
       },
       playIndex(index) {
         this.stopAudio()
+        // 兜底：页面里任何其它正在播放的 <audio> 一律停掉，避免两路叠加
+        try {
+          document.querySelectorAll('audio').forEach((element) => {
+            if (String(element.currentSrc || element.src || '').includes('/lamplit/api/tts')) { try { element.pause() } catch (err) {} }
+          })
+          if (window.speechSynthesis) window.speechSynthesis.cancel()
+        } catch (err) {}
         const token = ++this.token
         if (index < 0 || index >= this.segments.length) { this.playing = false; this.emit(); return }
         this.index = index
@@ -4694,6 +4702,7 @@ window.__ModuleLoader__.load({
         if (!text) { next(); return }
         const src = '/lamplit/api/tts?voice=' + encodeURIComponent(this.voice) + '&rate=' + encodeURIComponent(String(this.rate)) + '&text=' + encodeURIComponent(text.slice(0, 600))
         const audio = new Audio(src)
+        console.log('[lamp-tts] play token=', token, 'index=', index, 'text=', text.slice(0, 24))
         this.audio = audio
         audio.onended = next
         audio.onerror = () => { if (token !== this.token) return; this.audio = null; if (!this.speechFallback(text, next)) next() }
