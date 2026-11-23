@@ -6765,6 +6765,15 @@ window.__ModuleLoader__.load({
           window.addEventListener('lamp-tts-back', onBack)
           return () => window.removeEventListener('lamp-tts-back', onBack)
         }, [resolveBook]);
+        // 面板是刚挂载的（事件在挂载前发出）：消费一次遗留的回页面目标
+        useEffect(() => {
+          if (!lampBackTarget || !lampBackTarget.bookId) return
+          const detail = lampBackTarget
+          const book = resolveBook(detail.bookId, detail.chapterIndex, lampTts.bookTitle)
+          setSession({ book, focusQuote: '' })
+          // 章节跳转由 Reader 挂载时消费 lampBackTarget
+        }, []);
+
 
         const removeBook = useCallback(
           async (book) => {
