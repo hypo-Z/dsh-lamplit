@@ -4648,6 +4648,7 @@ window.__ModuleLoader__.load({
       rate: 1,
       audio: null,
       utter: null,
+      token: 0,
       listeners: new Set(),
       emit() { for (const fn of this.listeners) { try { fn() } catch (err) {} } },
       subscribe(fn) { this.listeners.add(fn); return () => this.listeners.delete(fn) },
@@ -4673,13 +4674,14 @@ window.__ModuleLoader__.load({
       },
       playIndex(index) {
         this.stopAudio()
+        const token = ++this.token
         if (index < 0 || index >= this.segments.length) { this.playing = false; this.emit(); return }
         this.index = index
         const text = this.segments[index]
         this.playing = true
         this.emit()
         const next = () => {
-          if (!this.playing || this.index !== index) return
+          if (token !== this.token || !this.playing || this.index !== index) return
           if (this.index + 1 < this.segments.length) { this.playIndex(this.index + 1); return }
           // 章末：有下一章就自动续播
           if (this.bookId && this.total > this.chapterIndex + 1) {
@@ -4694,14 +4696,14 @@ window.__ModuleLoader__.load({
         const audio = new Audio(src)
         this.audio = audio
         audio.onended = next
-        audio.onerror = () => { this.audio = null; if (!this.speechFallback(text, next)) next() }
+        audio.onerror = () => { if (token !== this.token) return; this.audio = null; if (!this.speechFallback(text, next)) next() }
         const started = audio.play()
-        if (started && started.catch) started.catch(() => { this.audio = null; if (!this.speechFallback(text, next)) next() })
+        if (started && started.catch) started.catch(() => { if (token !== this.token) return; this.audio = null; if (!this.speechFallback(text, next)) next() })
       },
       play() { this.playIndex(this.index) },
-      pause() { this.playing = false; this.stopAudio(); this.emit() },
+      pause() { this.token += 1; this.playing = false; this.stopAudio(); this.emit() },
       toggle() { if (this.playing) this.pause(); else this.play() },
-      stop() { this.playing = false; this.stopAudio(); this.emit() },
+      stop() { this.token += 1; this.playing = false; this.stopAudio(); this.emit() },
       async load(book, chapterIndex) {
         const res = await fetch('/lamplit/api/book/' + encodeURIComponent(book) + '/chapter/' + chapterIndex).then((response) => response.json())
         if (!res || !res.ok) throw new Error(res?.error || '章节加载失败')
