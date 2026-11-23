@@ -5301,8 +5301,9 @@ window.__ModuleLoader__.load({
       useEffect(
         () => () => {
           ttsToken.current += 1;
+          // 离开阅读页时把听书小窗收成小球，朗读继续
           try {
-            if (typeof window !== 'undefined' && window.speechSynthesis) window.speechSynthesis.cancel();
+            if (lampTts.playing || (lampTtsWindow && lampTtsWindow.style.display !== 'none')) collapseLampBall();
           } catch (err) {}
         },
         [],
