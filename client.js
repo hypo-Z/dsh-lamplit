@@ -4843,6 +4843,13 @@ window.__ModuleLoader__.load({
       lampTtsWindow.querySelector('#lamp-tts-text').textContent = lampTts.segments[lampTts.index] || ''
     }
 
+    function lampVoiceKey(name) {
+      const value = String(name || '')
+      if (/美佳|Meijia/i.test(value)) return 'meijia'
+      if (/婷婷|Tingting/i.test(value)) return 'tingting'
+      return 'yue'
+    }
+
     function ensureLampBallStyle() {
       if (document.getElementById('lamp-tts-ball-style')) return
       const style = document.createElement('style')
@@ -4962,6 +4969,13 @@ window.__ModuleLoader__.load({
       const ttsVoiceRef = useRef(ttsVoice);
       ttsVoiceRef.current = ttsVoice;
       useEffect(() => { writeAutoPrefs({ speed: autoSpeed, secs: autoSecs }); }, [autoSpeed, autoSecs]);
+      useEffect(() => {
+        lampTts.voice = lampVoiceKey(ttsVoice)
+        if (lampTts.playing) {
+          try { lampTts.playIndex(lampTts.index) } catch (err) {}
+        }
+      }, [ttsVoice])
+
       useEffect(() => {
         const unsubscribe = lampTts.subscribe(() => {
           if (!lampTts.playing) { setTts(null); return }
@@ -5311,8 +5325,7 @@ window.__ModuleLoader__.load({
           if (text !== '') { segments.push(text); segmentBlocks.push(index) }
         })
         if (segments.length === 0) return
-        const wanted = ttsVoiceRef.current || ''
-        lampTts.voice = /美佳|Meijia/i.test(wanted) ? 'meijia' : 'yue'
+        lampTts.voice = lampVoiceKey(ttsVoiceRef.current)
         lampTts.rate = ttsRate
         lampTts.bookId = book.id
         lampTts.bookTitle = book.title || ''
