@@ -4997,6 +4997,16 @@ window.__ModuleLoader__.load({
         }
       }, [ttsVoice])
 
+      // 兜底轮询：每 400ms 从引擎同步当前段，避免订阅事件丢失导致高亮落后
+      useEffect(() => {
+        const timer = setInterval(() => {
+          if (!lampTts.playing || lampTts.bookId !== book.id || lampTts.chapterIndex !== chapterIndex) return
+          const block = lampTts.segmentBlocks[lampTts.index] ?? 0
+          setTts((previous) => (previous && previous.index === block ? previous : { index: block, paused: false }))
+        }, 400)
+        return () => clearInterval(timer)
+      }, [book.id, chapterIndex])
+
       // 进入阅读页时，如果引擎正在读同一本书，立即同步高亮（不必等下一次 emit）
       useEffect(() => {
         if (!lampTts.bookId || lampTts.bookId !== book.id) return
@@ -5024,7 +5034,7 @@ window.__ModuleLoader__.load({
         const timer = setTimeout(() => {
           const node = document.querySelector('.lamp-block[data-tts="1"]')
           if (node && node.scrollIntoView) node.scrollIntoView({ block: 'center', behavior: 'smooth' })
-        }, 1000)
+        }, 300)
         return () => clearTimeout(timer)
       }, [tts && tts.index])
 
