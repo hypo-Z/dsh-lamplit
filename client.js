@@ -4721,6 +4721,7 @@ window.__ModuleLoader__.load({
     }
 
     let lampLayout = null
+    let lampBackTarget = null
     let lampTtsWindow = null
 
     function lampSend(panelId) {
@@ -4775,7 +4776,8 @@ window.__ModuleLoader__.load({
       root.querySelector('#lamp-tts-next').addEventListener('click', () => { lampTts.playIndex(Math.min(lampTts.segments.length - 1, lampTts.index + 1)) })
       root.querySelector('#lamp-tts-back').addEventListener('click', () => {
         try {
-          window.dispatchEvent(new CustomEvent('lamp-tts-back', { detail: { bookId: lampTts.bookId, chapterIndex: lampTts.chapterIndex, blockIndex: lampTts.segmentBlocks[lampTts.index] ?? 0 } }))
+          lampBackTarget = { bookId: lampTts.bookId, chapterIndex: lampTts.chapterIndex, blockIndex: lampTts.segmentBlocks[lampTts.index] ?? 0 }
+          window.dispatchEvent(new CustomEvent('lamp-tts-back', { detail: lampBackTarget }))
         } catch (err) {}
         lampSend('lamplit')
         root.style.display = 'none'
@@ -4942,6 +4944,16 @@ window.__ModuleLoader__.load({
       }, [book.id, chapterIndex, status])
 
       const loadChapterRef = useRef(null);
+      useEffect(() => {
+        const target = lampBackTarget
+        if (!target || target.bookId !== book.id) return
+        lampBackTarget = null
+        const index = Number(target.chapterIndex)
+        if (Number.isFinite(index) && index !== chapterIndex && loadChapterRef.current) {
+          loadChapterRef.current(index, 0)
+        }
+      }, [book.id])
+
       const ttsToken = useRef(0);
       const ttsContinue = useRef(false);
 
@@ -6683,6 +6695,17 @@ window.__ModuleLoader__.load({
         const openBook = useCallback((book) => {
           setSession({ book, focusQuote: '' });
         }, []);
+        useEffect(() => {
+          const onBack = (event) => {
+            const detail = event.detail || {}
+            if (!detail.bookId) return
+            const book = resolveBook(detail.bookId, detail.chapterIndex, lampTts.bookTitle)
+            setSession({ book, focusQuote: '' })
+          }
+          window.addEventListener('lamp-tts-back', onBack)
+          return () => window.removeEventListener('lamp-tts-back', onBack)
+        }, [resolveBook]);
+
 
         const resolveBook = useCallback(
           (bookId, chapterIndex, fallbackTitle) => {
