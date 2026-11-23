@@ -4995,7 +4995,7 @@ window.__ModuleLoader__.load({
         const timer = setTimeout(() => {
           const node = document.querySelector('.lamp-block[data-tts="1"]')
           if (node && node.scrollIntoView) node.scrollIntoView({ block: 'center', behavior: 'smooth' })
-        }, 3000)
+        }, 1000)
         return () => clearTimeout(timer)
       }, [tts && tts.index])
 
@@ -5004,8 +5004,19 @@ window.__ModuleLoader__.load({
         if (!target || target.bookId !== book.id) return
         lampBackTarget = null
         const index = Number(target.chapterIndex)
+        const blockIndex = Number(target.blockIndex) || 0
+        // 立即高亮当前段
+        setTts({ index: blockIndex, paused: !lampTts.playing })
+        const scrollNow = () => {
+          setTimeout(() => {
+            const node = document.querySelector('.lamp-block[data-tts="1"]') || document.querySelector('.lamp-prose')
+            if (node && node.scrollIntoView) node.scrollIntoView({ block: 'center', behavior: 'auto' })
+          }, 120)
+        }
         if (Number.isFinite(index) && index !== chapterIndex && loadChapterRef.current) {
-          loadChapterRef.current(index, 0)
+          Promise.resolve(loadChapterRef.current(index, 0)).then(scrollNow).catch(() => {})
+        } else {
+          scrollNow()
         }
       }, [book.id])
 
@@ -5051,13 +5062,15 @@ window.__ModuleLoader__.load({
           const detail = event.detail || {}
           if (detail.bookId && detail.bookId !== book.id) return
           const target = lampTts.bookId === book.id ? lampTts.chapterIndex : Number(detail.chapterIndex)
+          const blockIndex = lampTts.bookId === book.id ? (lampTts.segmentBlocks[lampTts.index] ?? 0) : (Number(detail.blockIndex) || 0)
+          setTts({ index: blockIndex, paused: !lampTts.playing })
           if (Number.isFinite(target) && target !== chapterIndex) {
             if (loadChapterRef.current) await loadChapterRef.current(target, 0)
           }
           setTimeout(() => {
             const node = document.querySelector('.lamp-block[data-tts="1"]') || document.querySelector('.lamp-prose')
-            if (node && node.scrollIntoView) node.scrollIntoView({ block: 'center', behavior: 'smooth' })
-          }, 300)
+            if (node && node.scrollIntoView) node.scrollIntoView({ block: 'center', behavior: 'auto' })
+          }, 120)
         }
         window.addEventListener('lamp-tts-back', onBack)
         return () => window.removeEventListener('lamp-tts-back', onBack)
