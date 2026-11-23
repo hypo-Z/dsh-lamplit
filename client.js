@@ -4797,7 +4797,8 @@ window.__ModuleLoader__.load({
       })
       root.querySelector('#lamp-tts-font-minus').addEventListener('click', () => adjustLampFont(-1))
       root.querySelector('#lamp-tts-font-plus').addEventListener('click', () => adjustLampFont(1))
-      lampTts.subscribe(renderLampTts)
+      lampTts.subscribe(() => { renderLampTts(); syncLampBall() })
+      syncLampBall()
       return root
     }
 
@@ -4831,7 +4832,16 @@ window.__ModuleLoader__.load({
       lampTtsWindow.querySelector('#lamp-tts-text').textContent = lampTts.segments[lampTts.index] || ''
     }
 
+    function ensureLampBallStyle() {
+      if (document.getElementById('lamp-tts-ball-style')) return
+      const style = document.createElement('style')
+      style.id = 'lamp-tts-ball-style'
+      style.textContent = '@keyframes lamp-ball-pulse{0%{box-shadow:0 0 0 0 rgba(255,212,105,.55)}70%{box-shadow:0 0 0 12px rgba(255,212,105,0)}100%{box-shadow:0 0 0 0 rgba(255,212,105,0)}}#lamp-tts-ball[data-playing="1"]{animation:lamp-ball-pulse 1.8s ease-out infinite}'
+      document.head.appendChild(style)
+    }
+
     function ensureLampBall() {
+      ensureLampBallStyle()
       let ball = document.getElementById('lamp-tts-ball')
       if (ball) return ball
       ball = document.createElement('button')
@@ -4863,6 +4873,11 @@ window.__ModuleLoader__.load({
       return ball
     }
 
+    function syncLampBall() {
+      const ball = document.getElementById('lamp-tts-ball')
+      if (ball) ball.dataset.playing = lampTts.playing ? '1' : '0'
+    }
+
     function collapseLampBall() {
       const win = lampTtsWindow
       const ball = ensureLampBall()
@@ -4874,6 +4889,7 @@ window.__ModuleLoader__.load({
         ball.style.bottom = 'auto'
         win.style.display = 'none'
       }
+      ball.dataset.playing = lampTts.playing ? '1' : '0'
       ball.style.display = ''
     }
 
