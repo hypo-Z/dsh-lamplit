@@ -5140,6 +5140,7 @@ window.__ModuleLoader__.load({
 
       const ttsStop = () => {
         ttsToken.current += 1;
+        lampTts.stop();
         try {
           if (window.speechSynthesis) window.speechSynthesis.cancel();
         } catch (err) {}
