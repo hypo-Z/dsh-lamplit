@@ -5364,7 +5364,13 @@ window.__ModuleLoader__.load({
         blocks.forEach((block, index) => {
           if (!block || block.t === 'hr' || block.t === 'code') return
           const text = typeof block.x === 'string' ? block.x.trim() : ''
-          if (text !== '') { segments.push(text); segmentBlocks.push(index) }
+          if (text === '') return
+          // 按句切分：逗号不断句，句末标点/换行处切一刀
+          const parts = text.match(/[^。！？!?；;\n]+[。！？!?；;]?/g) || [text]
+          for (const part of parts) {
+            const sentence = part.trim()
+            if (sentence !== '') { segments.push(sentence); segmentBlocks.push(index) }
+          }
         })
         if (segments.length === 0) return
         lampTts.voice = lampVoiceKey(ttsVoiceRef.current)
