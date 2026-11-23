@@ -4650,7 +4650,26 @@ window.__ModuleLoader__.load({
       utter: null,
       token: 0,
       listeners: new Set(),
-      emit() { for (const fn of this.listeners) { try { fn() } catch (err) {} } },
+      emit() {
+        try {
+          localStorage.setItem('lamp.ttsState', JSON.stringify({ bookId: this.bookId, chapterIndex: this.chapterIndex, index: this.index, block: this.segmentBlocks[this.index] ?? 0, voice: this.voice, rate: this.rate, title: this.chapterTitle, bookTitle: this.bookTitle }))
+        } catch (err) {}
+        for (const fn of this.listeners) { try { fn() } catch (err) {} }
+      },
+      restore() {
+        try {
+          const saved = JSON.parse(localStorage.getItem('lamp.ttsState') || 'null')
+          if (!saved) return
+          this.bookId = String(saved.bookId || '')
+          this.chapterIndex = Number(saved.chapterIndex) || 0
+          this.index = Number(saved.index) || 0
+          this.savedBlock = Number(saved.block) || 0
+          this.voice = String(saved.voice || 'yue')
+          this.rate = Number(saved.rate) || 1
+          this.chapterTitle = String(saved.title || '')
+          this.bookTitle = String(saved.bookTitle || '')
+        } catch (err) {}
+      },
       subscribe(fn) { this.listeners.add(fn); return () => this.listeners.delete(fn) },
       stopAudio() {
         if (this.audio) { try { this.audio.pause() } catch (err) {} this.audio.onended = null; this.audio.onerror = null; this.audio = null }
@@ -4730,6 +4749,8 @@ window.__ModuleLoader__.load({
       },
       async openWindow() { openLampTtsWindow(true) },
     })
+
+    lampTts.restore()
 
     let lampLayout = null
     let lampBackTarget = null
@@ -4978,10 +4999,10 @@ window.__ModuleLoader__.load({
 
       // 进入阅读页时，如果引擎正在读同一本书，立即同步高亮（不必等下一次 emit）
       useEffect(() => {
-        if (lampTts.bookId !== book.id || !lampTts.playing) return
+        if (!lampTts.bookId || lampTts.bookId !== book.id) return
         if (lampTts.chapterIndex !== chapterIndex) return
-        const blockIndex = lampTts.segmentBlocks[lampTts.index] ?? 0
-        setTts({ index: blockIndex, paused: false })
+        const blockIndex = lampTts.playing ? (lampTts.segmentBlocks[lampTts.index] ?? 0) : (lampTts.savedBlock || 0)
+        setTts({ index: blockIndex, paused: !lampTts.playing })
       }, [book.id, chapterIndex, status])
 
       useEffect(() => {
