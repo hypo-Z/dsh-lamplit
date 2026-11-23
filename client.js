@@ -4667,6 +4667,9 @@ window.__ModuleLoader__.load({
       });
       const [tts, setTts] = useState(null);
       const [ttsRate, setTtsRate] = useState(1);
+      const [ttsVoice, setTtsVoice] = useState(() => { try { return localStorage.getItem('lamp.ttsVoice') || '' } catch (err) { return '' } });
+      const ttsVoiceRef = useRef(ttsVoice);
+      ttsVoiceRef.current = ttsVoice;
       useEffect(() => { writeAutoPrefs({ speed: autoSpeed, secs: autoSecs }); }, [autoSpeed, autoSecs]);
       const ttsToken = useRef(0);
       const ttsContinue = useRef(false);
@@ -4983,8 +4986,10 @@ window.__ModuleLoader__.load({
           utter.lang = 'zh-CN';
           utter.rate = ttsRate;
           const voices = window.speechSynthesis.getVoices();
-          const zh = voices.find((voice) => /^zh/i.test(voice.lang));
-          if (zh) utter.voice = zh;
+          const zhVoices = voices.filter((voice) => /^zh/i.test(voice.lang));
+          const wanted = ttsVoiceRef.current;
+          const chosen = (wanted && zhVoices.find((voice) => voice.name === wanted)) || zhVoices.find((voice) => /Yue|Premium|高音质|优化/i.test(voice.name)) || zhVoices[0];
+          if (chosen) utter.voice = chosen;
           utter.onend = () => {
             if (ttsToken.current !== token) return;
             speak(position + 1);
@@ -5653,6 +5658,27 @@ window.__ModuleLoader__.load({
                 },
                 tts === null ? '听' : tts.paused ? '▶' : '❚❚',
               ),
+          tts !== null
+            ? h(
+                'button',
+                {
+                  type: 'button',
+                  className: 'lamp-btn lamp-icon-btn',
+                  title: '音色',
+                  'aria-label': '音色',
+                  style: { width: 'auto', padding: '0 8px', fontSize: 11 },
+                  onClick: () => {
+                    const voices = window.speechSynthesis.getVoices().filter((voice) => /^zh/i.test(voice.lang));
+                    if (voices.length === 0) return;
+                    const index = voices.findIndex((voice) => voice.name === ttsVoice);
+                    const next = voices[(index + 1) % voices.length];
+                    setTtsVoice(next.name);
+                    try { localStorage.setItem('lamp.ttsVoice', next.name) } catch (err) {}
+                  },
+                },
+                (ttsVoice || '音色').replace(/\s*\(.*\)$/, ''),
+              )
+            : null,
           tts !== null
             ? h(
                 'button',
