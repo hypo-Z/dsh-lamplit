@@ -4900,7 +4900,9 @@ window.__ModuleLoader__.load({
       ball.id = 'lamp-tts-ball'
       ball.title = '灯下听书'
       ball.textContent = '灯'
-      ball.style.cssText = 'position:fixed;right:24px;bottom:120px;width:52px;height:52px;border-radius:50%;z-index:2147483100;border:1px solid rgba(255,255,255,.2);background:linear-gradient(145deg,#2a2a30,#17171b);color:#ffd469;font-size:20px;font-weight:600;cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.45);display:none'
+      let savedPos = null
+      try { savedPos = JSON.parse(localStorage.getItem('lamp.ballPos') || 'null') } catch (err) {}
+      ball.style.cssText = 'position:fixed;' + (savedPos ? ('left:' + Math.min(Math.max(0, Number(savedPos.left) || 0), window.innerWidth - 52) + 'px;top:' + Math.min(Math.max(0, Number(savedPos.top) || 0), window.innerHeight - 52) + 'px;') : 'right:24px;bottom:120px;') + 'width:52px;height:52px;border-radius:50%;z-index:2147483100;border:1px solid rgba(255,255,255,.2);background:linear-gradient(145deg,#2a2a30,#17171b);color:#ffd469;font-size:20px;font-weight:600;cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.45);display:none'
       let drag = null
       ball.addEventListener('pointerdown', (event) => {
         drag = { x: event.clientX, y: event.clientY, left: ball.getBoundingClientRect().left, top: ball.getBoundingClientRect().top, moved: false }
@@ -4919,7 +4921,9 @@ window.__ModuleLoader__.load({
       ball.addEventListener('pointerup', () => {
         const moved = drag && drag.moved
         drag = null
-        if (!moved) restoreLampWindow()
+        if (!moved) { restoreLampWindow(); return }
+        const rect = ball.getBoundingClientRect()
+        try { localStorage.setItem('lamp.ballPos', JSON.stringify({ left: rect.left, top: rect.top })) } catch (err) {}
       })
       document.body.appendChild(ball)
       return ball
@@ -4935,10 +4939,12 @@ window.__ModuleLoader__.load({
       const ball = ensureLampBall()
       if (win) {
         const rect = win.getBoundingClientRect()
-        ball.style.left = Math.min(Math.max(0, rect.right - 52), window.innerWidth - 52) + 'px'
-        ball.style.top = Math.min(Math.max(0, rect.top), window.innerHeight - 52) + 'px'
-        ball.style.right = 'auto'
-        ball.style.bottom = 'auto'
+        if (rect.width > 0 && rect.height > 0) {
+          ball.style.left = Math.min(Math.max(0, rect.right - 52), window.innerWidth - 52) + 'px'
+          ball.style.top = Math.min(Math.max(0, rect.top), window.innerHeight - 52) + 'px'
+          ball.style.right = 'auto'
+          ball.style.bottom = 'auto'
+        }
         win.style.display = 'none'
       }
       ball.dataset.playing = lampTts.playing ? '1' : '0'
