@@ -4239,15 +4239,15 @@ window.__ModuleLoader__.load({
           return h('h' + (level + 2), { key, className: 'lamp-h' + level }, value);
         }
         case 'q':
-          return h('blockquote', { key, className: 'lamp-q' }, value);
+          return h('blockquote', { key, className: 'lamp-q', 'data-block-index': index }, value);
         case 'li':
-          return h('p', { key, className: 'lamp-li' }, value);
+          return h('p', { key, className: 'lamp-li', 'data-block-index': index }, value);
         case 'code':
-          return h('pre', { key, className: 'lamp-pre' }, h('code', null, value));
+          return h('pre', { key, className: 'lamp-pre', 'data-block-index': index }, h('code', null, value));
         case 'hr':
-          return h('hr', { key, className: 'lamp-hr' });
+          return h('hr', { key, className: 'lamp-hr', 'data-block-index': index });
         default:
-          return h('p', { key, className: 'lamp-p' }, value);
+          return h('p', { key, className: 'lamp-p', 'data-block-index': index }, value);
       }
     }
 
@@ -5412,8 +5412,27 @@ window.__ModuleLoader__.load({
         lampTts.chapterTitle = chapter?.chapter?.title || ''
         lampTts.segments = segments
         lampTts.segmentBlocks = segmentBlocks
-        lampTts.index = 0
-        setTts({ index: 0, paused: false })
+        // 首次从当前阅读位置开始；同一本书同一章有保存位置时优先保存位置
+        // 优先从当前可见段落开始；看不见时退回保存的朗读位置
+        let startBlock = -1
+        try {
+          const prose = document.querySelector('.lamp-prose')
+          if (prose) {
+            const top = prose.getBoundingClientRect().top + 24
+            for (const node of prose.querySelectorAll('[data-block-index]')) {
+              const rect = node.getBoundingClientRect()
+              if (rect.bottom > top) { startBlock = Number(node.dataset.blockIndex) || 0; break }
+            }
+          }
+        } catch (err) {}
+        if (startBlock < 0) {
+          startBlock = (lampTts.bookId === book.id && lampTts.chapterIndex === chapterIndex && lampTts.savedBlock) ? lampTts.savedBlock : 0
+        }
+        let startIndex = segmentBlocks.findIndex((block) => block >= startBlock)
+        if (startIndex < 0) startIndex = 0
+        lampTts.index = startIndex
+        lampTts.savedBlock = segmentBlocks[startIndex] ?? 0
+        setTts({ index: segmentBlocks[startIndex] ?? 0, paused: false })
         lampTts.play()
         openLampTtsWindow(true)
         fetch('/lamplit/api/book/' + encodeURIComponent(book.id))
