@@ -4639,6 +4639,7 @@ window.__ModuleLoader__.load({
       bookTitle: '',
       chapterIndex: 0,
       chapterTitle: '',
+      total: 0,
       segments: [],
       segmentBlocks: [],
       index: 0,
@@ -4679,8 +4680,14 @@ window.__ModuleLoader__.load({
         this.emit()
         const next = () => {
           if (!this.playing || this.index !== index) return
-          if (this.index + 1 >= this.segments.length) { this.playing = false; this.emit(); return }
-          this.playIndex(this.index + 1)
+          if (this.index + 1 < this.segments.length) { this.playIndex(this.index + 1); return }
+          // 章末：有下一章就自动续播
+          if (this.bookId && this.total > this.chapterIndex + 1) {
+            this.load(this.bookId, this.chapterIndex + 1).then(() => { if (this.playing) this.playIndex(0) }).catch(() => { this.playing = false; this.emit() })
+            return
+          }
+          this.playing = false
+          this.emit()
         }
         if (!text) { next(); return }
         const src = '/lamplit/api/tts?voice=' + encodeURIComponent(this.voice) + '&rate=' + encodeURIComponent(String(this.rate)) + '&text=' + encodeURIComponent(text.slice(0, 600))
@@ -4704,6 +4711,7 @@ window.__ModuleLoader__.load({
         this.bookId = book
         this.chapterIndex = chapterIndex
         this.chapterTitle = chapter.title || ''
+        this.total = Number(res.total) || 0
         this.segments = segments
         this.index = 0
         this.emit()
