@@ -4634,7 +4634,7 @@ window.__ModuleLoader__.load({
 
 
     // ── 听书引擎（模块级，切页不中断） ─────────────────────────────
-    const lampTts = {
+    const lampTts = window.__lampTts || (window.__lampTts = {
       bookId: '',
       bookTitle: '',
       chapterIndex: 0,
@@ -4729,7 +4729,7 @@ window.__ModuleLoader__.load({
         return chapter
       },
       async openWindow() { openLampTtsWindow(true) },
-    }
+    })
 
     let lampLayout = null
     let lampBackTarget = null
@@ -4740,6 +4740,8 @@ window.__ModuleLoader__.load({
     }
 
     function ensureLampTtsWindow() {
+      const existing = document.getElementById('lamp-tts-window')
+      if (existing) { lampTtsWindow = existing; return existing }
       if (lampTtsWindow) return lampTtsWindow
       const root = document.createElement('div')
       root.id = 'lamp-tts-window'
