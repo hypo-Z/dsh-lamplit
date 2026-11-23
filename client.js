@@ -4975,6 +4975,16 @@ window.__ModuleLoader__.load({
       }, [book.id, chapterIndex, status])
 
       const loadChapterRef = useRef(null);
+      // 朗读跟随时：当前段变化 3 秒后自动滚动到可视区域
+      useEffect(() => {
+        if (!tts || !lampTts.playing) return
+        const timer = setTimeout(() => {
+          const node = document.querySelector('.lamp-block[data-tts="1"]')
+          if (node && node.scrollIntoView) node.scrollIntoView({ block: 'center', behavior: 'smooth' })
+        }, 3000)
+        return () => clearTimeout(timer)
+      }, [tts && tts.index])
+
       useEffect(() => {
         const target = lampBackTarget
         if (!target || target.bookId !== book.id) return
