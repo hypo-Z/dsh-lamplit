@@ -7383,6 +7383,16 @@ window.__ModuleLoader__.load({
         return h(PageBoundary, null, h(Page, props));
       };
 
+      // 插件卸载/热重载时停掉引擎与兜底定时器，避免旧实例继续发声
+      ctx.effect(
+        () => () => {
+          try { lampTts.stop() } catch (err) {}
+          try { if (window.__lampUiSync) clearInterval(window.__lampUiSync) } catch (err) {}
+          window.__lampUiSync = null
+        },
+        'lamplit: tts cleanup',
+      )
+
       ctx.slots.inject('sidebar.panellist', () =>
         ctx.slots.register(
           {
