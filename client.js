@@ -4640,6 +4640,7 @@ window.__ModuleLoader__.load({
       chapterIndex: 0,
       chapterTitle: '',
       segments: [],
+      segmentBlocks: [],
       index: 0,
       playing: false,
       voice: 'yue',
@@ -4764,7 +4765,13 @@ window.__ModuleLoader__.load({
       root.querySelector('#lamp-tts-toggle').addEventListener('click', () => lampTts.toggle())
       root.querySelector('#lamp-tts-prev').addEventListener('click', () => { lampTts.playIndex(Math.max(0, lampTts.index - 1)) })
       root.querySelector('#lamp-tts-next').addEventListener('click', () => { lampTts.playIndex(Math.min(lampTts.segments.length - 1, lampTts.index + 1)) })
-      root.querySelector('#lamp-tts-back').addEventListener('click', () => { lampSend('lamplit'); root.style.display = 'none' })
+      root.querySelector('#lamp-tts-back').addEventListener('click', () => {
+        try {
+          window.dispatchEvent(new CustomEvent('lamp-tts-back', { detail: { bookId: lampTts.bookId, chapterIndex: lampTts.chapterIndex, blockIndex: lampTts.segmentBlocks[lampTts.index] ?? 0 } }))
+        } catch (err) {}
+        lampSend('lamplit')
+        root.style.display = 'none'
+      })
       root.querySelector('#lamp-tts-progress').addEventListener('input', (event) => { lampTts.playIndex(Number(event.target.value) || 0) })
       root.querySelector('#lamp-tts-chapter').addEventListener('change', async (event) => {
         const next = Number(event.target.value)
@@ -4914,6 +4921,18 @@ window.__ModuleLoader__.load({
       const ttsVoiceRef = useRef(ttsVoice);
       ttsVoiceRef.current = ttsVoice;
       useEffect(() => { writeAutoPrefs({ speed: autoSpeed, secs: autoSecs }); }, [autoSpeed, autoSecs]);
+      useEffect(() => {
+        const unsubscribe = lampTts.subscribe(() => {
+          if (!lampTts.playing) { setTts(null); return }
+          const blockIndex = lampTts.segmentBlocks[lampTts.index] ?? 0
+          setTts({ index: blockIndex, paused: false })
+          if (lampTts.bookId === book.id && lampTts.chapterIndex !== chapterIndex && status === 'ready') {
+            loadChapter(lampTts.chapterIndex, 0)
+          }
+        })
+        return unsubscribe
+      }, [book.id, chapterIndex, status, loadChapter])
+
       const ttsToken = useRef(0);
       const ttsContinue = useRef(false);
 
@@ -4950,6 +4969,23 @@ window.__ModuleLoader__.load({
       aiRef.current = ai;
 
       /* ---------------- 数据 ---------------- */
+
+      useEffect(() => {
+        const onBack = async (event) => {
+          const detail = event.detail || {}
+          if (detail.bookId && detail.bookId !== book.id) return
+          const target = lampTts.bookId === book.id ? lampTts.chapterIndex : Number(detail.chapterIndex)
+          if (Number.isFinite(target) && target !== chapterIndex) {
+            await loadChapter(target, 0)
+          }
+          setTimeout(() => {
+            const node = document.querySelector('.lamp-block[data-tts="1"]') || document.querySelector('.lamp-prose')
+            if (node && node.scrollIntoView) node.scrollIntoView({ block: 'center', behavior: 'smooth' })
+          }, 300)
+        }
+        window.addEventListener('lamp-tts-back', onBack)
+        return () => window.removeEventListener('lamp-tts-back', onBack)
+      }, [book.id, chapterIndex, loadChapter])
 
       const loadChapter = useCallback(
         async (index, restore) => {
@@ -5205,10 +5241,11 @@ window.__ModuleLoader__.load({
 
       const ttsPlay = () => {
         const segments = []
-        blocks.forEach((block) => {
+        const segmentBlocks = []
+        blocks.forEach((block, index) => {
           if (!block || block.t === 'hr' || block.t === 'code') return
           const text = typeof block.x === 'string' ? block.x.trim() : ''
-          if (text !== '') segments.push(text)
+          if (text !== '') { segments.push(text); segmentBlocks.push(index) }
         })
         if (segments.length === 0) return
         const wanted = ttsVoiceRef.current || ''
@@ -5219,6 +5256,7 @@ window.__ModuleLoader__.load({
         lampTts.chapterIndex = chapterIndex
         lampTts.chapterTitle = chapter?.chapter?.title || ''
         lampTts.segments = segments
+        lampTts.segmentBlocks = segmentBlocks
         lampTts.index = 0
         setTts({ index: 0, paused: false })
         lampTts.play()
