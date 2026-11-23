@@ -5418,9 +5418,9 @@ window.__ModuleLoader__.load({
         try {
           const prose = document.querySelector('.lamp-prose')
           if (prose) {
-            // 用视口顶部（避开顶部工具栏）判断第一段可见段落；
+            // 取视口中线附近的段落作为起点（更符合“我从这里开始读”的直觉）；
             // 不能用 prose 自身 top——整章容器滚动后它是负值，会导致永远从第 0 段开始
-            const top = 90
+            const top = window.innerHeight * 0.45
             for (const node of prose.querySelectorAll('[data-block-index]')) {
               const rect = node.getBoundingClientRect()
               if (rect.bottom > top) { startBlock = Number(node.dataset.blockIndex) || 0; break }
