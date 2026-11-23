@@ -5147,63 +5147,37 @@ window.__ModuleLoader__.load({
       };
 
       const ttsPlay = () => {
-        if (!ttsSupported) return;
-        ttsToken.current += 1;
-        const token = ttsToken.current;
-        const segments = [];
-        blocks.forEach((block, index) => {
-          if (!block || block.t === 'hr' || block.t === 'code') return;
-          const text = typeof block.x === 'string' ? block.x.trim() : '';
-          if (text !== '') segments.push({ index, text });
-        });
-        if (segments.length === 0) return;
-        const speak = (position) => {
-          if (ttsToken.current !== token) return;
-          if (position >= segments.length) {
-            if (hasNext(chapter)) {
-              ttsContinue.current = true;
-              loadChapter(chapter.next, 0);
-            } else {
-              ttsStop();
-            }
-            return;
-          }
-          const segment = segments[position];
-          const utter = new window.SpeechSynthesisUtterance(segment.text);
-          utter.lang = 'zh-CN';
-          utter.rate = ttsRate;
-          const voices = window.speechSynthesis.getVoices();
-          const zhVoices = voices.filter((voice) => /^zh/i.test(voice.lang));
-          const wanted = ttsVoiceRef.current;
-          const chosen = (wanted && zhVoices.find((voice) => voice.name === wanted)) || zhVoices.find((voice) => /Yue|Premium|高音质|优化/i.test(voice.name)) || zhVoices[0];
-          if (chosen) utter.voice = chosen;
-          utter.onend = () => {
-            if (ttsToken.current !== token) return;
-            speak(position + 1);
-          };
-          utter.onerror = () => {
-            if (ttsToken.current !== token) return;
-            ttsStop();
-          };
-          setTts({ index: segment.index, paused: false });
-          window.speechSynthesis.speak(utter);
-        };
-        speak(0);
+        const segments = []
+        blocks.forEach((block) => {
+          if (!block || block.t === 'hr' || block.t === 'code') return
+          const text = typeof block.x === 'string' ? block.x.trim() : ''
+          if (text !== '') segments.push(text)
+        })
+        if (segments.length === 0) return
+        const wanted = ttsVoiceRef.current || ''
+        lampTts.voice = /美佳|Meijia/i.test(wanted) ? 'meijia' : 'yue'
+        lampTts.rate = ttsRate
+        lampTts.bookId = book.id
+        lampTts.bookTitle = book.title || ''
+        lampTts.chapterIndex = chapterIndex
+        lampTts.chapterTitle = chapter?.chapter?.title || ''
+        lampTts.segments = segments
+        lampTts.index = 0
+        setTts({ index: 0, paused: false })
+        lampTts.play()
+        openLampTtsWindow(true)
+        fetch('/lamplit/api/book/' + encodeURIComponent(book.id))
+          .then((response) => response.json())
+          .then((data) => { if (data && data.ok) renderLampTtsChapters(data.toc || []) })
+          .catch(() => {})
       };
 
       const ttsToggle = () => {
-        if (tts === null) {
-          ttsPlay();
-          return;
-        }
-        if (tts.paused) {
-          try { window.speechSynthesis.resume(); } catch (err) {}
-          setTts({ index: tts.index, paused: false });
-        } else {
-          try { window.speechSynthesis.pause(); } catch (err) {}
-          setTts({ index: tts.index, paused: true });
-        }
+        if (lampTts.playing) { lampTts.pause(); setTts(null); return }
+        if (lampTts.segments.length > 0) { lampTts.play(); setTts({ index: lampTts.index, paused: false }); return }
+        ttsPlay()
       };
+
 
       useEffect(
         () => () => {
@@ -5884,6 +5858,17 @@ window.__ModuleLoader__.load({
                 ttsRate.toFixed(1) + '×',
               )
             : null,
+          h(
+            'button',
+            {
+              type: 'button',
+              className: 'lamp-btn lamp-icon-btn',
+              title: '听书小窗（可后台播放）',
+              'aria-label': '听书小窗',
+              onClick: () => lampTts.openWindow(true),
+            },
+            '窗',
+          ),
           tts !== null
             ? h(
                 'button',
@@ -7094,6 +7079,7 @@ window.__ModuleLoader__.load({
     }
 
     function apply(ctx) {
+      try { lampLayout = ctx.layout || (typeof ctx.get === 'function' ? ctx.get('layout') : null) || null } catch (err) {}
       const effect = (factory, label) => {
         if (typeof ctx.effect === 'function') return ctx.effect(factory, label);
         return factory();
