@@ -4935,12 +4935,13 @@ window.__ModuleLoader__.load({
           const blockIndex = lampTts.segmentBlocks[lampTts.index] ?? 0
           setTts({ index: blockIndex, paused: false })
           if (lampTts.bookId === book.id && lampTts.chapterIndex !== chapterIndex && status === 'ready') {
-            loadChapter(lampTts.chapterIndex, 0)
+            if (loadChapterRef.current) loadChapterRef.current(lampTts.chapterIndex, 0)
           }
         })
         return unsubscribe
-      }, [book.id, chapterIndex, status, loadChapter])
+      }, [book.id, chapterIndex, status])
 
+      const loadChapterRef = useRef(null);
       const ttsToken = useRef(0);
       const ttsContinue = useRef(false);
 
@@ -4984,7 +4985,7 @@ window.__ModuleLoader__.load({
           if (detail.bookId && detail.bookId !== book.id) return
           const target = lampTts.bookId === book.id ? lampTts.chapterIndex : Number(detail.chapterIndex)
           if (Number.isFinite(target) && target !== chapterIndex) {
-            await loadChapter(target, 0)
+            if (loadChapterRef.current) await loadChapterRef.current(target, 0)
           }
           setTimeout(() => {
             const node = document.querySelector('.lamp-block[data-tts="1"]') || document.querySelector('.lamp-prose')
@@ -4993,7 +4994,7 @@ window.__ModuleLoader__.load({
         }
         window.addEventListener('lamp-tts-back', onBack)
         return () => window.removeEventListener('lamp-tts-back', onBack)
-      }, [book.id, chapterIndex, loadChapter])
+      }, [book.id, chapterIndex])
 
       const loadChapter = useCallback(
         async (index, restore) => {
@@ -5019,6 +5020,7 @@ window.__ModuleLoader__.load({
         },
         [book.id],
       );
+      loadChapterRef.current = loadChapter;
 
       useEffect(() => {
         setFinished(!!book.finished);
