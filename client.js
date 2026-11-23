@@ -6001,12 +6001,16 @@ window.__ModuleLoader__.load({
                   'aria-label': '音色',
                   style: { width: 'auto', padding: '0 8px', fontSize: 11 },
                   onClick: () => {
-                    const voices = window.speechSynthesis.getVoices().filter((voice) => /^zh/i.test(voice.lang));
-                    if (voices.length === 0) return;
-                    const index = voices.findIndex((voice) => voice.name === ttsVoice);
-                    const next = voices[(index + 1) % voices.length];
-                    setTtsVoice(next.name);
-                    try { localStorage.setItem('lamp.ttsVoice', next.name) } catch (err) {}
+                    const order = [
+                      { key: 'yue', label: '月' },
+                      { key: 'tingting', label: '婷婷' },
+                      { key: 'meijia', label: '美佳' },
+                    ];
+                    const current = lampVoiceKey(ttsVoice);
+                    const index = order.findIndex((item) => item.key === current);
+                    const next = order[(index + 1) % order.length];
+                    setTtsVoice(next.label);
+                    try { localStorage.setItem('lamp.ttsVoice', next.label) } catch (err) {}
                   },
                 },
                 (ttsVoice || '音色').replace(/\s*\(.*\)$/, ''),
