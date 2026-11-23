@@ -6695,17 +6695,6 @@ window.__ModuleLoader__.load({
         const openBook = useCallback((book) => {
           setSession({ book, focusQuote: '' });
         }, []);
-        useEffect(() => {
-          const onBack = (event) => {
-            const detail = event.detail || {}
-            if (!detail.bookId) return
-            const book = resolveBook(detail.bookId, detail.chapterIndex, lampTts.bookTitle)
-            setSession({ book, focusQuote: '' })
-          }
-          window.addEventListener('lamp-tts-back', onBack)
-          return () => window.removeEventListener('lamp-tts-back', onBack)
-        }, [resolveBook]);
-
 
         const resolveBook = useCallback(
           (bookId, chapterIndex, fallbackTitle) => {
@@ -6737,6 +6726,17 @@ window.__ModuleLoader__.load({
           },
           [resolveBook],
         );
+
+        useEffect(() => {
+          const onBack = (event) => {
+            const detail = event.detail || {}
+            if (!detail.bookId) return
+            const book = resolveBook(detail.bookId, detail.chapterIndex, lampTts.bookTitle)
+            setSession({ book, focusQuote: '' })
+          }
+          window.addEventListener('lamp-tts-back', onBack)
+          return () => window.removeEventListener('lamp-tts-back', onBack)
+        }, [resolveBook]);
 
         const removeBook = useCallback(
           async (book) => {
