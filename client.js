@@ -4632,6 +4632,193 @@ window.__ModuleLoader__.load({
       } catch (err) {}
     }
 
+
+    // ── 听书引擎（模块级，切页不中断） ─────────────────────────────
+    const lampTts = {
+      bookId: '',
+      bookTitle: '',
+      chapterIndex: 0,
+      chapterTitle: '',
+      segments: [],
+      index: 0,
+      playing: false,
+      voice: 'yue',
+      rate: 1,
+      audio: null,
+      utter: null,
+      listeners: new Set(),
+      emit() { for (const fn of this.listeners) { try { fn() } catch (err) {} } },
+      subscribe(fn) { this.listeners.add(fn); return () => this.listeners.delete(fn) },
+      stopAudio() {
+        if (this.audio) { try { this.audio.pause() } catch (err) {} this.audio.onended = null; this.audio.onerror = null; this.audio = null }
+        try { if (window.speechSynthesis) window.speechSynthesis.cancel() } catch (err) {}
+        this.utter = null
+      },
+      speechFallback(text, onend) {
+        if (typeof window === 'undefined' || !window.SpeechSynthesisUtterance || !window.speechSynthesis) return false
+        const utter = new window.SpeechSynthesisUtterance(text)
+        utter.lang = 'zh-CN'
+        utter.rate = this.rate
+        const voices = window.speechSynthesis.getVoices().filter((voice) => /^zh/i.test(voice.lang))
+        const wanted = localStorage.getItem('lamp.ttsVoice') || ''
+        const chosen = (wanted && voices.find((voice) => voice.name === wanted)) || voices[0]
+        if (chosen) utter.voice = chosen
+        utter.onend = onend
+        utter.onerror = onend
+        this.utter = utter
+        window.speechSynthesis.speak(utter)
+        return true
+      },
+      playIndex(index) {
+        this.stopAudio()
+        if (index < 0 || index >= this.segments.length) { this.playing = false; this.emit(); return }
+        this.index = index
+        const text = this.segments[index]
+        this.playing = true
+        this.emit()
+        const next = () => {
+          if (!this.playing || this.index !== index) return
+          if (this.index + 1 >= this.segments.length) { this.playing = false; this.emit(); return }
+          this.playIndex(this.index + 1)
+        }
+        if (!text) { next(); return }
+        const src = '/lamplit/api/tts?voice=' + encodeURIComponent(this.voice) + '&rate=' + encodeURIComponent(String(this.rate)) + '&text=' + encodeURIComponent(text.slice(0, 600))
+        const audio = new Audio(src)
+        this.audio = audio
+        audio.onended = next
+        audio.onerror = () => { this.audio = null; if (!this.speechFallback(text, next)) next() }
+        const started = audio.play()
+        if (started && started.catch) started.catch(() => { this.audio = null; if (!this.speechFallback(text, next)) next() })
+      },
+      play() { this.playIndex(this.index) },
+      pause() { this.playing = false; this.stopAudio(); this.emit() },
+      toggle() { if (this.playing) this.pause(); else this.play() },
+      stop() { this.playing = false; this.stopAudio(); this.emit() },
+      async load(book, chapterIndex) {
+        const res = await fetch('/lamplit/api/book/' + encodeURIComponent(book) + '/chapter/' + chapterIndex).then((response) => response.json())
+        if (!res || !res.ok) throw new Error(res?.error || '章节加载失败')
+        const chapter = res.chapter || {}
+        const blocks = Array.isArray(chapter.blocks) ? chapter.blocks : []
+        const segments = blocks.filter((block) => block && block.t !== 'hr' && block.t !== 'code' && typeof block.x === 'string').map((block) => block.x.trim()).filter(Boolean)
+        this.bookId = book
+        this.chapterIndex = chapterIndex
+        this.chapterTitle = chapter.title || ''
+        this.segments = segments
+        this.index = 0
+        this.emit()
+        return chapter
+      },
+      async openWindow() { openLampTtsWindow(true) },
+    }
+
+    let lampLayout = null
+    let lampTtsWindow = null
+
+    function lampSend(panelId) {
+      try { if (lampLayout && typeof lampLayout.selectPanel === 'function') lampLayout.selectPanel(panelId) } catch (err) {}
+    }
+
+    function ensureLampTtsWindow() {
+      if (lampTtsWindow) return lampTtsWindow
+      const root = document.createElement('div')
+      root.id = 'lamp-tts-window'
+      root.style.cssText = 'position:fixed;right:24px;bottom:96px;width:340px;z-index:2147483100;background:rgba(20,20,24,.96);border:1px solid rgba(255,255,255,.14);border-radius:12px;box-shadow:0 18px 48px rgba(0,0,0,.5);color:#eee;font:13px/1.5 -apple-system,BlinkMacSystemFont,sans-serif;display:none;overflow:hidden'
+      root.innerHTML = '<div id="lamp-tts-bar" style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(255,255,255,.04);cursor:move"><b id="lamp-tts-title" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">听书</b><button id="lamp-tts-font-" style="border:0;background:none;color:#ddd;cursor:pointer">A-</button><button id="lamp-tts-font+" style="border:0;background:none;color:#ddd;cursor:pointer">A+</button><button id="lamp-tts-close" style="border:0;background:none;color:#ddd;cursor:pointer">✕</button></div><div id="lamp-tts-body" style="padding:10px"><div id="lamp-tts-sub" style="opacity:.7;font-size:12px;margin-bottom:8px"></div><input id="lamp-tts-progress" type="range" min="0" max="0" value="0" style="width:100%"><div style="display:flex;align-items:center;gap:6px;margin:6px 0"><button id="lamp-tts-prev" style="border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:6px;padding:4px 8px;cursor:pointer">⏮</button><button id="lamp-tts-toggle" style="border:0;background:var(--dsw-alias-brand-primary,#5b8cff);color:#fff;border-radius:6px;padding:4px 12px;cursor:pointer">▶</button><button id="lamp-tts-next" style="border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:6px;padding:4px 8px;cursor:pointer">⏭</button><button id="lamp-tts-back" style="margin-left:auto;border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:6px;padding:4px 8px;cursor:pointer">回页面</button></div><select id="lamp-tts-chapter" style="width:100%;background:rgba(255,255,255,.08);color:#eee;border:1px solid rgba(255,255,255,.14);border-radius:6px;padding:4px"></select><div id="lamp-tts-text" style="margin-top:8px;opacity:.85;max-height:110px;overflow:auto"></div></div><div id="lamp-tts-resize" style="position:absolute;right:0;bottom:0;width:14px;height:14px;cursor:nwse-resize;background:linear-gradient(135deg,transparent 50%,rgba(255,255,255,.35) 50%)"></div>'
+      document.body.appendChild(root)
+      lampTtsWindow = root
+      const bar = root.querySelector('#lamp-tts-bar')
+      const clamp = () => {
+        const rect = root.getBoundingClientRect()
+        root.style.left = Math.min(Math.max(0, rect.left), Math.max(0, window.innerWidth - rect.width)) + 'px'
+        root.style.top = Math.min(Math.max(0, rect.top), Math.max(0, window.innerHeight - rect.height)) + 'px'
+        root.style.right = 'auto'
+        root.style.bottom = 'auto'
+      }
+      let drag = null
+      bar.addEventListener('pointerdown', (event) => {
+        if (event.target.closest('button')) return
+        const rect = root.getBoundingClientRect()
+        drag = { x: event.clientX, y: event.clientY, left: rect.left, top: rect.top }
+        bar.setPointerCapture(event.pointerId)
+      })
+      bar.addEventListener('pointermove', (event) => {
+        if (!drag) return
+        root.style.left = Math.max(0, drag.left + event.clientX - drag.x) + 'px'
+        root.style.top = Math.max(0, drag.top + event.clientY - drag.y) + 'px'
+        root.style.right = 'auto'
+        root.style.bottom = 'auto'
+      })
+      bar.addEventListener('pointerup', () => { drag = null; clamp() })
+      const resize = root.querySelector('#lamp-tts-resize')
+      let resizing = null
+      resize.addEventListener('pointerdown', (event) => { event.stopPropagation(); resizing = { x: event.clientX, y: event.clientY, w: root.offsetWidth, h: root.offsetHeight } })
+      resize.addEventListener('pointermove', (event) => {
+        if (!resizing) return
+        root.style.width = Math.max(260, resizing.w + event.clientX - resizing.x) + 'px'
+        root.style.height = Math.max(180, resizing.h + event.clientY - resizing.y) + 'px'
+      })
+      resize.addEventListener('pointerup', () => { resizing = null; clamp() })
+      window.addEventListener('resize', clamp)
+      root.querySelector('#lamp-tts-close').addEventListener('click', () => { root.style.display = 'none' })
+      root.querySelector('#lamp-tts-toggle').addEventListener('click', () => lampTts.toggle())
+      root.querySelector('#lamp-tts-prev').addEventListener('click', () => { lampTts.playIndex(Math.max(0, lampTts.index - 1)) })
+      root.querySelector('#lamp-tts-next').addEventListener('click', () => { lampTts.playIndex(Math.min(lampTts.segments.length - 1, lampTts.index + 1)) })
+      root.querySelector('#lamp-tts-back').addEventListener('click', () => { lampSend('lamplit'); root.style.display = 'none' })
+      root.querySelector('#lamp-tts-progress').addEventListener('input', (event) => { lampTts.playIndex(Number(event.target.value) || 0) })
+      root.querySelector('#lamp-tts-chapter').addEventListener('change', async (event) => {
+        const next = Number(event.target.value)
+        if (!lampTts.bookId) return
+        try {
+          await lampTts.load(lampTts.bookId, next)
+          const toc = await fetch('/lamplit/api/book/' + encodeURIComponent(lampTts.bookId)).then((response) => response.json())
+          if (toc && toc.ok) renderLampTtsChapters(toc.toc || [])
+          lampTts.play()
+        } catch (err) {}
+      })
+      root.querySelector('#lamp-tts-font-').addEventListener('click', () => adjustLampFont(-1))
+      root.querySelector('#lamp-tts-font+').addEventListener('click', () => adjustLampFont(1))
+      lampTts.subscribe(renderLampTts)
+      return root
+    }
+
+    function adjustLampFont(delta) {
+      const current = Number(localStorage.getItem('lamp.ttsFont') || '13') || 13
+      const next = Math.min(20, Math.max(11, current + delta))
+      try { localStorage.setItem('lamp.ttsFont', String(next)) } catch (err) {}
+      if (lampTtsWindow) {
+        lampTtsWindow.style.fontSize = next + 'px'
+        lampTtsWindow.querySelector('#lamp-tts-text').style.fontSize = next + 'px'
+      }
+    }
+
+    function renderLampTtsChapters(toc) {
+      if (!lampTtsWindow) return
+      const select = lampTtsWindow.querySelector('#lamp-tts-chapter')
+      select.innerHTML = toc.map((item) => '<option value="' + item.index + '">' + String(item.title || '').replace(/</g, '&lt;') + '</option>').join('')
+      select.value = String(lampTts.chapterIndex)
+    }
+
+    function renderLampTts() {
+      if (!lampTtsWindow || lampTtsWindow.style.display === 'none') return
+      const title = lampTtsWindow.querySelector('#lamp-tts-title')
+      title.textContent = lampTts.chapterTitle || '听书'
+      lampTtsWindow.querySelector('#lamp-tts-sub').textContent = (lampTts.bookTitle ? lampTts.bookTitle + ' · ' : '') + (lampTts.segments.length ? (lampTts.index + 1) + '/' + lampTts.segments.length : '未开始')
+      const progress = lampTtsWindow.querySelector('#lamp-tts-progress')
+      progress.max = String(Math.max(0, lampTts.segments.length - 1))
+      progress.value = String(lampTts.index)
+      lampTtsWindow.querySelector('#lamp-tts-toggle').textContent = lampTts.playing ? '❚❚' : '▶'
+      lampTtsWindow.querySelector('#lamp-tts-text').textContent = lampTts.segments[lampTts.index] || ''
+    }
+
+    function openLampTtsWindow(show) {
+      const win = ensureLampTtsWindow()
+      if (show) {
+        win.style.display = ''
+        win.style.fontSize = (localStorage.getItem('lamp.ttsFont') || '13') + 'px'
+      }
+      renderLampTts()
+    }
+
     function Reader(props) {
       const { t, book } = props;
       const settings = props.settings;
