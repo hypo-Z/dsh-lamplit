@@ -5846,10 +5846,12 @@ window.__ModuleLoader__.load({
       );
       useEffect(() => {
         ttsToken.current += 1;
-        try {
-          if (typeof window !== 'undefined' && window.speechSynthesis) window.speechSynthesis.cancel();
-        } catch (err) {}
-        setTts(null);
+        // 只在引擎没有朗读时清理系统语音；不清高亮，避免回页面时提醒消失
+        if (!lampTts.playing) {
+          try {
+            if (typeof window !== 'undefined' && window.speechSynthesis) window.speechSynthesis.cancel();
+          } catch (err) {}
+        }
       }, [chapterKey]);
       useEffect(() => {
         if (status !== 'ready') return;
