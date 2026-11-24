@@ -4921,7 +4921,7 @@ window.__ModuleLoader__.load({
       let savedWin = null
       try { savedWin = JSON.parse(localStorage.getItem('lamp.winRect') || 'null') } catch (err) {}
       root.style.cssText = 'position:fixed;right:24px;bottom:96px;width:340px;z-index:2147483100;background:rgba(20,20,24,.96);border:1px solid rgba(255,255,255,.14);border-radius:12px;box-shadow:0 18px 48px rgba(0,0,0,.5);color:#eee;font:13px/1.5 -apple-system,BlinkMacSystemFont,sans-serif;display:none;overflow:hidden'
-      root.innerHTML = '<div id="lamp-tts-bar" style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(255,255,255,.04);cursor:move"><b id="lamp-tts-title" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">听书</b><button id="lamp-tts-voice" style="border:0;background:rgba(255,255,255,.1);color:#eee;border-radius:5px;padding:2px 8px;cursor:pointer">月</button><button id="lamp-tts-font-minus" style="border:0;background:none;color:#ddd;cursor:pointer">A-</button><button id="lamp-tts-font-plus" style="border:0;background:none;color:#ddd;cursor:pointer">A+</button><button id="lamp-tts-ballbtn" style="border:0;background:none;color:#ddd;cursor:pointer" title="收起为小球">◔</button><button id="lamp-tts-close" style="border:0;background:none;color:#ddd;cursor:pointer">✕</button></div><div id="lamp-tts-body" style="padding:10px"><div id="lamp-tts-sub" style="opacity:.7;font-size:12px;margin-bottom:8px"></div><input id="lamp-tts-progress" type="range" min="0" max="0" value="0" style="width:100%"><div style="display:flex;align-items:center;gap:6px;margin:6px 0"><button id="lamp-tts-prev" style="border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:6px;padding:4px 8px;cursor:pointer">⏮</button><button id="lamp-tts-toggle" style="border:0;background:var(--dsw-alias-brand-primary,#5b8cff);color:#fff;border-radius:6px;padding:4px 12px;cursor:pointer">▶</button><button id="lamp-tts-next" style="border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:6px;padding:4px 8px;cursor:pointer">⏭</button><button id="lamp-tts-back" style="margin-left:auto;border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:6px;padding:4px 8px;cursor:pointer">回页面</button></div><select id="lamp-tts-chapter" style="width:100%;background:rgba(255,255,255,.08);color:#eee;border:1px solid rgba(255,255,255,.14);border-radius:6px;padding:4px"></select><div id="lamp-tts-text" style="margin-top:8px;opacity:.85;max-height:110px;overflow:auto"></div></div><div id="lamp-tts-resize" style="position:absolute;right:0;bottom:0;width:14px;height:14px;cursor:nwse-resize;background:linear-gradient(135deg,transparent 50%,rgba(255,255,255,.35) 50%)"></div>'
+      root.innerHTML = '<div id="lamp-tts-bar" style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(255,255,255,.04);cursor:move"><b id="lamp-tts-title" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">听书</b><button id="lamp-tts-voice" style="border:0;background:rgba(255,255,255,.1);color:#eee;border-radius:5px;padding:2px 8px;cursor:pointer">月</button><button id="lamp-tts-font-minus" style="border:0;background:none;color:#ddd;cursor:pointer">A-</button><button id="lamp-tts-font-plus" style="border:0;background:none;color:#ddd;cursor:pointer">A+</button><button id="lamp-tts-ballbtn" style="border:0;background:none;color:#ddd;cursor:pointer" title="收起为小球">◔</button><button id="lamp-tts-close" style="border:0;background:none;color:#ddd;cursor:pointer">✕</button></div><div id="lamp-tts-body" style="padding:10px"><div id="lamp-tts-sub" style="opacity:.7;font-size:12px;margin-bottom:8px"></div><input id="lamp-tts-progress" type="range" min="0" max="0" value="0" style="width:100%"><div style="display:flex;align-items:center;gap:6px;margin:6px 0"><button id="lamp-tts-prev" style="border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:6px;padding:4px 8px;cursor:pointer">⏮</button><button id="lamp-tts-toggle" style="border:0;background:var(--dsw-alias-brand-primary,#5b8cff);color:#fff;border-radius:6px;padding:4px 12px;cursor:pointer">▶</button><button id="lamp-tts-next" style="border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:6px;padding:4px 8px;cursor:pointer">⏭</button><button id="lamp-tts-rate" style="border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:6px;padding:4px 8px;cursor:pointer">1.0×</button><button id="lamp-tts-back" style="margin-left:auto;border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:6px;padding:4px 8px;cursor:pointer">回页面</button></div><select id="lamp-tts-chapter" style="width:100%;background:rgba(255,255,255,.08);color:#eee;border:1px solid rgba(255,255,255,.14);border-radius:6px;padding:4px"></select><div id="lamp-tts-text" style="margin-top:8px;opacity:.85;max-height:110px;overflow:auto"></div></div><div id="lamp-tts-resize" style="position:absolute;right:0;bottom:0;width:14px;height:14px;cursor:nwse-resize;background:linear-gradient(135deg,transparent 50%,rgba(255,255,255,.35) 50%)"></div>'
       document.body.appendChild(root)
       if (savedWin) {
         try {
@@ -4980,6 +4980,11 @@ window.__ModuleLoader__.load({
       if (voiceBtn) {
         voiceBtn.textContent = lampVoiceLabel()
         voiceBtn.addEventListener('click', () => { cycleLampVoice(); scheduleHide() })
+      }
+      const rateBtn = root.querySelector('#lamp-tts-rate')
+      if (rateBtn) {
+        rateBtn.textContent = lampRateLabel()
+        rateBtn.addEventListener('click', () => { cycleLampRate(); scheduleHide() })
       }
       root.querySelector('#lamp-tts-toggle').addEventListener('click', () => lampTts.toggle())
       root.querySelector('#lamp-tts-prev').addEventListener('click', () => { lampTts.playIndex(Math.max(0, lampTts.index - 1)) })
@@ -5042,6 +5047,8 @@ window.__ModuleLoader__.load({
 
     function renderLampTtsChapters(toc) {
       if (!lampTtsWindow) return
+      const rateButton = lampTtsWindow.querySelector('#lamp-tts-rate')
+      if (rateButton) rateButton.textContent = lampRateLabel()
       const voiceButton = lampTtsWindow.querySelector('#lamp-tts-voice')
       if (voiceButton) voiceButton.textContent = lampVoiceLabel()
       const select = lampTtsWindow.querySelector('#lamp-tts-chapter')
@@ -5072,6 +5079,26 @@ window.__ModuleLoader__.load({
     function lampVoiceLabel() {
       const stored = localStorage.getItem('lamp.ttsVoice') || '月'
       return stored.replace(/\s*\(.*\)$/, '')
+    }
+
+    const LAMP_RATES = [0.8, 1, 1.2, 1.5]
+
+    function lampRate() {
+      const stored = Number(localStorage.getItem('lamp.ttsRate') || '1')
+      return LAMP_RATES.includes(stored) ? stored : 1
+    }
+
+    function lampRateLabel() { return lampRate().toFixed(1) + '×' }
+
+    function cycleLampRate() {
+      const current = lampRate()
+      const index = LAMP_RATES.indexOf(current)
+      const next = LAMP_RATES[(index + 1) % LAMP_RATES.length]
+      try { localStorage.setItem('lamp.ttsRate', String(next)) } catch (err) {}
+      lampTts.rate = next
+      if (lampTts.playing) { try { lampTts.playIndex(lampTts.index) } catch (err) {} }
+      const button = document.getElementById('lamp-tts-rate')
+      if (button) button.textContent = next.toFixed(1) + '×'
     }
 
     function cycleLampVoice() {
@@ -5704,7 +5731,7 @@ window.__ModuleLoader__.load({
         })
         if (segments.length === 0) return
         lampTts.voice = lampVoiceKey(localStorage.getItem('lamp.ttsVoice') || ttsVoiceRef.current)
-        lampTts.rate = ttsRate
+        lampTts.rate = lampRate()
         lampTts.bookId = book.id
         lampTts.bookTitle = book.title || ''
         lampTts.chapterIndex = chapterIndex
@@ -6381,24 +6408,6 @@ window.__ModuleLoader__.load({
                 )
               : null,
           ),
-          tts !== null
-            ? h(
-                'button',
-                {
-                  type: 'button',
-                  className: 'lamp-btn lamp-icon-btn',
-                  title: '语速',
-                  'aria-label': '语速',
-                  style: { width: 'auto', padding: '0 8px', fontSize: 11 },
-                  onClick: () => {
-                    const rates = [0.8, 1, 1.2, 1.5];
-                    const next = rates[(rates.indexOf(ttsRate) + 1) % rates.length];
-                    setTtsRate(next);
-                  },
-                },
-                ttsRate.toFixed(1) + '×',
-              )
-            : null,
           h(
             'button',
             {
