@@ -4654,6 +4654,7 @@ window.__ModuleLoader__.load({
       utter: null,
       token: 0,
       preload: null,
+      preload2: null,
       fraction: 0,
       currentTime: 0,
       pausedAt: 0,
@@ -4793,16 +4794,20 @@ window.__ModuleLoader__.load({
         }
         if (!text) { next(); return }
         const buildSrc = (value) => '/lamplit/api/tts?voice=' + encodeURIComponent(this.voice) + '&rate=' + encodeURIComponent(String(this.rate)) + '&text=' + encodeURIComponent(String(value).slice(0, 600))
-        const preloaded = this.preload && this.preload.index === index ? this.preload.url : null
+        let preloaded = null
+        if (this.preload && this.preload.index === index) { preloaded = this.preload.url; this.preload = null }
+        else if (this.preload2 && this.preload2.index === index) { preloaded = this.preload2.url; this.preload2 = null }
         const src = preloaded || buildSrc(text)
-        if (preloaded) this.preload = null
-        // 预取下一句，减少句间停顿
-        const nextText = this.segments[index + 1]
-        if (nextText) {
-          const nextIndex = index + 1
+        // 预取后两句，尽量消除句间等待
+        for (const offset of [1, 2]) {
+          const nextText = this.segments[index + offset]
+          if (!nextText) continue
+          const nextIndex = index + offset
+          if ((this.preload && this.preload.index === nextIndex) || (this.preload2 && this.preload2.index === nextIndex)) continue
           fetch(buildSrc(nextText)).then((response) => response.ok ? response.blob() : null).then((blob) => {
-            if (!blob || this.preload || token !== this.token) return
-            this.preload = { index: nextIndex, url: URL.createObjectURL(blob) }
+            if (!blob || token !== this.token) return
+            const slot = offset === 1 ? 'preload' : 'preload2'
+            if (!this[slot]) this[slot] = { index: nextIndex, url: URL.createObjectURL(blob) }
           }).catch(() => {})
         }
         const audio = new Audio(src)
