@@ -5759,6 +5759,15 @@ window.__ModuleLoader__.load({
       };
 
       const ttsPlay = () => {
+        // 同一本书/同一章已有朗读会话：继续上次位置，不要从头开始
+        if (lampTts.bookId === book.id && lampTts.chapterIndex === chapterIndex && lampTts.segments.length > 0) {
+          lampTts.voice = lampVoiceKey(localStorage.getItem('lamp.ttsVoice') || ttsVoiceRef.current)
+          lampTts.rate = lampRate()
+          setTts({ index: resolveBlockIndex(), text: lampTts.segments[lampTts.index] || '', paused: false })
+          lampTts.play()
+          openLampTtsWindow(true)
+          return
+        }
         const segments = []
         const segmentBlocks = []
         blocks.forEach((block, index) => {
