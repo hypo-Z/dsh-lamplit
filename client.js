@@ -5393,7 +5393,7 @@ window.__ModuleLoader__.load({
       };
       const followPauseUntil = useRef(0);
       const highlightedRef = useRef(null);
-      const applyDomHighlight = (text) => {
+      const applyDomHighlight = (text, retry) => {
         const head = String(text || '').trim().slice(0, 18)
         if (!head) return
         const nodes = document.querySelectorAll('.lamp-prose [data-block-index]')
@@ -5401,7 +5401,12 @@ window.__ModuleLoader__.load({
         for (const node of nodes) {
           if (String(node.textContent || '').indexOf(head) >= 0) { target = node; break }
         }
-        if (!target) return
+        if (!target) {
+          // 刚挂载/刚切章时 DOM 可能还没渲染完：重试几次
+          const attempt = Number(retry) || 0
+          if (attempt < 5) setTimeout(() => { try { applyDomHighlight(text, attempt + 1) } catch (err) {} }, 120)
+          return
+        }
         if (highlightedRef.current && highlightedRef.current !== target) {
           try { highlightedRef.current.setAttribute('data-tts', '0') } catch (err) {}
         }
