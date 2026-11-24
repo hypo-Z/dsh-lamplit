@@ -4956,6 +4956,10 @@ window.__ModuleLoader__.load({
         root.style.bottom = 'auto'
       }
       let drag = null
+      let dragRaf = 0
+      let dragPending = null
+      root.style.touchAction = 'none'
+      bar.style.touchAction = 'none'
       bar.addEventListener('pointerdown', (event) => {
         if (event.target.closest('button')) return
         const rect = root.getBoundingClientRect()
@@ -4977,11 +4981,24 @@ window.__ModuleLoader__.load({
       bar.addEventListener('pointerup', () => { drag = null; clamp(); saveWinRect() })
       const resize = root.querySelector('#lamp-tts-resize')
       let resizing = null
-      resize.addEventListener('pointerdown', (event) => { event.stopPropagation(); resizing = { x: event.clientX, y: event.clientY, w: root.offsetWidth, h: root.offsetHeight } })
+      let resizeRaf = 0
+      let resizePending = null
+      resize.style.touchAction = 'none'
+      resize.addEventListener('pointerdown', (event) => {
+        event.stopPropagation()
+        resizing = { x: event.clientX, y: event.clientY, w: root.offsetWidth, h: root.offsetHeight }
+        try { resize.setPointerCapture(event.pointerId) } catch (err) {}
+      })
       resize.addEventListener('pointermove', (event) => {
         if (!resizing) return
-        root.style.width = Math.max(260, resizing.w + event.clientX - resizing.x) + 'px'
-        root.style.height = Math.max(180, resizing.h + event.clientY - resizing.y) + 'px'
+        resizePending = { x: event.clientX, y: event.clientY }
+        if (resizeRaf) return
+        resizeRaf = requestAnimationFrame(() => {
+          resizeRaf = 0
+          if (!resizing || !resizePending) return
+          root.style.width = Math.max(260, resizing.w + resizePending.x - resizing.x) + 'px'
+          root.style.height = Math.max(180, resizing.h + resizePending.y - resizing.y) + 'px'
+        })
       })
       resize.addEventListener('pointerup', () => { resizing = null; clamp(); try { saveWinRect() } catch (err) {} })
       window.addEventListener('resize', clamp)
