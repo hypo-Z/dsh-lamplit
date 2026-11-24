@@ -4651,6 +4651,9 @@ window.__ModuleLoader__.load({
       token: 0,
       preload: null,
       fraction: 0,
+      currentTime: 0,
+      durations: new Map(),
+      msPerChar: 200,
       progressListeners: new Set(),
       listeners: new Set(),
       emit() {
@@ -4675,10 +4678,27 @@ window.__ModuleLoader__.load({
       },
       subscribe(fn) { this.listeners.add(fn); return () => this.listeners.delete(fn) },
       subscribeProgress(fn) { this.progressListeners.add(fn); return () => this.progressListeners.delete(fn) },
+      resetDurations() {
+        this.durations = new Map()
+        this.currentTime = 0
+        this.fraction = 0
+      },
+      estimateAt(index) {
+        const known = this.durations.get(index)
+        if (typeof known === 'number' && known > 0) return known
+        const text = this.segments[index] || ''
+        return Math.max(0.3, (text.length * this.msPerChar) / 1000 / (this.rate || 1))
+      },
       ratio() {
         const total = this.segments.length
         if (total === 0) return 0
-        return Math.min(1, (this.index + Math.max(0, Math.min(1, this.fraction))) / total)
+        let totalSeconds = 0
+        for (let index = 0; index < total; index += 1) totalSeconds += this.estimateAt(index)
+        if (totalSeconds <= 0) return 0
+        let elapsed = 0
+        for (let index = 0; index < this.index; index += 1) elapsed += this.estimateAt(index)
+        elapsed += Math.min(this.estimateAt(this.index), this.currentTime || 0)
+        return Math.min(1, elapsed / totalSeconds)
       },
       notifyProgress() { for (const fn of this.progressListeners) { try { fn(this.ratio()) } catch (err) {} } },
       stopAudio() {
@@ -4743,9 +4763,20 @@ window.__ModuleLoader__.load({
           }).catch(() => {})
         }
         const audio = new Audio(src)
+        audio.addEventListener('loadedmetadata', () => {
+          if (!audio.duration || !isFinite(audio.duration) || audio.duration <= 0) return
+          this.durations.set(index, audio.duration)
+          const chars = String(text || '').length
+          if (chars > 5) {
+            const measured = (audio.duration * 1000) / chars
+            this.msPerChar = Math.min(400, Math.max(80, this.msPerChar * 0.7 + measured * 0.3))
+          }
+          this.notifyProgress()
+        })
         audio.addEventListener('timeupdate', () => {
-          if (!audio.duration || !isFinite(audio.duration)) return
-          this.fraction = Math.max(0, Math.min(1, audio.currentTime / audio.duration))
+          this.currentTime = audio.currentTime || 0
+          const estimate = this.estimateAt(index)
+          this.fraction = estimate > 0 ? Math.min(1, this.currentTime / estimate) : 0
           this.notifyProgress()
         })
         console.log('[lamp-tts] play token=', token, 'index=', index, 'text=', text.slice(0, 24))
@@ -4773,6 +4804,7 @@ window.__ModuleLoader__.load({
         this.chapterTitle = chapter.title || ''
         this.total = Number(res.total) || 0
         this.segments = segments
+        this.resetDurations()
         this.index = 0
         this.emit()
         return chapter
@@ -5566,6 +5598,7 @@ window.__ModuleLoader__.load({
         lampTts.chapterTitle = chapter?.chapter?.title || ''
         lampTts.segments = segments
         lampTts.segmentBlocks = segmentBlocks
+        lampTts.resetDurations()
         // 首次从当前阅读位置开始；同一本书同一章有保存位置时优先保存位置
         // 优先从当前可见段落开始；看不见时退回保存的朗读位置
         let startBlock = -1
