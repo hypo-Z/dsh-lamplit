@@ -5359,7 +5359,7 @@ window.__ModuleLoader__.load({
           if (!lampTts.playing || lampTts.bookId !== book.id || lampTts.chapterIndex !== chapterIndex) return
           const block = resolveBlockIndex()
           setTts((previous) => (previous && previous.index === block ? previous : { index: block, paused: false }))
-        }, 400)
+        }, 200)
         return () => clearInterval(timer)
       }, [book.id, chapterIndex])
 
@@ -5415,8 +5415,8 @@ window.__ModuleLoader__.load({
         const timer = setTimeout(() => {
           if (settings.mode === 'paged' || Date.now() < followPauseUntil.current) return
           const node = document.querySelector('.lamp-block[data-tts="1"]')
-          if (node && node.scrollIntoView) node.scrollIntoView({ block: 'center', behavior: 'smooth' })
-        }, 300)
+          if (node && node.scrollIntoView) node.scrollIntoView({ block: 'center', behavior: 'auto' })
+        }, 0)
         return () => clearTimeout(timer)
       }, [tts && tts.index, settings.mode])
 
