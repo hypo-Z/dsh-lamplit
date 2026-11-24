@@ -4649,6 +4649,7 @@ window.__ModuleLoader__.load({
       audio: null,
       utter: null,
       token: 0,
+      preload: null,
       listeners: new Set(),
       emit() {
         try {
@@ -4719,11 +4720,26 @@ window.__ModuleLoader__.load({
           this.emit()
         }
         if (!text) { next(); return }
-        const src = '/lamplit/api/tts?voice=' + encodeURIComponent(this.voice) + '&rate=' + encodeURIComponent(String(this.rate)) + '&text=' + encodeURIComponent(text.slice(0, 600))
+        const buildSrc = (value) => '/lamplit/api/tts?voice=' + encodeURIComponent(this.voice) + '&rate=' + encodeURIComponent(String(this.rate)) + '&text=' + encodeURIComponent(String(value).slice(0, 600))
+        const preloaded = this.preload && this.preload.index === index ? this.preload.url : null
+        const src = preloaded || buildSrc(text)
+        if (preloaded) this.preload = null
+        // 预取下一句，减少句间停顿
+        const nextText = this.segments[index + 1]
+        if (nextText) {
+          const nextIndex = index + 1
+          fetch(buildSrc(nextText)).then((response) => response.ok ? response.blob() : null).then((blob) => {
+            if (!blob || this.preload || token !== this.token) return
+            this.preload = { index: nextIndex, url: URL.createObjectURL(blob) }
+          }).catch(() => {})
+        }
         const audio = new Audio(src)
         console.log('[lamp-tts] play token=', token, 'index=', index, 'text=', text.slice(0, 24))
         this.audio = audio
-        audio.onended = next
+        audio.onended = () => {
+          if (src.startsWith('blob:')) { try { URL.revokeObjectURL(src) } catch (err) {} }
+          next()
+        }
         audio.onerror = () => { if (token !== this.token) return; this.audio = null; if (!this.speechFallback(text, next)) next() }
         const started = audio.play()
         if (started && started.catch) started.catch(() => { if (token !== this.token) return; this.audio = null; if (!this.speechFallback(text, next)) next() })
