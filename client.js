@@ -5530,7 +5530,11 @@ window.__ModuleLoader__.load({
         openLampTtsWindow(true)
         fetch('/lamplit/api/book/' + encodeURIComponent(book.id))
           .then((response) => response.json())
-          .then((data) => { if (data && data.ok) renderLampTtsChapters(data.toc || []) })
+          .then((data) => {
+            if (!data || !data.ok) return
+            renderLampTtsChapters(data.toc || [])
+            if (!lampTts.total && Array.isArray(data.toc)) lampTts.total = data.toc.length
+          })
           .catch(() => {})
       };
 
