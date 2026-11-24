@@ -5357,7 +5357,7 @@ window.__ModuleLoader__.load({
       useEffect(() => {
         const timer = setInterval(() => {
           if (!lampTts.playing || lampTts.bookId !== book.id || lampTts.chapterIndex !== chapterIndex) return
-          const block = lampTts.segmentBlocks[lampTts.index] ?? 0
+          const block = resolveBlockIndex()
           setTts((previous) => (previous && previous.index === block ? previous : { index: block, paused: false }))
         }, 400)
         return () => clearInterval(timer)
@@ -5374,8 +5374,7 @@ window.__ModuleLoader__.load({
       useEffect(() => {
         const unsubscribe = lampTts.subscribe(() => {
           if (!lampTts.playing) { setTts(null); return }
-          const blockIndex = lampTts.segmentBlocks[lampTts.index] ?? 0
-          setTts({ index: blockIndex, paused: false })
+          setTts({ index: resolveBlockIndex(), paused: false })
           if (lampTts.bookId === book.id && lampTts.chapterIndex !== chapterIndex && status === 'ready') {
             if (loadChapterRef.current) loadChapterRef.current(lampTts.chapterIndex, 0)
           }
@@ -5384,6 +5383,15 @@ window.__ModuleLoader__.load({
       }, [book.id, chapterIndex, status])
 
       const loadChapterRef = useRef(null);
+      const resolveBlockIndex = () => {
+        const sentence = lampTts.segments[lampTts.index] || ''
+        const head = String(sentence).trim().slice(0, 18)
+        if (head) {
+          const found = blocks.findIndex((block) => block && typeof block.x === 'string' && block.x.indexOf(head) >= 0)
+          if (found >= 0) return found
+        }
+        return lampTts.segmentBlocks[lampTts.index] ?? 0
+      };
       const followPauseUntil = useRef(0);
       // 用户手动滚动/触摸后暂停自动跟随 10 秒
       useEffect(() => {
