@@ -3466,6 +3466,7 @@ window.__ModuleLoader__.load({
       const [error, setError] = useState('');
       const [busy, setBusy] = useState('');
       const [done, setDone] = useState({});
+      const [addErrors, setAddErrors] = useState({});
 
       const [menuOpen, setMenuOpen] = useState(false);
       const [activeRepo, setActiveRepo] = useState('');
@@ -3554,15 +3555,17 @@ window.__ModuleLoader__.load({
       const search = () => runSearch(query);
 
       const add = async (item) => {
-        const id = item.bookId || item.id;
-        setBusy(String(id));
+        const id = String(item.bookId || item.id);
+        setBusy(id);
         setError('');
+        setAddErrors((current) => { const next = { ...current }; delete next[id]; return next });
         try {
           await post('/provider/weread/open', { bookId: id, title: item.title, author: item.author });
           setDone((current) => Object.assign({}, current, { [id]: true }));
           if (props.onAdded) await props.onAdded();
         } catch (err) {
-          setError(errorText(err));
+          // 就地提示：错误显示在该书条目下方，不放列表顶部
+          setAddErrors((current) => ({ ...current, [id]: errorText(err) }));
         } finally {
           setBusy('');
         }
@@ -3675,6 +3678,7 @@ window.__ModuleLoader__.load({
                     { className: 'lamp-item-main' },
                     h('p', { className: 'lamp-item-title' }, item.title),
                     h('p', { className: 'lamp-item-sub' }, [item.author, item.words ? t('plaza.words', { n: fmtNumber(item.words) }) : ''].filter(Boolean).join(' · ')),
+                    addErrors[id] ? h('p', { style: { color: '#ff8a80', fontSize: 12, margin: '2px 0 0' } }, addErrors[id]) : null,
                   ),
                   h(
                     'button',
