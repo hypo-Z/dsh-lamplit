@@ -4874,6 +4874,8 @@ window.__ModuleLoader__.load({
       progress.max = String(Math.max(0, lampTts.segments.length - 1))
       progress.value = String(lampTts.index)
       lampTtsWindow.querySelector('#lamp-tts-toggle').textContent = lampTts.playing ? '❚❚' : '▶'
+      const select = lampTtsWindow.querySelector('#lamp-tts-chapter')
+      if (select && select.options.length > 0) select.value = String(lampTts.chapterIndex)
       lampTtsWindow.querySelector('#lamp-tts-text').textContent = lampTts.segments[lampTts.index] || ''
     }
 
@@ -5409,6 +5411,7 @@ window.__ModuleLoader__.load({
         lampTts.bookId = book.id
         lampTts.bookTitle = book.title || ''
         lampTts.chapterIndex = chapterIndex
+        lampTts.total = Number(book.chapterCount) || lampTts.total || 0
         lampTts.chapterTitle = chapter?.chapter?.title || ''
         lampTts.segments = segments
         lampTts.segmentBlocks = segmentBlocks
