@@ -5070,15 +5070,32 @@ window.__ModuleLoader__.load({
       }, [book.id, chapterIndex, status])
 
       const loadChapterRef = useRef(null);
+      const followPauseUntil = useRef(0);
+      // 用户手动滚动/触摸后暂停自动跟随 10 秒
+      useEffect(() => {
+        const pause = () => { if (lampTts.playing) followPauseUntil.current = Date.now() + 10000 }
+        window.addEventListener('wheel', pause, { passive: true })
+        window.addEventListener('touchmove', pause, { passive: true })
+        window.addEventListener('pointerdown', pause, { passive: true })
+        return () => {
+          window.removeEventListener('wheel', pause)
+          window.removeEventListener('touchmove', pause)
+          window.removeEventListener('pointerdown', pause)
+        }
+      }, [])
+
       // 朗读跟随时：当前段变化 3 秒后自动滚动到可视区域
       useEffect(() => {
         if (!tts || !lampTts.playing) return
+        if (settings.mode === 'paged') return
+        if (Date.now() < followPauseUntil.current) return
         const timer = setTimeout(() => {
+          if (settings.mode === 'paged' || Date.now() < followPauseUntil.current) return
           const node = document.querySelector('.lamp-block[data-tts="1"]')
           if (node && node.scrollIntoView) node.scrollIntoView({ block: 'center', behavior: 'smooth' })
         }, 300)
         return () => clearTimeout(timer)
-      }, [tts && tts.index])
+      }, [tts && tts.index, settings.mode])
 
       useEffect(() => {
         const target = lampBackTarget
