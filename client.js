@@ -4758,6 +4758,7 @@ window.__ModuleLoader__.load({
         return true
       },
       playIndex(index) {
+        if (this.playing && this.index === index && this.audio && !this.audio.paused) return
         this.stopAudio()
         // 兜底：页面里任何其它正在播放的 <audio> 一律停掉，避免两路叠加
         try {
@@ -5763,8 +5764,9 @@ window.__ModuleLoader__.load({
         if (lampTts.bookId === book.id && lampTts.chapterIndex === chapterIndex && lampTts.segments.length > 0) {
           lampTts.voice = lampVoiceKey(localStorage.getItem('lamp.ttsVoice') || ttsVoiceRef.current)
           lampTts.rate = lampRate()
-          setTts({ index: resolveBlockIndex(), text: lampTts.segments[lampTts.index] || '', paused: false })
-          lampTts.play()
+          setTts({ text: lampTts.segments[lampTts.index] || '', paused: false })
+          try { applyDomHighlight(lampTts.segments[lampTts.index] || '') } catch (err) {}
+          if (!lampTts.playing) lampTts.play()
           openLampTtsWindow(true)
           return
         }
@@ -5853,12 +5855,7 @@ window.__ModuleLoader__.load({
           } catch (err) {}
         }
       }, [chapterKey]);
-      useEffect(() => {
-        if (status !== 'ready') return;
-        if (!ttsContinue.current) return;
-        ttsContinue.current = false;
-        ttsPlay();
-      }, [chapterKey, status]);
+
 
       /** 从笔记/今日一句进来时，把正文滚到那一句（只做一次）。 */
       useEffect(() => {
