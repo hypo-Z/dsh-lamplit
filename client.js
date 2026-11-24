@@ -5361,7 +5361,7 @@ window.__ModuleLoader__.load({
           setTts((previous) => (previous && previous.index === block ? previous : { index: block, paused: false }))
         }, 400)
         return () => clearInterval(timer)
-      }, [book.id, chapterIndex, blocks])
+      }, [book.id, chapterIndex])
 
       // 进入阅读页时，如果引擎正在读同一本书，立即同步高亮（不必等下一次 emit）
       useEffect(() => {
@@ -5369,7 +5369,7 @@ window.__ModuleLoader__.load({
         if (lampTts.chapterIndex !== chapterIndex) return
         const blockIndex = lampTts.playing ? resolveBlockIndex() : (lampTts.savedBlock || 0)
         setTts({ index: blockIndex, paused: !lampTts.playing })
-      }, [book.id, chapterIndex, status, blocks])
+      }, [book.id, chapterIndex, status])
 
       useEffect(() => {
         const unsubscribe = lampTts.subscribe(() => {
@@ -5387,7 +5387,7 @@ window.__ModuleLoader__.load({
         const sentence = lampTts.segments[lampTts.index] || ''
         const head = String(sentence).trim().slice(0, 18)
         if (head) {
-          const found = blocks.findIndex((block) => block && typeof block.x === 'string' && block.x.indexOf(head) >= 0)
+          const found = blocksRef.current.findIndex((block) => block && typeof block.x === 'string' && block.x.indexOf(head) >= 0)
           if (found >= 0) return found
         }
         return lampTts.segmentBlocks[lampTts.index] ?? 0
@@ -5684,6 +5684,7 @@ window.__ModuleLoader__.load({
       );
 
       const blocks = chapter && chapter.chapter && Array.isArray(chapter.chapter.blocks) ? chapter.chapter.blocks : [];
+      blocksRef.current = blocks;
 
       /* ---------------- 自动翻页 / 滚动 + 听书 ---------------- */
 
