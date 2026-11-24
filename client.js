@@ -4947,6 +4947,42 @@ window.__ModuleLoader__.load({
         try { localStorage.setItem('lamp.ballPos', JSON.stringify({ left: rect.left, top: rect.top })) } catch (err) {}
       })
       document.body.appendChild(ball)
+      const openMenu = () => {
+        document.getElementById('lamp-ball-menu')?.remove()
+        const menu = document.createElement('div')
+        menu.id = 'lamp-ball-menu'
+        const rect = ball.getBoundingClientRect()
+        menu.style.cssText = 'position:fixed;z-index:2147483200;min-width:120px;background:rgba(20,20,24,.97);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:6px;color:#eee;font:12px/1.6 -apple-system,sans-serif;box-shadow:0 12px 32px rgba(0,0,0,.5);left:' + Math.min(rect.left, window.innerWidth - 140) + 'px;top:' + Math.max(8, rect.top - 96) + 'px'
+        const item = (label, action) => {
+          const button = document.createElement('button')
+          button.textContent = label
+          button.style.cssText = 'display:block;width:100%;text-align:left;border:0;background:none;color:#eee;padding:4px 8px;border-radius:5px;cursor:pointer;font:inherit'
+          button.addEventListener('mouseenter', () => { button.style.background = 'rgba(255,255,255,.1)' })
+          button.addEventListener('mouseleave', () => { button.style.background = 'none' })
+          button.addEventListener('click', () => { menu.remove(); action() })
+          menu.appendChild(button)
+        }
+        item(lampTts.playing ? '暂停朗读' : '继续朗读', () => { lampTts.toggle(); syncLampBall() })
+        item('回页面', () => {
+          try {
+            lampBackTarget = { bookId: lampTts.bookId, chapterIndex: lampTts.chapterIndex, blockIndex: lampTts.segmentBlocks[lampTts.index] ?? 0 }
+            window.dispatchEvent(new CustomEvent('lamp-tts-back', { detail: lampBackTarget }))
+          } catch (err) {}
+          lampSend('lamplit')
+          ball.style.display = 'none'
+        })
+        item('关闭听书', () => { lampTts.stop(); ball.style.display = 'none'; const win = document.getElementById('lamp-tts-window'); if (win) win.style.display = 'none' })
+        document.body.appendChild(menu)
+        setTimeout(() => {
+          const close = (event) => { if (!menu.contains(event.target) && event.target !== ball) { menu.remove(); document.removeEventListener('pointerdown', close) } }
+          document.addEventListener('pointerdown', close)
+        }, 0)
+      }
+      ball.addEventListener('contextmenu', (event) => { event.preventDefault(); openMenu() })
+      let pressTimer = null
+      ball.addEventListener('pointerdown', () => { pressTimer = setTimeout(openMenu, 650) })
+      ball.addEventListener('pointerup', () => { if (pressTimer) { clearTimeout(pressTimer); pressTimer = null } })
+      ball.addEventListener('pointermove', () => { if (pressTimer) { clearTimeout(pressTimer); pressTimer = null } })
       return ball
     }
 
