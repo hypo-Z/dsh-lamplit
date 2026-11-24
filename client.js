@@ -4657,12 +4657,15 @@ window.__ModuleLoader__.load({
       durations: new Map(),
       msPerChar: 200,
       progressListeners: new Set(),
+      lastSaveAt: 0,
+      lastProgressAt: 0,
       listeners: new Set(),
       emit() {
         try {
           localStorage.setItem('lamp.ttsState', JSON.stringify({ bookId: this.bookId, chapterIndex: this.chapterIndex, index: this.index, block: this.segmentBlocks[this.index] ?? 0, voice: this.voice, rate: this.rate, title: this.chapterTitle, bookTitle: this.bookTitle }))
         } catch (err) {}
         for (const fn of this.listeners) { try { fn() } catch (err) {} }
+        try { this.saveProgress(false) } catch (err) {}
       },
       restore() {
         try {
@@ -4703,6 +4706,31 @@ window.__ModuleLoader__.load({
         return Math.min(1, elapsed / totalSeconds)
       },
       notifyProgress() { for (const fn of this.progressListeners) { try { fn(this.ratio()) } catch (err) {} } },
+      estimateTotal() {
+        let total = 0
+        for (let index = 0; index < this.segments.length; index += 1) total += this.estimateAt(index)
+        return total
+      },
+      saveProgress(force) {
+        if (!this.bookId) return
+        const now = Date.now()
+        if (!force && now - this.lastSaveAt < 5000) return
+        this.lastSaveAt = now
+        const seconds = this.playing && this.lastProgressAt ? Math.min(60, (now - this.lastProgressAt) / 1000) : 0
+        this.lastProgressAt = now
+        try {
+          fetch('/lamplit/api/progress', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({
+              bookId: this.bookId,
+              chapterIndex: this.chapterIndex,
+              percent: this.ratio(),
+              seconds: Math.round(seconds),
+            }),
+          }).catch(() => {})
+        } catch (err) {}
+      },
       stopAudio() {
         if (this.audio) { try { this.audio.pause() } catch (err) {} this.audio.onended = null; this.audio.onerror = null; this.audio = null }
         try { if (window.speechSynthesis) window.speechSynthesis.cancel() } catch (err) {}
@@ -4821,6 +4849,7 @@ window.__ModuleLoader__.load({
           try { this.audio.pause() } catch (err) {}
           this.playing = false
           this.emit()
+          this.saveProgress(true)
           return
         }
         if (this.utter && window.speechSynthesis && window.speechSynthesis.speaking) {
@@ -4836,7 +4865,7 @@ window.__ModuleLoader__.load({
         this.emit()
       },
       toggle() { if (this.playing) this.pause(); else this.play() },
-      stop() { this.token += 1; this.playing = false; this.pausedAt = 0; this.pausedIndex = -1; this.currentTime = 0; this.stopAudio(); this.emit() },
+      stop() { this.token += 1; this.playing = false; this.pausedAt = 0; this.pausedIndex = -1; this.currentTime = 0; this.stopAudio(); this.emit(); this.saveProgress(true) },
       async load(book, chapterIndex) {
         const res = await fetch('/lamplit/api/book/' + encodeURIComponent(book) + '/chapter/' + chapterIndex).then((response) => response.json())
         if (!res || !res.ok) throw new Error(res?.error || '章节加载失败')
