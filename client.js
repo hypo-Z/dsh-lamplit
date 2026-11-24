@@ -6420,7 +6420,7 @@ window.__ModuleLoader__.load({
                 else ttsPlay()
               },
             },
-            '窗',
+            '听',
           ),
           tts !== null
             ? h(
