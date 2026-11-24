@@ -4936,7 +4936,11 @@ window.__ModuleLoader__.load({
       ball = document.createElement('button')
       ball.id = 'lamp-tts-ball'
       ball.title = '灯下听书'
-      ball.textContent = '灯'
+      ball.innerHTML = '<span id="lamp-ball-core" style="display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;background:#17171b;color:#ffd469;font-size:19px;font-weight:600">灯</span>'
+      ball.style.display = 'flex'
+      ball.style.alignItems = 'center'
+      ball.style.justifyContent = 'center'
+      ball.style.background = 'conic-gradient(rgba(255,212,105,.9) 0deg, rgba(255,255,255,.12) 0deg)'
       let savedPos = null
       try { savedPos = JSON.parse(localStorage.getItem('lamp.ballPos') || 'null') } catch (err) {}
       ball.style.cssText = 'position:fixed;' + (savedPos ? ('left:' + Math.min(Math.max(0, Number(savedPos.left) || 0), window.innerWidth - 52) + 'px;top:' + Math.min(Math.max(0, Number(savedPos.top) || 0), window.innerHeight - 52) + 'px;') : 'right:24px;bottom:120px;') + 'width:52px;height:52px;border-radius:50%;z-index:2147483100;border:1px solid rgba(255,255,255,.2);background:linear-gradient(145deg,#2a2a30,#17171b);color:#ffd469;font-size:20px;font-weight:600;cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.45);display:none'
@@ -4994,9 +4998,16 @@ window.__ModuleLoader__.load({
           document.addEventListener('pointerdown', close)
         }, 0)
       }
-      ball.addEventListener('contextmenu', (event) => { event.preventDefault(); openMenu() })
+      ball.addEventListener('contextmenu', (event) => {
+        event.preventDefault()
+        if (pressTimer) { clearTimeout(pressTimer); pressTimer = null }
+        openMenu()
+      })
       let pressTimer = null
-      ball.addEventListener('pointerdown', () => { pressTimer = setTimeout(openMenu, 650) })
+      ball.addEventListener('pointerdown', (event) => {
+        if (event.button !== 0) { if (pressTimer) { clearTimeout(pressTimer); pressTimer = null } return }
+        pressTimer = setTimeout(openMenu, 650)
+      })
       ball.addEventListener('pointerup', () => { if (pressTimer) { clearTimeout(pressTimer); pressTimer = null } })
       ball.addEventListener('pointermove', () => { if (pressTimer) { clearTimeout(pressTimer); pressTimer = null } })
       return ball
@@ -5004,7 +5015,11 @@ window.__ModuleLoader__.load({
 
     function syncLampBall() {
       const ball = document.getElementById('lamp-tts-ball')
-      if (ball) ball.dataset.playing = lampTts.playing ? '1' : '0'
+      if (!ball) return
+      ball.dataset.playing = lampTts.playing ? '1' : '0'
+      const total = lampTts.segments.length
+      const ratio = total > 0 ? Math.min(1, (lampTts.index + 1) / total) : 0
+      ball.style.background = 'conic-gradient(rgba(255,212,105,.95) ' + (ratio * 360).toFixed(1) + 'deg, rgba(255,255,255,.12) ' + (ratio * 360).toFixed(1) + 'deg)'
     }
 
     function collapseLampBall() {
