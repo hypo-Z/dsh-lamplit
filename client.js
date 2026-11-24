@@ -4921,7 +4921,7 @@ window.__ModuleLoader__.load({
       let savedWin = null
       try { savedWin = JSON.parse(localStorage.getItem('lamp.winRect') || 'null') } catch (err) {}
       root.style.cssText = 'position:fixed;right:24px;bottom:96px;width:340px;z-index:2147483100;background:rgba(20,20,24,.96);border:1px solid rgba(255,255,255,.14);border-radius:12px;box-shadow:0 18px 48px rgba(0,0,0,.5);color:#eee;font:13px/1.5 -apple-system,BlinkMacSystemFont,sans-serif;display:none;overflow:hidden'
-      root.innerHTML = '<div id="lamp-tts-bar" style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(255,255,255,.04);cursor:move"><b id="lamp-tts-title" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">听书</b><button id="lamp-tts-voice" style="border:0;background:rgba(255,255,255,.1);color:#eee;border-radius:5px;padding:2px 8px;cursor:pointer">月</button><button id="lamp-tts-font-minus" style="border:0;background:none;color:#ddd;cursor:pointer">A-</button><button id="lamp-tts-font-plus" style="border:0;background:none;color:#ddd;cursor:pointer">A+</button><button id="lamp-tts-ballbtn" style="border:0;background:none;color:#ddd;cursor:pointer" title="收起为小球">◔</button><button id="lamp-tts-close" style="border:0;background:none;color:#ddd;cursor:pointer">✕</button></div><div id="lamp-tts-body" style="padding:10px"><div id="lamp-tts-sub" style="opacity:.7;font-size:12px;margin-bottom:8px"></div><input id="lamp-tts-progress" type="range" min="0" max="0" value="0" style="width:100%"><div style="display:flex;align-items:center;gap:6px;margin:6px 0"><button id="lamp-tts-prev" style="border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:6px;padding:4px 8px;cursor:pointer">⏮</button><button id="lamp-tts-toggle" style="border:0;background:var(--dsw-alias-brand-primary,#5b8cff);color:#fff;border-radius:6px;padding:4px 12px;cursor:pointer">▶</button><button id="lamp-tts-next" style="border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:6px;padding:4px 8px;cursor:pointer">⏭</button><button id="lamp-tts-rate" style="border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:6px;padding:4px 8px;cursor:pointer">1.0×</button><button id="lamp-tts-back" style="margin-left:auto;border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:6px;padding:4px 8px;cursor:pointer">回页面</button></div><select id="lamp-tts-chapter" style="width:100%;background:rgba(255,255,255,.08);color:#eee;border:1px solid rgba(255,255,255,.14);border-radius:6px;padding:4px"></select><div id="lamp-tts-text" style="margin-top:8px;opacity:.85;max-height:110px;overflow:auto"></div></div><div id="lamp-tts-resize" style="position:absolute;right:0;bottom:0;width:14px;height:14px;cursor:nwse-resize;background:linear-gradient(135deg,transparent 50%,rgba(255,255,255,.35) 50%)"></div>'
+      root.innerHTML = '<div id="lamp-tts-bar" style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(255,255,255,.04);cursor:move"><b id="lamp-tts-title" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">听书</b><button id="lamp-tts-font-minus" style="border:0;background:none;color:#ddd;cursor:pointer">A-</button><button id="lamp-tts-font-plus" style="border:0;background:none;color:#ddd;cursor:pointer">A+</button><button id="lamp-tts-ballbtn" style="border:0;background:none;color:#ddd;cursor:pointer" title="收起为小球">◔</button><button id="lamp-tts-close" style="border:0;background:none;color:#ddd;cursor:pointer">✕</button></div><div id="lamp-tts-body" style="padding:10px"><div id="lamp-tts-sub" style="opacity:.7;font-size:12px;margin-bottom:8px"></div><input id="lamp-tts-progress" type="range" min="0" max="0" value="0" style="width:100%"><div style="display:flex;align-items:center;gap:6px;margin:6px 0"><button id="lamp-tts-prev" style="border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:6px;padding:4px 8px;cursor:pointer">⏮</button><button id="lamp-tts-toggle" style="border:0;background:var(--dsw-alias-brand-primary,#5b8cff);color:#fff;border-radius:6px;padding:4px 12px;cursor:pointer">▶</button><button id="lamp-tts-next" style="border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:6px;padding:4px 8px;cursor:pointer">⏭</button><button id="lamp-tts-rate" style="border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:6px;padding:4px 8px;cursor:pointer">1.0×</button><button id="lamp-tts-voice" style="border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:6px;padding:4px 8px;cursor:pointer">月 ▾</button><button id="lamp-tts-back" style="margin-left:auto;border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:6px;padding:4px 8px;cursor:pointer">回页面</button></div><select id="lamp-tts-chapter" style="width:100%;background:rgba(255,255,255,.08);color:#eee;border:1px solid rgba(255,255,255,.14);border-radius:6px;padding:4px"></select><div id="lamp-tts-text" style="margin-top:8px;opacity:.85;max-height:110px;overflow:auto"></div></div><div id="lamp-tts-resize" style="position:absolute;right:0;bottom:0;width:14px;height:14px;cursor:nwse-resize;background:linear-gradient(135deg,transparent 50%,rgba(255,255,255,.35) 50%)"></div>'
       document.body.appendChild(root)
       if (savedWin) {
         try {
@@ -4978,8 +4978,34 @@ window.__ModuleLoader__.load({
       root.querySelector('#lamp-tts-ballbtn').addEventListener('click', () => collapseLampBall())
       const voiceBtn = root.querySelector('#lamp-tts-voice')
       if (voiceBtn) {
-        voiceBtn.textContent = lampVoiceLabel()
-        voiceBtn.addEventListener('click', () => { cycleLampVoice(); scheduleHide() })
+        voiceBtn.textContent = lampVoiceLabel() + ' ▾'
+        voiceBtn.addEventListener('click', () => {
+          document.getElementById('lamp-voice-menu')?.remove()
+          const menu = document.createElement('div')
+          menu.id = 'lamp-voice-menu'
+          const rect = voiceBtn.getBoundingClientRect()
+          menu.style.cssText = 'position:fixed;z-index:2147483300;min-width:110px;background:rgba(20,20,24,.98);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:4px;color:#eee;font:12px/1.7 -apple-system,sans-serif;box-shadow:0 12px 32px rgba(0,0,0,.5);left:' + Math.max(8, rect.left) + 'px;bottom:' + (window.innerHeight - rect.top + 6) + 'px'
+          const current = lampVoiceKey(localStorage.getItem('lamp.ttsVoice') || '月')
+          for (const item of LAMP_VOICES) {
+            const option = document.createElement('button')
+            option.textContent = (item.key === current ? '✓ ' : '　') + item.label
+            option.style.cssText = 'display:block;width:100%;text-align:left;border:0;background:' + (item.key === current ? 'rgba(255,255,255,.1)' : 'none') + ';color:#eee;padding:3px 8px;border-radius:5px;cursor:pointer;font:inherit'
+            option.addEventListener('click', () => {
+              try { localStorage.setItem('lamp.ttsVoice', item.label) } catch (err) {}
+              lampTts.voice = item.key
+              if (lampTts.playing) { try { lampTts.playIndex(lampTts.index) } catch (err) {} }
+              voiceBtn.textContent = item.label + ' ▾'
+              menu.remove()
+            })
+            menu.appendChild(option)
+          }
+          document.body.appendChild(menu)
+          setTimeout(() => {
+            const close = (event) => { if (!menu.contains(event.target) && event.target !== voiceBtn) { menu.remove(); document.removeEventListener('pointerdown', close) } }
+            document.addEventListener('pointerdown', close)
+          }, 0)
+          scheduleHide()
+        })
       }
       const rateBtn = root.querySelector('#lamp-tts-rate')
       if (rateBtn) {
@@ -5050,7 +5076,7 @@ window.__ModuleLoader__.load({
       const rateButton = lampTtsWindow.querySelector('#lamp-tts-rate')
       if (rateButton) rateButton.textContent = lampRateLabel()
       const voiceButton = lampTtsWindow.querySelector('#lamp-tts-voice')
-      if (voiceButton) voiceButton.textContent = lampVoiceLabel()
+      if (voiceButton) voiceButton.textContent = lampVoiceLabel() + ' ▾'
       const select = lampTtsWindow.querySelector('#lamp-tts-chapter')
       select.innerHTML = toc.map((item) => '<option value="' + item.index + '">' + String(item.title || '').replace(/</g, '&lt;') + '</option>').join('')
       select.value = String(lampTts.chapterIndex)
