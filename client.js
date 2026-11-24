@@ -5361,15 +5361,15 @@ window.__ModuleLoader__.load({
           setTts((previous) => (previous && previous.index === block ? previous : { index: block, paused: false }))
         }, 400)
         return () => clearInterval(timer)
-      }, [book.id, chapterIndex])
+      }, [book.id, chapterIndex, blocks])
 
       // 进入阅读页时，如果引擎正在读同一本书，立即同步高亮（不必等下一次 emit）
       useEffect(() => {
         if (!lampTts.bookId || lampTts.bookId !== book.id) return
         if (lampTts.chapterIndex !== chapterIndex) return
-        const blockIndex = lampTts.playing ? (lampTts.segmentBlocks[lampTts.index] ?? 0) : (lampTts.savedBlock || 0)
+        const blockIndex = lampTts.playing ? resolveBlockIndex() : (lampTts.savedBlock || 0)
         setTts({ index: blockIndex, paused: !lampTts.playing })
-      }, [book.id, chapterIndex, status])
+      }, [book.id, chapterIndex, status, blocks])
 
       useEffect(() => {
         const unsubscribe = lampTts.subscribe(() => {
