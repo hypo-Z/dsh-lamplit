@@ -5368,6 +5368,7 @@ window.__ModuleLoader__.load({
             loadChapterRef.current(Number(detail.chapterIndex), 0)
           }
           setTts({ text: detail.text, paused: false })
+          applyDomHighlight(detail.text)
         }
         window.addEventListener('lamp-tts-sentence', onSentence)
         return () => window.removeEventListener('lamp-tts-sentence', onSentence)
@@ -5385,6 +5386,26 @@ window.__ModuleLoader__.load({
         return lampTts.segmentBlocks[lampTts.index] ?? 0
       };
       const followPauseUntil = useRef(0);
+      const highlightedRef = useRef(null);
+      const applyDomHighlight = (text) => {
+        const head = String(text || '').trim().slice(0, 18)
+        if (!head) return
+        const nodes = document.querySelectorAll('.lamp-prose [data-block-index]')
+        let target = null
+        for (const node of nodes) {
+          if (String(node.textContent || '').indexOf(head) >= 0) { target = node; break }
+        }
+        if (!target) return
+        if (highlightedRef.current && highlightedRef.current !== target) {
+          try { highlightedRef.current.setAttribute('data-tts', '0') } catch (err) {}
+        }
+        target.setAttribute('data-tts', '1')
+        highlightedRef.current = target
+        if (settings.mode === 'paged') return
+        if (Date.now() < followPauseUntil.current) return
+        try { target.scrollIntoView({ block: 'center', behavior: 'auto' }) } catch (err) {}
+      };
+
       // 用户手动滚动/触摸后暂停自动跟随 10 秒
       useEffect(() => {
         const pause = () => { if (lampTts.playing) followPauseUntil.current = Date.now() + 10000 }
@@ -5398,18 +5419,6 @@ window.__ModuleLoader__.load({
         }
       }, [])
 
-      // 朗读跟随时：当前段变化 3 秒后自动滚动到可视区域
-      useEffect(() => {
-        if (!tts || !lampTts.playing) return
-        if (settings.mode === 'paged') return
-        if (Date.now() < followPauseUntil.current) return
-        const timer = setTimeout(() => {
-          if (settings.mode === 'paged' || Date.now() < followPauseUntil.current) return
-          const node = document.querySelector('.lamp-block[data-tts="1"]')
-          if (node && node.scrollIntoView) node.scrollIntoView({ block: 'center', behavior: 'auto' })
-        }, 0)
-        return () => clearTimeout(timer)
-      }, [tts && tts.text, settings.mode])
 
       useEffect(() => {
         const target = lampBackTarget
@@ -5419,6 +5428,8 @@ window.__ModuleLoader__.load({
         const blockIndex = Number(target.blockIndex) || 0
         // 立即高亮当前段
         setTts({ text: lampTts.segments[lampTts.index] || '', paused: !lampTts.playing })
+        try { applyDomHighlight(lampTts.segments[lampTts.index] || '') } catch (err) {}
+        applyDomHighlight(lampTts.segments[lampTts.index] || '')
         const scrollNow = () => {
           setTimeout(() => {
             const node = document.querySelector('.lamp-block[data-tts="1"]') || document.querySelector('.lamp-prose')
@@ -6252,8 +6263,8 @@ window.__ModuleLoader__.load({
             className: [element.props && element.props.className, 'lamp-block'].filter(Boolean).join(' '),
             'data-mark': marked ? '1' : '0',
             'data-focus': focused ? '1' : '0',
-            'data-tts': speaking ? '1' : '0',
-            'data-tts-past': spoken && !speaking ? '1' : '0',
+            'data-tts': '0',
+            'data-tts-past': '0',
           };
           if (!marked) return React.cloneElement(element, common);
           return h(
