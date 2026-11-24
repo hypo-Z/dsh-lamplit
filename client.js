@@ -4780,6 +4780,7 @@ window.__ModuleLoader__.load({
           this.notifyProgress()
         })
         audio.addEventListener('timeupdate', () => {
+          if (this.audio !== audio || this.index !== index) return
           this.currentTime = audio.currentTime || 0
           const estimate = this.estimateAt(index)
           this.fraction = estimate > 0 ? Math.min(1, this.currentTime / estimate) : 0
