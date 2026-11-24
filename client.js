@@ -6529,22 +6529,6 @@ window.__ModuleLoader__.load({
             },
             '听',
           ),
-          tts !== null
-            ? h(
-                'button',
-                {
-                  type: 'button',
-                  className: 'lamp-btn lamp-icon-btn',
-                  title: '停止听书',
-                  'aria-label': '停止听书',
-                  onClick: () => {
-                    ttsContinue.current = false;
-                    ttsStop();
-                  },
-                },
-                '×',
-              )
-            : null,
           isScan
             ? null
             : h(
