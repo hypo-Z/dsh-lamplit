@@ -6247,30 +6247,26 @@ window.__ModuleLoader__.load({
           const byText = head !== '';
           const speaking = tts !== null && (byText ? (typeof block?.x === 'string' && block.x.indexOf(head) >= 0) : tts.index === index);
           const spoken = tts !== null && (byText ? false : tts.index > index);
-          if (!marked && !focused && !speaking) {
-            if (!spoken) return element;
-            return React.cloneElement(element, { 'data-tts-past': '1' });
-          }
+          const common = {
+            key: element.key,
+            className: [element.props && element.props.className, 'lamp-block'].filter(Boolean).join(' '),
+            'data-mark': marked ? '1' : '0',
+            'data-focus': focused ? '1' : '0',
+            'data-tts': speaking ? '1' : '0',
+            'data-tts-past': spoken && !speaking ? '1' : '0',
+          };
+          if (!marked) return React.cloneElement(element, common);
           return h(
             'div',
-            {
-              key: 'wrap' + index,
-              className: 'lamp-block',
-              'data-mark': marked ? '1' : '0',
-              'data-focus': focused ? '1' : '0',
-              'data-tts': speaking ? '1' : '0',
-              'data-tts-past': spoken && !speaking ? '1' : '0',
-            },
+            Object.assign({}, common, { key: 'wrap' + index }),
             element,
-            marked
-              ? h('button', {
-                  type: 'button',
-                  className: 'lamp-note-dot',
-                  'aria-label': t('notes.jump'),
-                  title: t('notes.jump'),
-                  onClick: () => setOverlay('notes'),
-                })
-              : null,
+            h('button', {
+              type: 'button',
+              className: 'lamp-note-dot',
+              'aria-label': t('notes.jump'),
+              title: t('notes.jump'),
+              onClick: () => setOverlay('notes'),
+            }),
           );
         });
         const end = h(
