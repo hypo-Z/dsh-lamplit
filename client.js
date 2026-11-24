@@ -6247,6 +6247,10 @@ window.__ModuleLoader__.load({
           const byText = head !== '';
           const speaking = tts !== null && (byText ? (typeof block?.x === 'string' && block.x.indexOf(head) >= 0) : tts.index === index);
           const spoken = tts !== null && (byText ? false : tts.index > index);
+          if (!marked && !focused && !speaking) {
+            if (!spoken) return element;
+            return React.cloneElement(element, { 'data-tts-past': '1' });
+          }
           return h(
             'div',
             {
