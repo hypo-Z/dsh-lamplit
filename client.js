@@ -4779,9 +4779,23 @@ window.__ModuleLoader__.load({
       if (lampTtsWindow) return lampTtsWindow
       const root = document.createElement('div')
       root.id = 'lamp-tts-window'
+      let savedWin = null
+      try { savedWin = JSON.parse(localStorage.getItem('lamp.winRect') || 'null') } catch (err) {}
       root.style.cssText = 'position:fixed;right:24px;bottom:96px;width:340px;z-index:2147483100;background:rgba(20,20,24,.96);border:1px solid rgba(255,255,255,.14);border-radius:12px;box-shadow:0 18px 48px rgba(0,0,0,.5);color:#eee;font:13px/1.5 -apple-system,BlinkMacSystemFont,sans-serif;display:none;overflow:hidden'
       root.innerHTML = '<div id="lamp-tts-bar" style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(255,255,255,.04);cursor:move"><b id="lamp-tts-title" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">听书</b><button id="lamp-tts-font-minus" style="border:0;background:none;color:#ddd;cursor:pointer">A-</button><button id="lamp-tts-font-plus" style="border:0;background:none;color:#ddd;cursor:pointer">A+</button><button id="lamp-tts-ballbtn" style="border:0;background:none;color:#ddd;cursor:pointer" title="收起为小球">◔</button><button id="lamp-tts-close" style="border:0;background:none;color:#ddd;cursor:pointer">✕</button></div><div id="lamp-tts-body" style="padding:10px"><div id="lamp-tts-sub" style="opacity:.7;font-size:12px;margin-bottom:8px"></div><input id="lamp-tts-progress" type="range" min="0" max="0" value="0" style="width:100%"><div style="display:flex;align-items:center;gap:6px;margin:6px 0"><button id="lamp-tts-prev" style="border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:6px;padding:4px 8px;cursor:pointer">⏮</button><button id="lamp-tts-toggle" style="border:0;background:var(--dsw-alias-brand-primary,#5b8cff);color:#fff;border-radius:6px;padding:4px 12px;cursor:pointer">▶</button><button id="lamp-tts-next" style="border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:6px;padding:4px 8px;cursor:pointer">⏭</button><button id="lamp-tts-back" style="margin-left:auto;border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:6px;padding:4px 8px;cursor:pointer">回页面</button></div><select id="lamp-tts-chapter" style="width:100%;background:rgba(255,255,255,.08);color:#eee;border:1px solid rgba(255,255,255,.14);border-radius:6px;padding:4px"></select><div id="lamp-tts-text" style="margin-top:8px;opacity:.85;max-height:110px;overflow:auto"></div></div><div id="lamp-tts-resize" style="position:absolute;right:0;bottom:0;width:14px;height:14px;cursor:nwse-resize;background:linear-gradient(135deg,transparent 50%,rgba(255,255,255,.35) 50%)"></div>'
       document.body.appendChild(root)
+      if (savedWin) {
+        try {
+          const width = Math.min(Math.max(260, Number(savedWin.width) || 340), window.innerWidth)
+          const height = savedWin.height ? Math.min(Math.max(180, Number(savedWin.height)), window.innerHeight) : 0
+          root.style.width = width + 'px'
+          if (height) root.style.height = height + 'px'
+          root.style.left = Math.min(Math.max(0, Number(savedWin.left) || 0), window.innerWidth - width) + 'px'
+          root.style.top = Math.min(Math.max(0, Number(savedWin.top) || 0), window.innerHeight - (height || 200)) + 'px'
+          root.style.right = 'auto'
+          root.style.bottom = 'auto'
+        } catch (err) {}
+      }
       lampTtsWindow = root
       const bar = root.querySelector('#lamp-tts-bar')
       const clamp = () => {
@@ -4805,7 +4819,12 @@ window.__ModuleLoader__.load({
         root.style.right = 'auto'
         root.style.bottom = 'auto'
       })
-      bar.addEventListener('pointerup', () => { drag = null; clamp() })
+      const saveWinRect = () => {
+        try {
+          localStorage.setItem('lamp.winRect', JSON.stringify({ left: root.getBoundingClientRect().left, top: root.getBoundingClientRect().top, width: root.offsetWidth, height: root.offsetHeight }))
+        } catch (err) {}
+      }
+      bar.addEventListener('pointerup', () => { drag = null; clamp(); saveWinRect() })
       const resize = root.querySelector('#lamp-tts-resize')
       let resizing = null
       resize.addEventListener('pointerdown', (event) => { event.stopPropagation(); resizing = { x: event.clientX, y: event.clientY, w: root.offsetWidth, h: root.offsetHeight } })
@@ -4814,7 +4833,7 @@ window.__ModuleLoader__.load({
         root.style.width = Math.max(260, resizing.w + event.clientX - resizing.x) + 'px'
         root.style.height = Math.max(180, resizing.h + event.clientY - resizing.y) + 'px'
       })
-      resize.addEventListener('pointerup', () => { resizing = null; clamp() })
+      resize.addEventListener('pointerup', () => { resizing = null; clamp(); try { saveWinRect() } catch (err) {} })
       window.addEventListener('resize', clamp)
       root.querySelector('#lamp-tts-close').addEventListener('click', () => { root.style.display = 'none' })
       root.querySelector('#lamp-tts-ballbtn').addEventListener('click', () => collapseLampBall())
