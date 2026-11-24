@@ -4911,9 +4911,17 @@ window.__ModuleLoader__.load({
         root.style.display = 'none'
       })
       root.querySelector('#lamp-tts-progress').addEventListener('input', (event) => {
-        const raw = Number(event.target.value) || 0
-        const target = Math.min(lampTts.segments.length - 1, Math.max(0, Math.floor(raw)))
-        lampTts.playIndex(target)
+        const ratio = Math.max(0, Math.min(1, (Number(event.target.value) || 0) / 1000))
+        const total = lampTts.segments.length
+        if (total === 0) return
+        let elapsed = 0
+        let totalSeconds = 0
+        for (let index = 0; index < total; index += 1) totalSeconds += lampTts.estimateAt(index)
+        for (let index = 0; index < total; index += 1) {
+          elapsed += lampTts.estimateAt(index)
+          if (elapsed / totalSeconds >= ratio) { lampTts.playIndex(index); return }
+        }
+        lampTts.playIndex(total - 1)
       })
       root.querySelector('#lamp-tts-chapter').addEventListener('change', async (event) => {
         const next = Number(event.target.value)
@@ -4933,7 +4941,7 @@ window.__ModuleLoader__.load({
         if (ring) ring.setAttribute('stroke-dashoffset', String(157.08 * (1 - ratio)))
         applyLampRingColor(ratio)
         const progress = document.getElementById('lamp-tts-progress')
-        if (progress && lampTts.segments.length > 0) progress.value = String(ratio * lampTts.segments.length)
+        if (progress && lampTts.segments.length > 0) progress.value = String(Math.round(ratio * 1000))
       })
       syncLampBall()
       return root
@@ -4963,8 +4971,8 @@ window.__ModuleLoader__.load({
       title.textContent = lampTts.chapterTitle || '听书'
       lampTtsWindow.querySelector('#lamp-tts-sub').textContent = (lampTts.bookTitle ? lampTts.bookTitle + ' · ' : '') + (lampTts.segments.length ? (lampTts.index + 1) + '/' + lampTts.segments.length : '未开始')
       const progress = lampTtsWindow.querySelector('#lamp-tts-progress')
-      progress.max = String(Math.max(1, lampTts.segments.length))
-      progress.value = String(lampTts.index + (lampTts.playing ? lampTts.fraction : 0))
+      progress.max = '1000'
+      progress.value = String(Math.round(lampTts.ratio() * 1000))
       lampTtsWindow.querySelector('#lamp-tts-toggle').textContent = lampTts.playing ? '❚❚' : '▶'
       const select = lampTtsWindow.querySelector('#lamp-tts-chapter')
       if (select && select.options.length > 0) select.value = String(lampTts.chapterIndex)
