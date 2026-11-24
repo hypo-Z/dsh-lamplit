@@ -7742,7 +7742,7 @@ window.__ModuleLoader__.load({
       // 插件卸载/热重载时停掉引擎与兜底定时器，避免旧实例继续发声
       ctx.effect(
         () => () => {
-          try { lampTts.stop() } catch (err) {}
+          // 只清理兜底定时器；不要停止听书引擎，否则切页/重载会把朗读打断
           try { if (window.__lampUiSync) clearInterval(window.__lampUiSync) } catch (err) {}
           window.__lampUiSync = null
         },
