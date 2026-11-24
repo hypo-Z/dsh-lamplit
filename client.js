@@ -5358,7 +5358,8 @@ window.__ModuleLoader__.load({
         const timer = setInterval(() => {
           if (!lampTts.playing || lampTts.bookId !== book.id || lampTts.chapterIndex !== chapterIndex) return
           const block = resolveBlockIndex()
-          setTts((previous) => (previous && previous.index === block ? previous : { index: block, paused: false }))
+          const sentence = lampTts.segments[lampTts.index] || ''
+          setTts((previous) => (previous && previous.index === block && previous.text === sentence ? previous : { index: block, text: sentence, paused: false }))
         }, 200)
         return () => clearInterval(timer)
       }, [book.id, chapterIndex])
@@ -5368,13 +5369,13 @@ window.__ModuleLoader__.load({
         if (!lampTts.bookId || lampTts.bookId !== book.id) return
         if (lampTts.chapterIndex !== chapterIndex) return
         const blockIndex = lampTts.playing ? resolveBlockIndex() : (lampTts.savedBlock || 0)
-        setTts({ index: blockIndex, paused: !lampTts.playing })
+        setTts({ index: blockIndex, text: lampTts.segments[lampTts.index] || '', paused: !lampTts.playing })
       }, [book.id, chapterIndex, status])
 
       useEffect(() => {
         const unsubscribe = lampTts.subscribe(() => {
           if (!lampTts.playing) { setTts(null); return }
-          setTts({ index: resolveBlockIndex(), paused: false })
+          setTts({ index: resolveBlockIndex(), text: lampTts.segments[lampTts.index] || '', paused: false })
           if (lampTts.bookId === book.id && lampTts.chapterIndex !== chapterIndex && status === 'ready') {
             if (loadChapterRef.current) loadChapterRef.current(lampTts.chapterIndex, 0)
           }
@@ -6252,8 +6253,10 @@ window.__ModuleLoader__.load({
           if (!element) return null;
           const marked = noteMarks.has(index);
           const focused = focusIndex === index;
-          const speaking = tts !== null && tts.index === index;
-          const spoken = tts !== null && tts.index > index;
+          const head = tts && tts.text ? String(tts.text).trim().slice(0, 18) : '';
+          const byText = head !== '';
+          const speaking = tts !== null && (byText ? (typeof block?.x === 'string' && block.x.indexOf(head) >= 0) : tts.index === index);
+          const spoken = tts !== null && (byText ? false : tts.index > index);
           if (!marked && !focused && !speaking) {
             if (!spoken) return element;
             return React.cloneElement(element, { 'data-tts-past': '1' });
