@@ -4650,6 +4650,8 @@ window.__ModuleLoader__.load({
       utter: null,
       token: 0,
       preload: null,
+      fraction: 0,
+      progressListeners: new Set(),
       listeners: new Set(),
       emit() {
         try {
@@ -4672,6 +4674,13 @@ window.__ModuleLoader__.load({
         } catch (err) {}
       },
       subscribe(fn) { this.listeners.add(fn); return () => this.listeners.delete(fn) },
+      subscribeProgress(fn) { this.progressListeners.add(fn); return () => this.progressListeners.delete(fn) },
+      ratio() {
+        const total = this.segments.length
+        if (total === 0) return 0
+        return Math.min(1, (this.index + Math.max(0, Math.min(1, this.fraction))) / total)
+      },
+      notifyProgress() { for (const fn of this.progressListeners) { try { fn(this.ratio()) } catch (err) {} } },
       stopAudio() {
         if (this.audio) { try { this.audio.pause() } catch (err) {} this.audio.onended = null; this.audio.onerror = null; this.audio = null }
         try { if (window.speechSynthesis) window.speechSynthesis.cancel() } catch (err) {}
@@ -4734,6 +4743,11 @@ window.__ModuleLoader__.load({
           }).catch(() => {})
         }
         const audio = new Audio(src)
+        audio.addEventListener('timeupdate', () => {
+          if (!audio.duration || !isFinite(audio.duration)) return
+          this.fraction = Math.max(0, Math.min(1, audio.currentTime / audio.duration))
+          this.notifyProgress()
+        })
         console.log('[lamp-tts] play token=', token, 'index=', index, 'text=', text.slice(0, 24))
         this.audio = audio
         audio.onended = () => {
@@ -4864,7 +4878,11 @@ window.__ModuleLoader__.load({
         lampSend('lamplit')
         root.style.display = 'none'
       })
-      root.querySelector('#lamp-tts-progress').addEventListener('input', (event) => { lampTts.playIndex(Number(event.target.value) || 0) })
+      root.querySelector('#lamp-tts-progress').addEventListener('input', (event) => {
+        const raw = Number(event.target.value) || 0
+        const target = Math.min(lampTts.segments.length - 1, Math.max(0, Math.floor(raw)))
+        lampTts.playIndex(target)
+      })
       root.querySelector('#lamp-tts-chapter').addEventListener('change', async (event) => {
         const next = Number(event.target.value)
         if (!lampTts.bookId) return
@@ -4878,6 +4896,12 @@ window.__ModuleLoader__.load({
       root.querySelector('#lamp-tts-font-minus').addEventListener('click', () => adjustLampFont(-1))
       root.querySelector('#lamp-tts-font-plus').addEventListener('click', () => adjustLampFont(1))
       lampTts.subscribe(() => { renderLampTts(); syncLampBall() })
+      lampTts.subscribeProgress((ratio) => {
+        const ring = document.getElementById('lamp-ball-ring')
+        if (ring) ring.setAttribute('stroke-dashoffset', String(157.08 * (1 - ratio)))
+        const progress = document.getElementById('lamp-tts-progress')
+        if (progress && lampTts.segments.length > 0) progress.value = String(ratio * lampTts.segments.length)
+      })
       syncLampBall()
       return root
     }
@@ -4906,8 +4930,8 @@ window.__ModuleLoader__.load({
       title.textContent = lampTts.chapterTitle || '听书'
       lampTtsWindow.querySelector('#lamp-tts-sub').textContent = (lampTts.bookTitle ? lampTts.bookTitle + ' · ' : '') + (lampTts.segments.length ? (lampTts.index + 1) + '/' + lampTts.segments.length : '未开始')
       const progress = lampTtsWindow.querySelector('#lamp-tts-progress')
-      progress.max = String(Math.max(0, lampTts.segments.length - 1))
-      progress.value = String(lampTts.index)
+      progress.max = String(Math.max(1, lampTts.segments.length))
+      progress.value = String(lampTts.index + (lampTts.playing ? lampTts.fraction : 0))
       lampTtsWindow.querySelector('#lamp-tts-toggle').textContent = lampTts.playing ? '❚❚' : '▶'
       const select = lampTtsWindow.querySelector('#lamp-tts-chapter')
       if (select && select.options.length > 0) select.value = String(lampTts.chapterIndex)
@@ -5022,8 +5046,7 @@ window.__ModuleLoader__.load({
       const ball = document.getElementById('lamp-tts-ball')
       if (!ball) return
       ball.dataset.playing = lampTts.playing ? '1' : '0'
-      const total = lampTts.segments.length
-      const ratio = total > 0 ? Math.min(1, (lampTts.index + 1) / total) : 0
+      const ratio = lampTts.ratio()
       const ring = document.getElementById('lamp-ball-ring')
       if (ring) ring.setAttribute('stroke-dashoffset', String(157.08 * (1 - ratio)))
     }
