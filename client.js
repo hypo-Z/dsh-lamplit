@@ -4736,6 +4736,10 @@ window.__ModuleLoader__.load({
         const token = ++this.token
         if (index < 0 || index >= this.segments.length) { this.playing = false; this.emit(); return }
         this.index = index
+        this.currentTime = 0
+        this.fraction = 0
+        this.pausedAt = 0
+        this.pausedIndex = -1
         const text = this.segments[index]
         this.playing = true
         this.emit()
