@@ -5382,6 +5382,7 @@ window.__ModuleLoader__.load({
         return unsubscribe
       }, [book.id, chapterIndex, status])
 
+      const blocksRef = useRef([]);
       const loadChapterRef = useRef(null);
       const resolveBlockIndex = () => {
         const sentence = lampTts.segments[lampTts.index] || ''
