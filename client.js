@@ -4925,7 +4925,7 @@ window.__ModuleLoader__.load({
       if (document.getElementById('lamp-tts-ball-style')) return
       const style = document.createElement('style')
       style.id = 'lamp-tts-ball-style'
-      style.textContent = '@keyframes lamp-ball-pulse{0%{box-shadow:0 0 0 0 rgba(255,212,105,.55)}70%{box-shadow:0 0 0 12px rgba(255,212,105,0)}100%{box-shadow:0 0 0 0 rgba(255,212,105,0)}}#lamp-tts-ball[data-playing="1"]{animation:lamp-ball-pulse 1.8s ease-out infinite}'
+      style.textContent = '@keyframes lamp-ball-pulse{0%{box-shadow:0 10px 28px rgba(0,0,0,.45),0 0 0 0 rgba(245,196,81,.22)}70%{box-shadow:0 10px 28px rgba(0,0,0,.45),0 0 0 10px rgba(245,196,81,0)}100%{box-shadow:0 10px 28px rgba(0,0,0,.45),0 0 0 0 rgba(245,196,81,0)}}#lamp-tts-ball[data-playing="1"]{animation:lamp-ball-pulse 2.4s ease-out infinite}'
       document.head.appendChild(style)
     }
 
@@ -4936,11 +4936,16 @@ window.__ModuleLoader__.load({
       ball = document.createElement('button')
       ball.id = 'lamp-tts-ball'
       ball.title = '灯下听书'
-      ball.innerHTML = '<span id="lamp-ball-core" style="display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;background:#17171b;color:#ffd469;font-size:19px;font-weight:600">灯</span>'
+      ball.innerHTML = '<svg viewBox="0 0 56 56" style="position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);pointer-events:none"><circle cx="28" cy="28" r="25" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="2.5"/><circle id="lamp-ball-ring" cx="28" cy="28" r="25" fill="none" stroke="#f5c451" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="157.08" stroke-dashoffset="157.08" style="transition:stroke-dashoffset .4s ease"/></svg><span id="lamp-ball-core" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:radial-gradient(120% 120% at 30% 20%, #2b2b31 0%, #17171b 60%);color:#f5c451;font-size:18px;font-weight:600;letter-spacing:.5px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)">灯</span>'
       ball.style.display = 'flex'
       ball.style.alignItems = 'center'
       ball.style.justifyContent = 'center'
-      ball.style.background = 'conic-gradient(rgba(255,212,105,.9) 0deg, rgba(255,255,255,.12) 0deg)'
+      ball.style.padding = '0'
+      ball.style.background = 'rgba(23,23,27,.78)'
+      ball.style.backdropFilter = 'blur(14px) saturate(1.4)'
+      ball.style.WebkitBackdropFilter = 'blur(14px) saturate(1.4)'
+      ball.style.border = '1px solid rgba(255,255,255,.10)'
+      ball.style.boxShadow = '0 10px 28px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.06)'
       let savedPos = null
       try { savedPos = JSON.parse(localStorage.getItem('lamp.ballPos') || 'null') } catch (err) {}
       ball.style.cssText = 'position:fixed;' + (savedPos ? ('left:' + Math.min(Math.max(0, Number(savedPos.left) || 0), window.innerWidth - 52) + 'px;top:' + Math.min(Math.max(0, Number(savedPos.top) || 0), window.innerHeight - 52) + 'px;') : 'right:24px;bottom:120px;') + 'width:52px;height:52px;border-radius:50%;z-index:2147483100;border:1px solid rgba(255,255,255,.2);background:linear-gradient(145deg,#2a2a30,#17171b);color:#ffd469;font-size:20px;font-weight:600;cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.45);display:none'
@@ -5019,7 +5024,8 @@ window.__ModuleLoader__.load({
       ball.dataset.playing = lampTts.playing ? '1' : '0'
       const total = lampTts.segments.length
       const ratio = total > 0 ? Math.min(1, (lampTts.index + 1) / total) : 0
-      ball.style.background = 'conic-gradient(rgba(255,212,105,.95) ' + (ratio * 360).toFixed(1) + 'deg, rgba(255,255,255,.12) ' + (ratio * 360).toFixed(1) + 'deg)'
+      const ring = document.getElementById('lamp-ball-ring')
+      if (ring) ring.setAttribute('stroke-dashoffset', String(157.08 * (1 - ratio)))
     }
 
     function collapseLampBall() {
