@@ -4775,6 +4775,11 @@ window.__ModuleLoader__.load({
         const text = this.segments[index]
         this.playing = true
         this.emit()
+        try {
+          window.dispatchEvent(new CustomEvent('lamp-tts-sentence', {
+            detail: { bookId: this.bookId, chapterIndex: this.chapterIndex, index, text: this.segments[index] || '' },
+          }))
+        } catch (err) {}
         const next = () => {
           if (token !== this.token || !this.playing || this.index !== index) return
           if (this.index + 1 < this.segments.length) { this.playIndex(this.index + 1); return }
@@ -5353,34 +5358,19 @@ window.__ModuleLoader__.load({
         }
       }, [ttsVoice])
 
-      // 兜底轮询：每 400ms 从引擎同步当前段，避免订阅事件丢失导致高亮落后
+      // 引擎切句时直接推送（无轮询、无延迟）
       useEffect(() => {
-        const timer = setInterval(() => {
-          if (!lampTts.playing || lampTts.bookId !== book.id || lampTts.chapterIndex !== chapterIndex) return
-          const block = resolveBlockIndex()
-          const sentence = lampTts.segments[lampTts.index] || ''
-          setTts((previous) => (previous && previous.index === block && previous.text === sentence ? previous : { index: block, text: sentence, paused: false }))
-        }, 200)
-        return () => clearInterval(timer)
-      }, [book.id, chapterIndex])
-
-      // 进入阅读页时，如果引擎正在读同一本书，立即同步高亮（不必等下一次 emit）
-      useEffect(() => {
-        if (!lampTts.bookId || lampTts.bookId !== book.id) return
-        if (lampTts.chapterIndex !== chapterIndex) return
-        const blockIndex = lampTts.playing ? resolveBlockIndex() : (lampTts.savedBlock || 0)
-        setTts({ index: blockIndex, text: lampTts.segments[lampTts.index] || '', paused: !lampTts.playing })
-      }, [book.id, chapterIndex, status])
-
-      useEffect(() => {
-        const unsubscribe = lampTts.subscribe(() => {
-          if (!lampTts.playing) { setTts(null); return }
-          setTts({ index: resolveBlockIndex(), text: lampTts.segments[lampTts.index] || '', paused: false })
-          if (lampTts.bookId === book.id && lampTts.chapterIndex !== chapterIndex && status === 'ready') {
-            if (loadChapterRef.current) loadChapterRef.current(lampTts.chapterIndex, 0)
+        const onSentence = (event) => {
+          const detail = event.detail || {}
+          if (!detail.text) return
+          if (detail.bookId && detail.bookId !== book.id) return
+          if (Number(detail.chapterIndex) !== chapterIndex && status === 'ready' && loadChapterRef.current && lampTts.bookId === book.id) {
+            loadChapterRef.current(Number(detail.chapterIndex), 0)
           }
-        })
-        return unsubscribe
+          setTts({ text: detail.text, paused: false })
+        }
+        window.addEventListener('lamp-tts-sentence', onSentence)
+        return () => window.removeEventListener('lamp-tts-sentence', onSentence)
       }, [book.id, chapterIndex, status])
 
       const blocksRef = useRef([]);
@@ -5419,7 +5409,7 @@ window.__ModuleLoader__.load({
           if (node && node.scrollIntoView) node.scrollIntoView({ block: 'center', behavior: 'auto' })
         }, 0)
         return () => clearTimeout(timer)
-      }, [tts && tts.index, settings.mode])
+      }, [tts && tts.text, settings.mode])
 
       useEffect(() => {
         const target = lampBackTarget
@@ -5428,7 +5418,7 @@ window.__ModuleLoader__.load({
         const index = Number(target.chapterIndex)
         const blockIndex = Number(target.blockIndex) || 0
         // 立即高亮当前段
-        setTts({ index: blockIndex, paused: !lampTts.playing })
+        setTts({ text: lampTts.segments[lampTts.index] || '', paused: !lampTts.playing })
         const scrollNow = () => {
           setTimeout(() => {
             const node = document.querySelector('.lamp-block[data-tts="1"]') || document.querySelector('.lamp-prose')
