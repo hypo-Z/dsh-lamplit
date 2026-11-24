@@ -5241,6 +5241,21 @@ window.__ModuleLoader__.load({
         try { localStorage.setItem('lamp.ballPos', JSON.stringify({ left: rect.left, top: rect.top })) } catch (err) {}
       })
       document.body.appendChild(ball)
+      if (!window.__lampBallClamp) {
+        window.__lampBallClamp = () => {
+          const node = document.getElementById('lamp-tts-ball')
+          if (!node || node.style.display === 'none') return
+          const rect = node.getBoundingClientRect()
+          const left = Math.min(Math.max(0, rect.left), Math.max(0, window.innerWidth - 52))
+          const top = Math.min(Math.max(0, rect.top), Math.max(0, window.innerHeight - 52))
+          node.style.left = left + 'px'
+          node.style.top = top + 'px'
+          node.style.right = 'auto'
+          node.style.bottom = 'auto'
+          try { localStorage.setItem('lamp.ballPos', JSON.stringify({ left, top })) } catch (err) {}
+        }
+        window.addEventListener('resize', window.__lampBallClamp)
+      }
       const openMenu = () => {
         document.getElementById('lamp-ball-menu')?.remove()
         const menu = document.createElement('div')
