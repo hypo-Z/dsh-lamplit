@@ -4921,7 +4921,7 @@ window.__ModuleLoader__.load({
       let savedWin = null
       try { savedWin = JSON.parse(localStorage.getItem('lamp.winRect') || 'null') } catch (err) {}
       root.style.cssText = 'position:fixed;right:24px;bottom:96px;width:340px;z-index:2147483100;background:rgba(20,20,24,.96);border:1px solid rgba(255,255,255,.14);border-radius:12px;box-shadow:0 18px 48px rgba(0,0,0,.5);color:#eee;font:13px/1.5 -apple-system,BlinkMacSystemFont,sans-serif;display:none;overflow:hidden'
-      root.innerHTML = '<div id="lamp-tts-bar" style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(255,255,255,.04);cursor:move"><b id="lamp-tts-title" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">听书</b><button id="lamp-tts-font-minus" style="border:0;background:none;color:#ddd;cursor:pointer">A-</button><button id="lamp-tts-font-plus" style="border:0;background:none;color:#ddd;cursor:pointer">A+</button><button id="lamp-tts-ballbtn" style="border:0;background:none;color:#ddd;cursor:pointer" title="收起为小球">◔</button><button id="lamp-tts-close" style="border:0;background:none;color:#ddd;cursor:pointer">✕</button></div><div id="lamp-tts-body" style="padding:10px"><div id="lamp-tts-sub" style="opacity:.7;font-size:12px;margin-bottom:8px"></div><input id="lamp-tts-progress" type="range" min="0" max="0" value="0" style="width:100%"><div style="display:flex;align-items:center;gap:6px;margin:6px 0"><button id="lamp-tts-prev" style="border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:6px;padding:4px 8px;cursor:pointer">⏮</button><button id="lamp-tts-toggle" style="border:0;background:var(--dsw-alias-brand-primary,#5b8cff);color:#fff;border-radius:6px;padding:4px 12px;cursor:pointer">▶</button><button id="lamp-tts-next" style="border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:6px;padding:4px 8px;cursor:pointer">⏭</button><button id="lamp-tts-back" style="margin-left:auto;border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:6px;padding:4px 8px;cursor:pointer">回页面</button></div><select id="lamp-tts-chapter" style="width:100%;background:rgba(255,255,255,.08);color:#eee;border:1px solid rgba(255,255,255,.14);border-radius:6px;padding:4px"></select><div id="lamp-tts-text" style="margin-top:8px;opacity:.85;max-height:110px;overflow:auto"></div></div><div id="lamp-tts-resize" style="position:absolute;right:0;bottom:0;width:14px;height:14px;cursor:nwse-resize;background:linear-gradient(135deg,transparent 50%,rgba(255,255,255,.35) 50%)"></div>'
+      root.innerHTML = '<div id="lamp-tts-bar" style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:rgba(255,255,255,.04);cursor:move"><b id="lamp-tts-title" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">听书</b><button id="lamp-tts-voice" style="border:0;background:rgba(255,255,255,.1);color:#eee;border-radius:5px;padding:2px 8px;cursor:pointer">月</button><button id="lamp-tts-font-minus" style="border:0;background:none;color:#ddd;cursor:pointer">A-</button><button id="lamp-tts-font-plus" style="border:0;background:none;color:#ddd;cursor:pointer">A+</button><button id="lamp-tts-ballbtn" style="border:0;background:none;color:#ddd;cursor:pointer" title="收起为小球">◔</button><button id="lamp-tts-close" style="border:0;background:none;color:#ddd;cursor:pointer">✕</button></div><div id="lamp-tts-body" style="padding:10px"><div id="lamp-tts-sub" style="opacity:.7;font-size:12px;margin-bottom:8px"></div><input id="lamp-tts-progress" type="range" min="0" max="0" value="0" style="width:100%"><div style="display:flex;align-items:center;gap:6px;margin:6px 0"><button id="lamp-tts-prev" style="border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:6px;padding:4px 8px;cursor:pointer">⏮</button><button id="lamp-tts-toggle" style="border:0;background:var(--dsw-alias-brand-primary,#5b8cff);color:#fff;border-radius:6px;padding:4px 12px;cursor:pointer">▶</button><button id="lamp-tts-next" style="border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:6px;padding:4px 8px;cursor:pointer">⏭</button><button id="lamp-tts-back" style="margin-left:auto;border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:6px;padding:4px 8px;cursor:pointer">回页面</button></div><select id="lamp-tts-chapter" style="width:100%;background:rgba(255,255,255,.08);color:#eee;border:1px solid rgba(255,255,255,.14);border-radius:6px;padding:4px"></select><div id="lamp-tts-text" style="margin-top:8px;opacity:.85;max-height:110px;overflow:auto"></div></div><div id="lamp-tts-resize" style="position:absolute;right:0;bottom:0;width:14px;height:14px;cursor:nwse-resize;background:linear-gradient(135deg,transparent 50%,rgba(255,255,255,.35) 50%)"></div>'
       document.body.appendChild(root)
       if (savedWin) {
         try {
@@ -4976,6 +4976,11 @@ window.__ModuleLoader__.load({
       window.addEventListener('resize', clamp)
       root.querySelector('#lamp-tts-close').addEventListener('click', () => { root.style.display = 'none' })
       root.querySelector('#lamp-tts-ballbtn').addEventListener('click', () => collapseLampBall())
+      const voiceBtn = root.querySelector('#lamp-tts-voice')
+      if (voiceBtn) {
+        voiceBtn.textContent = lampVoiceLabel()
+        voiceBtn.addEventListener('click', () => { cycleLampVoice(); scheduleHide() })
+      }
       root.querySelector('#lamp-tts-toggle').addEventListener('click', () => lampTts.toggle())
       root.querySelector('#lamp-tts-prev').addEventListener('click', () => { lampTts.playIndex(Math.max(0, lampTts.index - 1)) })
       root.querySelector('#lamp-tts-next').addEventListener('click', () => { lampTts.playIndex(Math.min(lampTts.segments.length - 1, lampTts.index + 1)) })
@@ -5037,6 +5042,8 @@ window.__ModuleLoader__.load({
 
     function renderLampTtsChapters(toc) {
       if (!lampTtsWindow) return
+      const voiceButton = lampTtsWindow.querySelector('#lamp-tts-voice')
+      if (voiceButton) voiceButton.textContent = lampVoiceLabel()
       const select = lampTtsWindow.querySelector('#lamp-tts-chapter')
       select.innerHTML = toc.map((item) => '<option value="' + item.index + '">' + String(item.title || '').replace(/</g, '&lt;') + '</option>').join('')
       select.value = String(lampTts.chapterIndex)
@@ -5054,6 +5061,28 @@ window.__ModuleLoader__.load({
       const select = lampTtsWindow.querySelector('#lamp-tts-chapter')
       if (select && select.options.length > 0) select.value = String(lampTts.chapterIndex)
       lampTtsWindow.querySelector('#lamp-tts-text').textContent = lampTts.segments[lampTts.index] || ''
+    }
+
+    const LAMP_VOICES = [
+      { key: 'yue', label: '月' },
+      { key: 'tingting', label: '婷婷' },
+      { key: 'meijia', label: '美佳' },
+    ]
+
+    function lampVoiceLabel() {
+      const stored = localStorage.getItem('lamp.ttsVoice') || '月'
+      return stored.replace(/\s*\(.*\)$/, '')
+    }
+
+    function cycleLampVoice() {
+      const current = lampVoiceKey(localStorage.getItem('lamp.ttsVoice') || '月')
+      const index = LAMP_VOICES.findIndex((item) => item.key === current)
+      const next = LAMP_VOICES[(index + 1) % LAMP_VOICES.length]
+      try { localStorage.setItem('lamp.ttsVoice', next.label) } catch (err) {}
+      lampTts.voice = next.key
+      if (lampTts.playing) { try { lampTts.playIndex(lampTts.index) } catch (err) {} }
+      const button = document.getElementById('lamp-tts-voice')
+      if (button) button.textContent = next.label
     }
 
     function lampVoiceKey(name) {
@@ -5674,7 +5703,7 @@ window.__ModuleLoader__.load({
           }
         })
         if (segments.length === 0) return
-        lampTts.voice = lampVoiceKey(ttsVoiceRef.current)
+        lampTts.voice = lampVoiceKey(localStorage.getItem('lamp.ttsVoice') || ttsVoiceRef.current)
         lampTts.rate = ttsRate
         lampTts.bookId = book.id
         lampTts.bookTitle = book.title || ''
@@ -6352,46 +6381,6 @@ window.__ModuleLoader__.load({
                 )
               : null,
           ),
-          isScan
-            ? null
-            : h(
-                'button',
-                {
-                  type: 'button',
-                  className: 'lamp-btn lamp-icon-btn',
-                  'data-on': tts !== null ? '1' : '0',
-                  title: ttsSupported ? '听书（跟随当前章，读完自动续章）' : '当前环境不支持语音朗读',
-                  'aria-label': '听书',
-                  disabled: !ttsSupported,
-                  onClick: ttsToggle,
-                },
-                tts === null ? '听' : tts.paused ? '▶' : '❚❚',
-              ),
-          tts !== null
-            ? h(
-                'button',
-                {
-                  type: 'button',
-                  className: 'lamp-btn lamp-icon-btn',
-                  title: '音色',
-                  'aria-label': '音色',
-                  style: { width: 'auto', padding: '0 8px', fontSize: 11 },
-                  onClick: () => {
-                    const order = [
-                      { key: 'yue', label: '月' },
-                      { key: 'tingting', label: '婷婷' },
-                      { key: 'meijia', label: '美佳' },
-                    ];
-                    const current = lampVoiceKey(ttsVoice);
-                    const index = order.findIndex((item) => item.key === current);
-                    const next = order[(index + 1) % order.length];
-                    setTtsVoice(next.label);
-                    try { localStorage.setItem('lamp.ttsVoice', next.label) } catch (err) {}
-                  },
-                },
-                (ttsVoice || '音色').replace(/\s*\(.*\)$/, ''),
-              )
-            : null,
           tts !== null
             ? h(
                 'button',
@@ -6417,7 +6406,10 @@ window.__ModuleLoader__.load({
               className: 'lamp-btn lamp-icon-btn',
               title: '听书小窗（可后台播放）',
               'aria-label': '听书小窗',
-              onClick: () => lampTts.openWindow(true),
+              onClick: () => {
+                if (lampTts.playing || lampTts.segments.length > 0) lampTts.openWindow(true)
+                else ttsPlay()
+              },
             },
             '窗',
           ),
