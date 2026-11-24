@@ -5431,6 +5431,19 @@ window.__ModuleLoader__.load({
       }, [])
 
 
+      // 回到阅读页/切章后：与引擎当前章节和句子对齐，立即补高亮
+      useEffect(() => {
+        if (!lampTts.bookId || lampTts.bookId !== book.id) return
+        if (lampTts.chapterIndex !== chapterIndex) {
+          if (status === 'ready' && loadChapterRef.current) loadChapterRef.current(lampTts.chapterIndex, 0)
+          return
+        }
+        const text = lampTts.segments[lampTts.index] || ''
+        if (!text) return
+        setTts({ text, paused: !lampTts.playing })
+        applyDomHighlight(text)
+      }, [book.id, chapterIndex, status])
+
       useEffect(() => {
         const target = lampBackTarget
         if (!target || target.bookId !== book.id) return
@@ -5439,7 +5452,6 @@ window.__ModuleLoader__.load({
         const blockIndex = Number(target.blockIndex) || 0
         // 立即高亮当前段
         setTts({ text: lampTts.segments[lampTts.index] || '', paused: !lampTts.playing })
-        try { applyDomHighlight(lampTts.segments[lampTts.index] || '') } catch (err) {}
         applyDomHighlight(lampTts.segments[lampTts.index] || '')
         const scrollNow = () => {
           setTimeout(() => {
