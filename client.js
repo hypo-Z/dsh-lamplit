@@ -5301,12 +5301,21 @@ window.__ModuleLoader__.load({
       const win = lampTtsWindow
       const ball = ensureLampBall()
       if (win) {
-        const rect = win.getBoundingClientRect()
-        if (rect.width > 0 && rect.height > 0) {
-          ball.style.left = Math.min(Math.max(0, rect.right - 52), window.innerWidth - 52) + 'px'
-          ball.style.top = Math.min(Math.max(0, rect.top), window.innerHeight - 52) + 'px'
+        let savedBall = null
+        try { savedBall = JSON.parse(localStorage.getItem('lamp.ballPos') || 'null') } catch (err) {}
+        if (savedBall) {
+          ball.style.left = Math.min(Math.max(0, Number(savedBall.left) || 0), window.innerWidth - 52) + 'px'
+          ball.style.top = Math.min(Math.max(0, Number(savedBall.top) || 0), window.innerHeight - 52) + 'px'
           ball.style.right = 'auto'
           ball.style.bottom = 'auto'
+        } else {
+          const rect = win.getBoundingClientRect()
+          if (rect.width > 0 && rect.height > 0) {
+            ball.style.left = Math.min(Math.max(0, rect.right - 52), window.innerWidth - 52) + 'px'
+            ball.style.top = Math.min(Math.max(0, rect.top), window.innerHeight - 52) + 'px'
+            ball.style.right = 'auto'
+            ball.style.bottom = 'auto'
+          }
         }
         win.style.display = 'none'
       }
