@@ -4899,6 +4899,7 @@ window.__ModuleLoader__.load({
       lampTts.subscribeProgress((ratio) => {
         const ring = document.getElementById('lamp-ball-ring')
         if (ring) ring.setAttribute('stroke-dashoffset', String(157.08 * (1 - ratio)))
+        applyLampRingColor(ratio)
         const progress = document.getElementById('lamp-tts-progress')
         if (progress && lampTts.segments.length > 0) progress.value = String(ratio * lampTts.segments.length)
       })
@@ -4943,6 +4944,23 @@ window.__ModuleLoader__.load({
       if (/美佳|Meijia/i.test(value)) return 'meijia'
       if (/婷婷|Tingting/i.test(value)) return 'tingting'
       return 'yue'
+    }
+
+    // 红绿灯配色：暂停红、播放时随进度由绿过渡到黄
+    function lampRingColor(ratio, playing) {
+      if (!playing) return '#ff453a'
+      const from = [48, 209, 88]   // #30d158
+      const to = [255, 214, 10]    // #ffd60a
+      const t = Math.max(0, Math.min(1, Number(ratio) || 0))
+      const mix = from.map((value, index) => Math.round(value + (to[index] - value) * t))
+      return 'rgb(' + mix.join(',') + ')'
+    }
+
+    function applyLampRingColor(ratio) {
+      const ring = document.getElementById('lamp-ball-ring')
+      if (ring) ring.setAttribute('stroke', lampRingColor(ratio, lampTts.playing))
+      const progress = document.getElementById('lamp-tts-progress')
+      if (progress) progress.style.accentColor = lampRingColor(ratio, lampTts.playing)
     }
 
     function ensureLampBallStyle() {
@@ -5047,6 +5065,7 @@ window.__ModuleLoader__.load({
       if (!ball) return
       ball.dataset.playing = lampTts.playing ? '1' : '0'
       const ratio = lampTts.ratio()
+      applyLampRingColor(ratio)
       const ring = document.getElementById('lamp-ball-ring')
       if (ring) ring.setAttribute('stroke-dashoffset', String(157.08 * (1 - ratio)))
     }
