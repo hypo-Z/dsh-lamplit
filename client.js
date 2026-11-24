@@ -4652,6 +4652,8 @@ window.__ModuleLoader__.load({
       preload: null,
       fraction: 0,
       currentTime: 0,
+      pausedAt: 0,
+      pausedIndex: -1,
       durations: new Map(),
       msPerChar: 200,
       progressListeners: new Set(),
@@ -4789,10 +4791,47 @@ window.__ModuleLoader__.load({
         const started = audio.play()
         if (started && started.catch) started.catch(() => { if (token !== this.token) return; this.audio = null; if (!this.speechFallback(text, next)) next() })
       },
-      play() { this.playIndex(this.index) },
-      pause() { this.token += 1; this.playing = false; this.stopAudio(); this.emit() },
+      play() {
+        // 同一句暂停后继续：保留 audio 元素与播放位置，从暂停处接着播
+        if (this.audio && this.pausedIndex === this.index && this.pausedAt > 0) {
+          this.playing = true
+          this.emit()
+          const resumed = this.audio.play()
+          if (resumed && resumed.catch) resumed.catch(() => { this.playIndex(this.index) })
+          return
+        }
+        if (this.utter && this.pausedIndex === this.index) {
+          this.playing = true
+          this.emit()
+          try { window.speechSynthesis.resume() } catch (err) {}
+          return
+        }
+        this.playIndex(this.index)
+      },
+      pause() {
+        if (this.audio && !this.audio.paused) {
+          this.pausedAt = this.audio.currentTime || 0
+          this.pausedIndex = this.index
+          this.currentTime = this.pausedAt
+          try { this.audio.pause() } catch (err) {}
+          this.playing = false
+          this.emit()
+          return
+        }
+        if (this.utter && window.speechSynthesis && window.speechSynthesis.speaking) {
+          this.pausedIndex = this.index
+          try { window.speechSynthesis.pause() } catch (err) {}
+          this.playing = false
+          this.emit()
+          return
+        }
+        this.token += 1
+        this.playing = false
+        this.stopAudio()
+        this.emit()
+      },
       toggle() { if (this.playing) this.pause(); else this.play() },
-      stop() { this.token += 1; this.playing = false; this.stopAudio(); this.emit() },
+      stop() { this.token += 1; this.playing = false; this.pausedAt = 0; this.pausedIndex = -1; this.currentTime = 0; this.stopAudio(); this.emit() },
       async load(book, chapterIndex) {
         const res = await fetch('/lamplit/api/book/' + encodeURIComponent(book) + '/chapter/' + chapterIndex).then((response) => response.json())
         if (!res || !res.ok) throw new Error(res?.error || '章节加载失败')
