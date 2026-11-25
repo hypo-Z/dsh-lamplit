@@ -1,2 +1,2 @@
 allowBuilds:
-  msedge-tts: set this to true or false
+  msedge-tts: false
