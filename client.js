@@ -4655,6 +4655,7 @@ window.__ModuleLoader__.load({
       token: 0,
       preload: null,
       preload2: null,
+      preload3: null,
       fraction: 0,
       currentTime: 0,
       pausedAt: 0,
@@ -4798,16 +4799,17 @@ window.__ModuleLoader__.load({
         let preloaded = null
         if (this.preload && this.preload.index === index) { preloaded = this.preload.url; this.preload = null }
         else if (this.preload2 && this.preload2.index === index) { preloaded = this.preload2.url; this.preload2 = null }
+        else if (this.preload3 && this.preload3.index === index) { preloaded = this.preload3.url; this.preload3 = null }
         const src = preloaded || buildSrc(text)
         // 预取后两句，尽量消除句间等待
-        for (const offset of [1, 2]) {
+        for (const offset of [1, 2, 3]) {
           const nextText = this.segments[index + offset]
           if (!nextText) continue
           const nextIndex = index + offset
-          if ((this.preload && this.preload.index === nextIndex) || (this.preload2 && this.preload2.index === nextIndex)) continue
+          if ((this.preload && this.preload.index === nextIndex) || (this.preload2 && this.preload2.index === nextIndex) || (this.preload3 && this.preload3.index === nextIndex)) continue
           fetch(buildSrc(nextText)).then((response) => response.ok ? response.blob() : null).then((blob) => {
             if (!blob || token !== this.token) return
-            const slot = offset === 1 ? 'preload' : 'preload2'
+            const slot = offset === 1 ? 'preload' : (offset === 2 ? 'preload2' : 'preload3')
             if (!this[slot]) this[slot] = { index: nextIndex, url: URL.createObjectURL(blob) }
           }).catch(() => {})
         }
@@ -5126,15 +5128,8 @@ window.__ModuleLoader__.load({
 
     const LAMP_VOICES = [
       { key: 'yue', label: '月' },
-      { key: 'han', label: '瀚' },
       { key: 'lilian', label: '黎潋' },
-      { key: 'tingting', label: '婷婷' },
-      { key: 'meijia', label: '美佳' },
-      { key: 'kokoro_f1', label: 'K女·叙述' },
-      { key: 'kokoro_f2', label: 'K女·明亮' },
       { key: 'kokoro_f3', label: 'K女·文学' },
-      { key: 'kokoro_m1', label: 'K男·沉稳' },
-      { key: 'kokoro_m2', label: 'K男·自然' },
       { key: 'kokoro_m3', label: 'K男·故事' },
     ]
 
@@ -5850,8 +5845,14 @@ window.__ModuleLoader__.load({
           // 按句切分：逗号不断句，句末标点/换行处切一刀
           const parts = text.match(/[^。！？!?；;\n]+[。！？!?；;]?/g) || [text]
           for (const part of parts) {
-            const sentence = part.trim()
-            if (sentence !== '') { segments.push(sentence); segmentBlocks.push(index) }
+            const raw = part.trim()
+            if (raw === '') continue
+            // 长句再按逗号切：Kokoro 合成长度越短，单句延迟越稳
+            const chunks = raw.length > 42 ? (raw.match(/[^，,、：:]+[，,、：:]?/g) || [raw]) : [raw]
+            for (const chunk of chunks) {
+              const sentence = chunk.trim()
+              if (sentence !== '') { segments.push(sentence); segmentBlocks.push(index) }
+            }
           }
         })
         if (segments.length === 0) return
