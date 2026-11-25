@@ -5130,6 +5130,12 @@ window.__ModuleLoader__.load({
       { key: 'lilian', label: '黎潋' },
       { key: 'tingting', label: '婷婷' },
       { key: 'meijia', label: '美佳' },
+      { key: 'kokoro_f1', label: 'K女·叙述' },
+      { key: 'kokoro_f2', label: 'K女·明亮' },
+      { key: 'kokoro_f3', label: 'K女·文学' },
+      { key: 'kokoro_m1', label: 'K男·沉稳' },
+      { key: 'kokoro_m2', label: 'K男·自然' },
+      { key: 'kokoro_m3', label: 'K男·故事' },
     ]
 
     function lampVoiceLabel() {
@@ -5170,6 +5176,9 @@ window.__ModuleLoader__.load({
 
     function lampVoiceKey(name) {
       const value = String(name || '')
+      for (const item of LAMP_VOICES) {
+        if (value === item.label || value === item.key) return item.key
+      }
       if (/美佳|Meijia/i.test(value)) return 'meijia'
       if (/婷婷|Tingting/i.test(value)) return 'tingting'
       if (/黎潋|Lilian/i.test(value)) return 'lilian'
