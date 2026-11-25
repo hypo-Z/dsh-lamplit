@@ -5126,6 +5126,8 @@ window.__ModuleLoader__.load({
 
     const LAMP_VOICES = [
       { key: 'yue', label: '月' },
+      { key: 'han', label: '瀚' },
+      { key: 'lilian', label: '黎潋' },
       { key: 'tingting', label: '婷婷' },
       { key: 'meijia', label: '美佳' },
     ]
@@ -5170,6 +5172,8 @@ window.__ModuleLoader__.load({
       const value = String(name || '')
       if (/美佳|Meijia/i.test(value)) return 'meijia'
       if (/婷婷|Tingting/i.test(value)) return 'tingting'
+      if (/黎潋|Lilian/i.test(value)) return 'lilian'
+      if (/瀚|Han/i.test(value)) return 'han'
       return 'yue'
     }
 
