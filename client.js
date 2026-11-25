@@ -5131,6 +5131,8 @@ window.__ModuleLoader__.load({
       { key: 'lilian', label: '黎潋' },
       { key: 'kokoro_f3', label: 'K女·文学' },
       { key: 'kokoro_m3', label: 'K男·故事' },
+      { key: 'edge_xiaoxiao', label: 'E晓晓' },
+      { key: 'edge_yunxi', label: 'E云希' },
     ]
 
     function lampVoiceLabel() {

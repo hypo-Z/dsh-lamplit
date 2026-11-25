@@ -66,5 +66,8 @@
       "platform": "web",
       "immediately": true
     }
+  },
+  "dependencies": {
+    "msedge-tts": "2.1.1"
   }
 }
