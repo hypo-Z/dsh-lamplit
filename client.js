@@ -7532,6 +7532,27 @@ window.__ModuleLoader__.load({
             setSession({ book: target, focusQuote: '', stamp: Date.now() });
           };
           if (!book || book.source !== 'weread') { show(book); return }
+          // 先用**上次抓到的云端章节**（book.remote.chapterIndex）立即跳转，不等网络；
+          // 网络只做后台确认与纠正。这就是“慢一点也能接受”的做法。
+          const cachedIndex = Number(book.remote && book.remote.chapterIndex)
+          const localIndex = Number(book.progress && book.progress.chapterIndex) || 0
+          const useCached = Number.isFinite(cachedIndex) && cachedIndex >= 0 && cachedIndex !== localIndex
+          if (useCached) {
+            const target = {
+              ...book,
+              progress: { ...(book.progress || {}), chapterIndex: cachedIndex, percent: 0, updatedAt: Date.now() },
+            }
+            lampTrace('open-cached', { bookId: book.id, chapter: cachedIndex, localIndex })
+            show(target)
+            // 本地进度立刻跟上缓存值，首页/书架不会再显示旧位置
+            try {
+              fetch('/lamplit/api/progress', {
+                method: 'POST',
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify({ bookId: book.id, chapterIndex: cachedIndex, percent: 0, seconds: 0 }),
+              }).catch(() => {})
+            } catch (err) {}
+          }
           // 打开前问一次云端：云端比本地新就从云端那一章开始，超时/失败照旧用本地
           let settled = false;
           let openedLocal = false;
@@ -7540,10 +7561,10 @@ window.__ModuleLoader__.load({
             settled = true
             openedLocal = true
             clearTimeout(timer)
-            show(book)
+            if (!useCached) show(book)
           };
           // 云端慢的时候别死等：先按本地打开，云端结果晚到再纠正到采纳的章节
-          const timer = setTimeout(fallback, 8000);
+          const timer = setTimeout(fallback, useCached ? 12000 : 8000);
           fetch('/lamplit/api/book/' + encodeURIComponent(book.id) + '/cloud-progress', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' })
             .then((response) => response.json())
             .then((res) => {
@@ -7555,10 +7576,12 @@ window.__ModuleLoader__.load({
                 return
               }
               // 已经用本地打开过了：云端这时候才回来，仍然要纠正（这就是“点进去还是旧章节”的来源）
-              if (openedLocal && adoptedBook) {
+              if (adoptedBook) {
                 const targetIndex = Number(adoptedBook.progress && adoptedBook.progress.chapterIndex)
-                if (Number.isFinite(targetIndex) && targetIndex !== Number(book.progress && book.progress.chapterIndex)) {
-                  lampTrace('late-adopt', { bookId: book.id, chapter: targetIndex })
+                const shownIndex = useCached ? cachedIndex : Number(book.progress && book.progress.chapterIndex)
+                if (Number.isFinite(targetIndex) && targetIndex !== shownIndex) {
+                  lampTrace('late-adopt', { bookId: book.id, chapter: targetIndex, shown: shownIndex })
+                  replaceBook(adoptedBook)
                   show(adoptedBook)
                 }
               }
