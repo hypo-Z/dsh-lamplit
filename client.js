@@ -201,6 +201,7 @@ window.__ModuleLoader__.load({
       'home.compareUnreachable': '云端进度暂时读不到',
       'home.cloudAhead': '云端读到了第 {chapter} 章（{percent}%），比本地靠前',
       'home.followCloud': '跟随云端',
+      'home.followFailed': '微信读书没有返回可用进度',
       'home.weekCard': '本周阅读',
       'home.weekdays': '一 二 三 四 五 六 日',
       'home.shelfCard': '书架',
@@ -574,6 +575,7 @@ window.__ModuleLoader__.load({
       'home.compareUnreachable': 'Cloud progress unavailable',
       'home.cloudAhead': 'WeRead is at ch. {chapter} ({percent}%), ahead of local',
       'home.followCloud': 'Follow WeRead',
+      'home.followFailed': 'WeRead did not return a position',
       'home.weekCard': 'This week',
       'home.weekdays': 'M T W T F S S',
       'home.shelfCard': 'Shelf',
@@ -4780,6 +4782,7 @@ window.__ModuleLoader__.load({
       prefetching: 0,
       gapBatch: [],
       gapTimer: 0,
+      suppressSaveUntil: 0,
       lastEndAt: 0,
       lastEndIndex: -1,
       fraction: 0,
@@ -4845,7 +4848,7 @@ window.__ModuleLoader__.load({
       },
       saveProgress(force) {
         if (!this.bookId) return
-        if (this.skipSaveOnce) { this.skipSaveOnce = false; return }
+        if (this.suppressSaveUntil && Date.now() < this.suppressSaveUntil) return
         const now = Date.now()
         if (!force && now - this.lastSaveAt < 5000) return
         this.lastSaveAt = now
@@ -7496,8 +7499,9 @@ window.__ModuleLoader__.load({
             try {
               const targetIndex = Number(target && target.progress && target.progress.chapterIndex)
               if (Number.isFinite(targetIndex) && lampTts.bookId === target.id && Number(lampTts.chapterIndex) !== targetIndex) {
-                // 停掉听书时不要把它旧章节的位置再写回本地，否则刚采纳的位置又被拉回去
-                lampTts.skipSaveOnce = true
+                // 停听书时它会连着写两次进度（emit + saveProgress），
+                // 用一个 3 秒的抑制窗，避免旧章节把刚采纳的位置覆盖回去
+                lampTts.suppressSaveUntil = Date.now() + 3000
                 lampTts.stop()
               }
             } catch (err) {}
@@ -7959,14 +7963,25 @@ window.__ModuleLoader__.load({
                         onOpen: openBook,
                         onFollowCloud: (book) => {
                           if (!book) return;
-                          fetch('/lamplit/api/book/' + encodeURIComponent(book.id) + '/cloud-progress', {
-                            method: 'POST',
-                            headers: { 'content-type': 'application/json' },
-                            body: JSON.stringify({ force: true }),
-                          })
-                            .then((response) => response.json())
-                            .then((res) => openBook(res && res.book ? res.book : book))
-                            .catch(() => openBook(book));
+                          // 采纳失败时不能悄悄用本地旧位置打开——用户会以为“跟了但没变”
+                          const attempt = (left) => {
+                            fetch('/lamplit/api/book/' + encodeURIComponent(book.id) + '/cloud-progress', {
+                              method: 'POST',
+                              headers: { 'content-type': 'application/json' },
+                              body: JSON.stringify({ force: true }),
+                            })
+                              .then((response) => response.json())
+                              .then((res) => {
+                                if (res && res.ok === true && res.adopted === true && res.book) { openBook(res.book); return }
+                                if (left > 0) { setTimeout(() => attempt(left - 1), 800); return }
+                                say(tr('toast.failed', { error: (res && res.error) || tr('home.followFailed') }));
+                              })
+                              .catch(() => {
+                                if (left > 0) { setTimeout(() => attempt(left - 1), 800); return }
+                                say(tr('toast.failed', { error: tr('home.followFailed') }));
+                              });
+                          };
+                          attempt(1);
                         },
                         onOpenNote: openFromNote,
                         onOpenNotes: () => openNotesPage(null),
