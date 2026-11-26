@@ -1,5 +1,12 @@
 # Changelog
 
+## 未发布 · 0.2.11
+
+- **修复崩溃**：Edge 合成连接握手超时时，`ws` 的 `'error'` 事件没有监听器，会冒成 `uncaughtException`
+  把 DSH 主进程带崩（报错窗口里的 `Error: Opening handshake has timed out`）
+- 每个 WebSocket 从创建起就挂常驻 `error` 监听；并发竞争里落选的连接先摘监听再 terminate
+- `send()` 在连接刚断开时可能同步抛错，已捕获并让该句走回落
+
 ## 未发布 · 0.2.10
 
 - **修复“跟到 37 章又跳回 29 章”**：写回前先看云端章节，云端比本地靠前就跳过写回，不再用本地位置把云端覆盖回去
