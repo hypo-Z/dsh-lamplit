@@ -199,6 +199,7 @@ window.__ModuleLoader__.load({
       'home.compareAgo': '{n} 分钟前',
       'home.compareNow': '刚刚',
       'home.compareUnreachable': '云端进度暂时读不到',
+      'home.compareFurthest': '（最远读到）',
       'home.cloudAhead': '云端读到了第 {chapter} 章（{percent}%），比本地靠前',
       'home.followCloud': '跟随云端',
       'home.weekCard': '本周阅读',
@@ -572,6 +573,7 @@ window.__ModuleLoader__.load({
       'home.compareAgo': '{n} min ago',
       'home.compareNow': 'just now',
       'home.compareUnreachable': 'Cloud progress unavailable',
+      'home.compareFurthest': ' (furthest)',
       'home.cloudAhead': 'WeRead is at ch. {chapter} ({percent}%), ahead of local',
       'home.followCloud': 'Follow WeRead',
       'home.weekCard': 'This week',
@@ -2203,7 +2205,7 @@ window.__ModuleLoader__.load({
           ),
           h(
             'div',
-            { className: 'lamp-compare', 'data-stale': compare && compare.cloud && compare.cloudNewer ? '1' : '0' },
+            { className: 'lamp-compare', 'data-stale': compare && compare.cloud && (compare.cloudNewer || compare.cloudDiffers) ? '1' : '0' },
             h('span', { className: 'lamp-compare-item' }, t('home.compareLocal', { percent })),
             compare === null
               ? null
@@ -2212,8 +2214,11 @@ window.__ModuleLoader__.load({
                     'span',
                     { className: 'lamp-compare-item lamp-compare-cloud' },
                     t('home.compareCloud', { percent: Math.round(Number(compare.cloud.percent) || 0) }),
+                    !compare.cloudDiffers && Math.abs(Math.round(Number(compare.cloud.percent) || 0) - percent) > 3
+                      ? h('span', { className: 'lamp-compare-meta' }, t('home.compareFurthest'))
+                      : null,
                     h('span', { className: 'lamp-compare-meta' },
-                      t('home.compareChapter', { n: Number(compare.cloud.chapterIdx) || 0 }),
+                      compare.cloudChapter === null ? '' : t('home.compareChapter', { n: compare.cloudChapter }),
                       ' · ',
                       compare.cloudAge === null
                         ? ''
@@ -2382,9 +2387,14 @@ window.__ModuleLoader__.load({
             const cloudUpdate = Number(res.cloud && res.cloud.updateTime) || 0
             const localUpdate = Math.round((Number(res.local && res.local.updatedAt) || 0) / 1000)
             const age = cloudUpdate > 0 ? (Date.now() / 1000) - cloudUpdate : null
+            const localIndex = Number(res.local && res.local.chapterIndex)
+            const cloudIndex = res.cloud ? Number(res.cloud.chapterIndex) : -1
             setCompare({
               local: res.local,
               cloud: res.cloud,
+              cloudChapter: Number.isFinite(cloudIndex) && cloudIndex >= 0 ? cloudIndex + 1 : null,
+              localChapter: Number(localIndex) + 1,
+              cloudDiffers: res.cloud ? cloudIndex !== localIndex : false,
               cloudNewer: cloudUpdate > 0 && (cloudUpdate - localUpdate) > 60,
               cloudAge: age !== null && age >= 0 ? age / 60 : null,
             })
@@ -2449,7 +2459,7 @@ window.__ModuleLoader__.load({
                     onOpen: props.onOpen,
                   })
                 : null,
-              props.continueBook && compare && compare.cloudNewer && Number(compare.cloud && compare.cloud.chapterIndex) >= 0
+              props.continueBook && compare && compare.cloudDiffers && Number(compare.cloud && compare.cloud.chapterIndex) >= 0
                 ? h(
                     'div',
                     { className: 'lamp-cloudbar' },
