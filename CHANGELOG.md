@@ -1,5 +1,13 @@
 # Changelog
 
+## 未发布 · 0.2.18
+
+- **修掉“打开到第 42 章、本地却被写回第 28 章”**：新增全局 `lampEpoch`，每次打开书 +1；
+  旧阅读器实例的 5 秒定时上报发现自己已被取代就直接丢弃，不再把旧章节写回去
+- 采纳云端后记 `adoptedAt/adoptIndex`，**2 分钟内倒退 4 章以上**的写入一律忽略（哪怕来自别的窗口）
+- `POST /api/progress` 记录来源：`src`（reader / tts / unknown）、`epoch`、写入章节与旧值，
+  通过 `GET /api/client-log` 的 `progress` 数组查看
+
 ## 未发布 · 0.2.17
 
 - 打开书改为**先用缓存的云端章节立即跳转**（`book.remote.chapterIndex`，首页每次打开都会刷新它），

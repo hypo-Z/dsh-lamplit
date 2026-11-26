@@ -4765,6 +4765,8 @@ window.__ModuleLoader__.load({
     // 本插件创建过的全部 <audio>，用来在切句时停掉上一句，避免两路叠加
     const lampAudios = new Set()
     // 关键动作上报：排查“点了跟随云端却没跳”到底是哪一步没执行
+    // 每打开一次书就 +1；旧阅读器实例的定时上报据此失效，避免它把旧章节写回去
+    let lampEpoch = 0
     const lampTrace = (event, data) => {
       try {
         fetch('/lamplit/api/client-log', {
@@ -4877,6 +4879,7 @@ window.__ModuleLoader__.load({
               percent: this.ratio(),
               seconds: Math.round(seconds),
               force: force === true,
+              src: 'tts',
             }),
           }).catch(() => {})
         } catch (err) {}
@@ -5633,6 +5636,7 @@ window.__ModuleLoader__.load({
       const startPercent = useRef(chapterInnerPercent(book)).current;
 
       const openedAtRef = useRef(Date.now());
+      const epochRef = useRef(lampEpoch);
       useEffect(() => {
         lampTrace('mount', { bookId: book.id, startIndex, chapterCount: book.chapterCount || 0 });
       }, []);
@@ -5908,6 +5912,8 @@ window.__ModuleLoader__.load({
 
       const flush = useCallback(
         async (force) => {
+          // 这个实例已经被新的打开动作取代：不要再上报（否则旧章节会把新位置盖回去）
+          if (epochRef.current !== lampEpoch) return;
           const snapshot = stateRef.current;
           if (!snapshot || snapshot.chapterIndex === null) return;
           const sent = sentRef.current;
@@ -5924,6 +5930,8 @@ window.__ModuleLoader__.load({
               chapterIndex: snapshot.chapterIndex,
               percent: snapshot.percent,
               seconds,
+              src: 'reader',
+              epoch: epochRef.current,
             });
             if (res && res.book && aliveRef.current) props.onBookUpdated(res.book);
           } catch (err) {
@@ -7529,6 +7537,7 @@ window.__ModuleLoader__.load({
               ttsChapter: Number(lampTts.chapterIndex),
               ttsPlaying: lampTts.playing === true,
             });
+            lampEpoch += 1
             setSession({ book: target, focusQuote: '', stamp: Date.now() });
           };
           if (!book || book.source !== 'weread') { show(book); return }
