@@ -2377,6 +2377,12 @@ window.__ModuleLoader__.load({
       const { t } = props;
       const [compare, setCompare] = useState(null);
       const compareBookId = props.continueBook ? props.continueBook.id : '';
+      // 采纳之后 book.progress 会立刻变，但 compare 还是打开页面时抓的快照：
+      // 用实时章节覆盖 cloudDiffers，否则「跟随云端」按钮不会消失。
+      const liveLocalChapter = (Number(props.continueBook && props.continueBook.progress && props.continueBook.progress.chapterIndex) || 0) + 1;
+      const liveCompare = compare && compare.cloud
+        ? { ...compare, cloudDiffers: compare.cloudChapter !== liveLocalChapter }
+        : compare;
       useEffect(() => {
         if (!compareBookId) { setCompare(null); return undefined }
         let alive = true
@@ -2455,11 +2461,11 @@ window.__ModuleLoader__.load({
                     t,
                     book: props.continueBook,
                     chapterTitle: props.chapterTitle,
-                    compare,
+                    compare: liveCompare,
                     onOpen: props.onOpen,
                   })
                 : null,
-              props.continueBook && compare && compare.cloudDiffers && Number(compare.cloud && compare.cloud.chapterIndex) >= 0
+              props.continueBook && liveCompare && liveCompare.cloudDiffers && Number(liveCompare.cloud && liveCompare.cloud.chapterIndex) >= 0
                 ? h(
                     'div',
                     { className: 'lamp-cloudbar' },
