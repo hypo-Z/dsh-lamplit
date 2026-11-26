@@ -7391,7 +7391,7 @@ window.__ModuleLoader__.load({
           // 打开前问一次云端：云端比本地新就从云端那一章开始，超时/失败照旧用本地
           let settled = false;
           const fallback = () => { if (settled) return; settled = true; clearTimeout(timer); show(book) };
-          const timer = setTimeout(fallback, 1500);
+          const timer = setTimeout(fallback, 4000);
           fetch('/lamplit/api/book/' + encodeURIComponent(book.id) + '/cloud-progress', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' })
             .then((response) => response.json())
             .then((res) => {
