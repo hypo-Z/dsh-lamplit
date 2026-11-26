@@ -7476,7 +7476,7 @@ window.__ModuleLoader__.load({
         /* ---------------- 书 / 笔记 ---------------- */
 
         const openBook = useCallback((book) => {
-          const show = (target) => setSession({ book: target, focusQuote: '' });
+          const show = (target) => setSession({ book: target, focusQuote: '', stamp: Date.now() });
           if (!book || book.source !== 'weread') { show(book); return }
           // 打开前问一次云端：云端比本地新就从云端那一章开始，超时/失败照旧用本地
           let settled = false;
@@ -7519,7 +7519,7 @@ window.__ModuleLoader__.load({
         const openFromNote = useCallback(
           (note) => {
             const book = resolveBook(note.bookId, note.chapterIndex, note.bookTitle);
-            setSession({ book, focusQuote: note.quote || '' });
+            setSession({ book, focusQuote: note.quote || '', stamp: Date.now() });
           },
           [resolveBook],
         );
@@ -7529,7 +7529,7 @@ window.__ModuleLoader__.load({
             const detail = event.detail || {}
             if (!detail.bookId) return
             const book = resolveBook(detail.bookId, detail.chapterIndex, lampTts.bookTitle)
-            setSession({ book, focusQuote: '' })
+            setSession({ book, focusQuote: '', stamp: Date.now() })
           }
           window.addEventListener('lamp-tts-back', onBack)
           return () => window.removeEventListener('lamp-tts-back', onBack)
@@ -7539,7 +7539,7 @@ window.__ModuleLoader__.load({
           if (!lampBackTarget || !lampBackTarget.bookId) return
           const detail = lampBackTarget
           const book = resolveBook(detail.bookId, detail.chapterIndex, lampTts.bookTitle)
-          setSession({ book, focusQuote: '' })
+          setSession({ book, focusQuote: '', stamp: Date.now() })
           // 章节跳转由 Reader 挂载时消费 lampBackTarget
         }, []);
 
@@ -7933,7 +7933,11 @@ window.__ModuleLoader__.load({
                         onOpen: openBook,
                         onFollowCloud: (book) => {
                           if (!book) return;
-                          fetch('/lamplit/api/book/' + encodeURIComponent(book.id) + '/cloud-progress', { method: 'POST' })
+                          fetch('/lamplit/api/book/' + encodeURIComponent(book.id) + '/cloud-progress', {
+                            method: 'POST',
+                            headers: { 'content-type': 'application/json' },
+                            body: JSON.stringify({ force: true }),
+                          })
                             .then((response) => response.json())
                             .then((res) => openBook(res && res.book ? res.book : book))
                             .catch(() => openBook(book));
@@ -7972,6 +7976,7 @@ window.__ModuleLoader__.load({
             body,
             session
               ? h(MemoReader, {
+                  key: session.stamp || session.book.id,
                   t: tr,
                   book: session.book,
                   settings,
