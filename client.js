@@ -1263,6 +1263,9 @@ window.__ModuleLoader__.load({
       '.lamp-chrome{transition:opacity .32s ease,transform .32s ease}',
       '.lamp-reader[data-chrome="0"] .lamp-topbar{opacity:0;transform:translateY(-8px);pointer-events:none}',
       '.lamp-reader[data-chrome="0"] .lamp-footbar{opacity:0;pointer-events:none}',
+      // 自动隐藏后如果 JS 状态没恢复，鼠标移上来也要能用（否则目录/上一章/下一章点不动）
+      '.lamp-reader[data-chrome="0"]:hover .lamp-topbar{opacity:1;transform:none;pointer-events:auto}',
+      '.lamp-reader[data-chrome="0"]:hover .lamp-footbar{opacity:1;pointer-events:auto}',
       '.lamp-topbar{position:absolute;top:0;left:0;right:0;z-index:12;display:flex;align-items:center;gap:10px;',
       'padding:9px clamp(12px,3vw,20px);background:color-mix(in srgb,var(--dsw-alias-bg-layer-1) 94%,transparent);',
       'border-bottom:1px solid var(--lamp-line-strong);color:var(--dsw-alias-label-primary);backdrop-filter:blur(10px)}',
@@ -5685,7 +5688,15 @@ window.__ModuleLoader__.load({
           if (!detail.text) return
           if (detail.bookId && detail.bookId !== book.id) return
           const justOpened = Date.now() - openedAtRef.current < 2500
-          if (!justOpened && Number(detail.chapterIndex) !== chapterIndex && status === 'ready' && loadChapterRef.current && lampTts.bookId === book.id) {
+          // 只有真的在播时才跟随：暂停/残留的听书会话不该再控制页面
+          if (
+            !justOpened &&
+            lampTts.playing === true &&
+            Number(detail.chapterIndex) !== chapterIndex &&
+            status === 'ready' &&
+            loadChapterRef.current &&
+            lampTts.bookId === book.id
+          ) {
             lampTrace('tts-jump', { from: chapterIndex, to: Number(detail.chapterIndex) });
             loadChapterRef.current(Number(detail.chapterIndex), 0)
           }
@@ -6323,11 +6334,16 @@ window.__ModuleLoader__.load({
       }, []);
 
       const jumpChapter = useCallback(
-        (index) => {
-          loadChapter(index, 0);
+        (index, restore = 0) => {
+          // 手动换章：如果听书还停在旧章，先停掉，免得它随后的句子事件把页面拽回去
+          if (lampTts.playing === true && Number(lampTts.chapterIndex) !== Number(index) && lampTts.bookId === book.id) {
+            lampTts.suppressSaveUntil = Date.now() + 3000
+            lampTts.stop()
+          }
+          loadChapter(index, restore);
           setChrome(true);
         },
-        [loadChapter],
+        [loadChapter, book.id],
       );
 
       const onScroll = useCallback(() => {
@@ -6659,7 +6675,7 @@ window.__ModuleLoader__.load({
             hasNext(chapter)
               ? h(
                   'button',
-                  { type: 'button', className: 'lamp-btn', onClick: () => loadChapter(chapter.next, 0) },
+                  { type: 'button', className: 'lamp-btn', onClick: () => jumpChapter(chapter.next, 0) },
                   t('reader.next'),
                 )
               : h(
@@ -6961,7 +6977,7 @@ window.__ModuleLoader__.load({
               type: 'button',
               className: 'lamp-foot-btn',
               disabled: !hasPrev(chapter),
-              onClick: () => hasPrev(chapter) && loadChapter(chapter.prev, 1),
+              onClick: () => hasPrev(chapter) && jumpChapter(chapter.prev, 1),
             },
             t('reader.prev'),
           ),
@@ -6971,7 +6987,7 @@ window.__ModuleLoader__.load({
               type: 'button',
               className: 'lamp-foot-btn',
               disabled: !hasNext(chapter),
-              onClick: () => hasNext(chapter) && loadChapter(chapter.next, 0),
+              onClick: () => hasNext(chapter) && jumpChapter(chapter.next, 0),
             },
             t('reader.next'),
           ),
