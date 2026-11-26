@@ -4845,6 +4845,7 @@ window.__ModuleLoader__.load({
       },
       saveProgress(force) {
         if (!this.bookId) return
+        if (this.skipSaveOnce) { this.skipSaveOnce = false; return }
         const now = Date.now()
         if (!force && now - this.lastSaveAt < 5000) return
         this.lastSaveAt = now
@@ -5615,6 +5616,7 @@ window.__ModuleLoader__.load({
       ).current;
       const startPercent = useRef(chapterInnerPercent(book)).current;
 
+      const openedAtRef = useRef(Date.now());
       const [meta, setMeta] = useState({ book, toc: [] });
       const [finished, setFinished] = useState(!!book.finished);
       const [chapter, setChapter] = useState(null);
@@ -5659,7 +5661,8 @@ window.__ModuleLoader__.load({
           const detail = event.detail || {}
           if (!detail.text) return
           if (detail.bookId && detail.bookId !== book.id) return
-          if (Number(detail.chapterIndex) !== chapterIndex && status === 'ready' && loadChapterRef.current && lampTts.bookId === book.id) {
+          const justOpened = Date.now() - openedAtRef.current < 2500
+          if (!justOpened && Number(detail.chapterIndex) !== chapterIndex && status === 'ready' && loadChapterRef.current && lampTts.bookId === book.id) {
             loadChapterRef.current(Number(detail.chapterIndex), 0)
           }
           setTts({ text: detail.text, paused: false })
@@ -7487,7 +7490,19 @@ window.__ModuleLoader__.load({
         /* ---------------- 书 / 笔记 ---------------- */
 
         const openBook = useCallback((book) => {
-          const show = (target) => setSession({ book: target, focusQuote: '', stamp: Date.now() });
+          const show = (target) => {
+            // 打开的位置和正在听的位置不一致：先把听书停掉，
+            // 否则它的 lamp-tts-sentence 事件会把刚打开的章节拽回旧的
+            try {
+              const targetIndex = Number(target && target.progress && target.progress.chapterIndex)
+              if (Number.isFinite(targetIndex) && lampTts.bookId === target.id && Number(lampTts.chapterIndex) !== targetIndex) {
+                // 停掉听书时不要把它旧章节的位置再写回本地，否则刚采纳的位置又被拉回去
+                lampTts.skipSaveOnce = true
+                lampTts.stop()
+              }
+            } catch (err) {}
+            setSession({ book: target, focusQuote: '', stamp: Date.now() });
+          };
           if (!book || book.source !== 'weread') { show(book); return }
           // 打开前问一次云端：云端比本地新就从云端那一章开始，超时/失败照旧用本地
           let settled = false;
