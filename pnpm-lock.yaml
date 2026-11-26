@@ -11,6 +11,9 @@ importers:
       msedge-tts:
         specifier: 2.1.1
         version: 2.1.1(debug@4.4.3)
+      ws:
+        specifier: 8.23.0
+        version: 8.23.0
 
 packages:
 

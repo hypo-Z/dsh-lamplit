@@ -4657,6 +4657,8 @@ window.__ModuleLoader__.load({
 
 
     // ── 听书引擎（模块级，切页不中断） ─────────────────────────────
+    // 本插件创建过的全部 <audio>，用来在切句时停掉上一句，避免两路叠加
+    const lampAudios = new Set()
     const lampTts = window.__lampTts || (window.__lampTts = {
       bookId: '',
       bookTitle: '',
@@ -4757,9 +4759,15 @@ window.__ModuleLoader__.load({
         } catch (err) {}
       },
       stopAudio() {
-        if (this.audio) { try { this.audio.pause() } catch (err) {} this.audio.onended = null; this.audio.onerror = null; this.audio = null }
+        // 清掉 src 才能中断还在传输的流式合成，否则服务端会继续把整句合成完
+        if (this.audio) { try { this.audio.pause() } catch (err) {} this.audio.onended = null; this.audio.onerror = null; try { this.audio.removeAttribute('src'); this.audio.load() } catch (err) {} this.audio = null }
         try { if (window.speechSynthesis) window.speechSynthesis.cancel() } catch (err) {}
         this.utter = null
+      },
+      warmup() {
+        if (!/^edge_/.test(this.voice) || this.warmedVoice === this.voice) return
+        this.warmedVoice = this.voice
+        fetch('/lamplit/api/tts/warm?voice=' + encodeURIComponent(this.voice)).catch(() => {})
       },
       speechFallback(text, onend) {
         console.log('[lamp-tts] fallback speech', String(text).slice(0, 24))
@@ -4780,11 +4788,13 @@ window.__ModuleLoader__.load({
       playIndex(index) {
         if (this.playing && this.index === index && this.audio && !this.audio.paused) return
         this.stopAudio()
-        // 兜底：页面里任何其它正在播放的 <audio> 一律停掉，避免两路叠加
+        // 兜底：本插件之前创建的 <audio> 一律停掉，避免两路叠加
         try {
-          document.querySelectorAll('audio').forEach((element) => {
-            if (String(element.currentSrc || element.src || '').includes('/lamplit/api/tts')) { try { element.pause() } catch (err) {} }
-          })
+          for (const element of lampAudios) {
+            if (element === this.audio) continue
+            try { element.pause() } catch (err) {}
+            lampAudios.delete(element)
+          }
           if (window.speechSynthesis) window.speechSynthesis.cancel()
         } catch (err) {}
         const token = ++this.token
@@ -4814,7 +4824,10 @@ window.__ModuleLoader__.load({
           this.emit()
         }
         if (!text) { next(); return }
-        const buildSrc = (value) => '/lamplit/api/tts?voice=' + encodeURIComponent(this.voice) + '&rate=' + encodeURIComponent(String(this.rate)) + '&text=' + encodeURIComponent(String(value).slice(0, 600))
+        this.warmup()
+        // stream=1：服务端边合成边回包，首字更快；出错时退回整段模式重试一次
+        const useStream = !this.forceBuffer
+        const buildSrc = (value) => '/lamplit/api/tts?voice=' + encodeURIComponent(this.voice) + '&rate=' + encodeURIComponent(String(this.rate)) + (useStream ? '&stream=1' : '') + '&text=' + encodeURIComponent(String(value).slice(0, 600))
         let preloaded = null
         if (this.preload && this.preload.index === index) { preloaded = this.preload.url; this.preload = null }
         else if (this.preload2 && this.preload2.index === index) { preloaded = this.preload2.url; this.preload2 = null }
@@ -4833,6 +4846,8 @@ window.__ModuleLoader__.load({
           }).catch(() => {})
         }
         const audio = new Audio(src)
+        lampAudios.add(audio)
+        audio.addEventListener('ended', () => lampAudios.delete(audio))
         audio.addEventListener('loadedmetadata', () => {
           if (!audio.duration || !isFinite(audio.duration) || audio.duration <= 0) return
           this.durations.set(index, audio.duration)
@@ -4854,9 +4869,20 @@ window.__ModuleLoader__.load({
         this.audio = audio
         audio.onended = () => {
           if (src.startsWith('blob:')) { try { URL.revokeObjectURL(src) } catch (err) {} }
+          this.forceBuffer = false
           next()
         }
-        audio.onerror = () => { if (token !== this.token) return; this.audio = null; if (!this.speechFallback(text, next)) next() }
+        audio.onerror = () => {
+          if (token !== this.token) return
+          this.audio = null
+          // 流式音频被截断/半路失败：换整段模式重来一次，成功就说明只是流的问题
+          if (useStream && !preloaded) {
+            this.forceBuffer = true
+            this.playIndex(index)
+            return
+          }
+          if (!this.speechFallback(text, next)) next()
+        }
         const started = audio.play()
         if (started && started.catch) started.catch(() => { if (token !== this.token) return; this.audio = null; if (!this.speechFallback(text, next)) next() })
       },
@@ -4875,6 +4901,7 @@ window.__ModuleLoader__.load({
           try { window.speechSynthesis.resume() } catch (err) {}
           return
         }
+        this.warmup()
         this.playIndex(this.index)
       },
       pause() {
@@ -4922,6 +4949,8 @@ window.__ModuleLoader__.load({
     })
 
     lampTts.restore()
+    // 上次用的是在线音色：插件加载后就把连接热起来，第一句不必等握手
+    if (/^edge_/.test(lampTts.voice)) setTimeout(() => { try { lampTts.warmup() } catch (err) {} }, 1500)
 
     let lampLayout = null
     let lampBackTarget = null

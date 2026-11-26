@@ -44,7 +44,31 @@ export function apply(ctx, config) {
           const response = await api.handle(toRequest(req, Buffer.concat(chunks)))
           res.statusCode = response.status
           response.headers.forEach((value, key) => res.setHeader(key, value))
-          res.end(Buffer.from(await response.arrayBuffer()))
+          // 语音合成是流式的：边到边写，不要先整段 buffer 再发
+          if (!response.body) {
+            res.end()
+            return
+          }
+          const reader = response.body.getReader()
+          // 客户端提前断开（切句/暂停）时，把上游的流一起取消，别让服务端白合成
+          const abort = () => { if (!res.writableFinished) reader.cancel().catch(() => {}) }
+          res.on('close', abort)
+          try {
+            for (;;) {
+              const { done, value } = await reader.read()
+              if (done) break
+              if (res.destroyed || res.writableEnded) break
+              if (!res.write(Buffer.from(value))) {
+                await new Promise((resolve) => {
+                  res.once('drain', resolve)
+                  res.once('close', resolve)
+                })
+              }
+            }
+            if (!res.destroyed) res.end()
+          } finally {
+            res.off('close', abort)
+          }
         } catch (error) {
           ctx.logger?.warn?.('[lamplit] 请求失败：%s', error?.stack ?? String(error))
           if (!res.headersSent) {
