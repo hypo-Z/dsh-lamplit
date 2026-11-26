@@ -31,6 +31,7 @@ window.__ModuleLoader__.load({
       mode: 'scroll',
       justify: true,
       chromeAutoHide: true,
+      syncWereadProgress: false,
     };
 
     /* ------------------------------------------------------------------ */
@@ -1488,6 +1489,7 @@ window.__ModuleLoader__.load({
         mode: source.mode === 'paged' ? 'paged' : 'scroll',
         justify: source.justify !== false,
         chromeAutoHide: source.chromeAutoHide !== false,
+        syncWereadProgress: source.syncWereadProgress === true,
       };
     }
 
