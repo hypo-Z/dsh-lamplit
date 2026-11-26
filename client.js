@@ -193,6 +193,14 @@ window.__ModuleLoader__.load({
       'onboard.expiredBody': '扫一次码就能恢复，书架和阅读进度都还在本机。',
       'onboard.reconnect': '重新扫码',
       'home.wechatLine': '微信读书进度 {percent}% · 累计 {minutes} 分钟',
+      'home.compareLocal': '本地 {percent}%',
+      'home.compareCloud': '云端 {percent}%',
+      'home.compareChapter': '第 {n} 章',
+      'home.compareAgo': '{n} 分钟前',
+      'home.compareNow': '刚刚',
+      'home.compareUnreachable': '云端进度暂时读不到',
+      'home.cloudAhead': '云端读到了第 {chapter} 章（{percent}%），比本地靠前',
+      'home.followCloud': '跟随云端',
       'home.weekCard': '本周阅读',
       'home.weekdays': '一 二 三 四 五 六 日',
       'home.shelfCard': '书架',
@@ -558,6 +566,14 @@ window.__ModuleLoader__.load({
       'onboard.expiredBody': 'One scan brings it back. Your shelf and progress stay on this machine.',
       'onboard.reconnect': 'Re-scan',
       'home.wechatLine': 'WeRead {percent}% · {minutes} min so far',
+      'home.compareLocal': 'Local {percent}%',
+      'home.compareCloud': 'Cloud {percent}%',
+      'home.compareChapter': 'ch. {n}',
+      'home.compareAgo': '{n} min ago',
+      'home.compareNow': 'just now',
+      'home.compareUnreachable': 'Cloud progress unavailable',
+      'home.cloudAhead': 'WeRead is at ch. {chapter} ({percent}%), ahead of local',
+      'home.followCloud': 'Follow WeRead',
       'home.weekCard': 'This week',
       'home.weekdays': 'M T W T F S S',
       'home.shelfCard': 'Shelf',
@@ -869,6 +885,14 @@ window.__ModuleLoader__.load({
       '.lamp-progress i{display:block;height:100%;background:var(--lamp-accent);border-radius:2px;transition:width .3s ease}',
       '.lamp-progress-label{font-size:13px;color:var(--lamp-ink2);font-variant-numeric:tabular-nums;flex:none}',
       '.lamp-continue-note{margin:0;font-size:12px;color:var(--lamp-mute);font-variant-numeric:tabular-nums}',
+      '.lamp-compare{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--lamp-mute);font-variant-numeric:tabular-nums}',
+      '.lamp-compare-item{display:inline-flex;gap:4px;align-items:baseline}',
+      '.lamp-compare-meta{color:var(--lamp-mute)}',
+      '.lamp-compare-cloud{color:var(--lamp-accent-2,var(--lamp-accent))}',
+      '.lamp-compare[data-stale="1"] .lamp-compare-cloud{font-weight:600}',
+      '.lamp-compare-muted{opacity:.7}',
+      '.lamp-cloudbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:-8px 0 12px;padding:10px 14px;border:1px solid var(--lamp-line);border-radius:10px;background:var(--lamp-surface);font-size:12px;color:var(--lamp-ink2)}',
+      '.lamp-cloudbar-text{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
       '@media (max-width:760px){.lamp-continue{flex-wrap:wrap;gap:16px}}.lamp-continue{--x:0}',
 
       /* ---------- 首页卡片 ---------- */
@@ -2146,7 +2170,7 @@ window.__ModuleLoader__.load({
     /* ------------------------------------------------------------------ */
 
     function ContinueBar(props) {
-      const { t, book } = props;
+      const { t, book, compare } = props;
       const percent = bookPercent(book);
       const index = clamp(
         (book.progress && book.progress.chapterIndex) || 0,
@@ -2177,9 +2201,29 @@ window.__ModuleLoader__.load({
             h('div', { className: 'lamp-progress' }, h('i', { style: { width: percent + '%' } })),
             h('span', { className: 'lamp-progress-label' }, t('shelf.readPercent', { n: percent })),
           ),
-          remote.progress !== undefined && remote.progress !== null
-            ? h('p', { className: 'lamp-continue-note' }, t('home.wechatLine', { percent: remotePercent, minutes }))
-            : null,
+          h(
+            'div',
+            { className: 'lamp-compare', 'data-stale': compare && compare.cloud && compare.cloudNewer ? '1' : '0' },
+            h('span', { className: 'lamp-compare-item' }, t('home.compareLocal', { percent })),
+            compare === null
+              ? null
+              : compare.cloud
+                ? h(
+                    'span',
+                    { className: 'lamp-compare-item lamp-compare-cloud' },
+                    t('home.compareCloud', { percent: Math.round(Number(compare.cloud.percent) || 0) }),
+                    h('span', { className: 'lamp-compare-meta' },
+                      t('home.compareChapter', { n: Number(compare.cloud.chapterIdx) || 0 }),
+                      ' · ',
+                      compare.cloudAge === null
+                        ? ''
+                        : compare.cloudAge < 1
+                          ? t('home.compareNow')
+                          : t('home.compareAgo', { n: Math.round(compare.cloudAge) }),
+                    ),
+                  )
+                : h('span', { className: 'lamp-compare-item lamp-compare-muted' }, t('home.compareUnreachable')),
+          ),
         ),
         h('span', { className: 'lamp-btn lamp-btn-primary' }, t('home.continue')),
       );
@@ -2326,6 +2370,28 @@ window.__ModuleLoader__.load({
 
     function HomePage(props) {
       const { t } = props;
+      const [compare, setCompare] = useState(null);
+      const compareBookId = props.continueBook ? props.continueBook.id : '';
+      useEffect(() => {
+        if (!compareBookId) { setCompare(null); return undefined }
+        let alive = true
+        fetch('/lamplit/api/weread/compare?bookId=' + encodeURIComponent(compareBookId))
+          .then((response) => response.json())
+          .then((res) => {
+            if (!alive || !res || res.ok !== true) return
+            const cloudUpdate = Number(res.cloud && res.cloud.updateTime) || 0
+            const localUpdate = Math.round((Number(res.local && res.local.updatedAt) || 0) / 1000)
+            const age = cloudUpdate > 0 ? (Date.now() / 1000) - cloudUpdate : null
+            setCompare({
+              local: res.local,
+              cloud: res.cloud,
+              cloudNewer: cloudUpdate > 0 && (cloudUpdate - localUpdate) > 60,
+              cloudAge: age !== null && age >= 0 ? age / 60 : null,
+            })
+          })
+          .catch(() => {})
+        return () => { alive = false }
+      }, [compareBookId])
       const shelf = props.shelf || [];
       const stats = props.stats || {};
       const days = lastSevenDays(stats.days);
@@ -2379,8 +2445,32 @@ window.__ModuleLoader__.load({
                     t,
                     book: props.continueBook,
                     chapterTitle: props.chapterTitle,
+                    compare,
                     onOpen: props.onOpen,
                   })
+                : null,
+              props.continueBook && compare && compare.cloudNewer && Number(compare.cloud && compare.cloud.chapterIndex) >= 0
+                ? h(
+                    'div',
+                    { className: 'lamp-cloudbar' },
+                    h(
+                      'span',
+                      { className: 'lamp-cloudbar-text' },
+                      t('home.cloudAhead', {
+                        chapter: (Number(compare.cloud.chapterIndex) || 0) + 1,
+                        percent: Math.round(Number(compare.cloud.percent) || 0),
+                      }),
+                    ),
+                    h(
+                      'button',
+                      {
+                        type: 'button',
+                        className: 'lamp-btn lamp-btn-ghost lamp-btn-sm',
+                        onClick: () => props.onFollowCloud && props.onFollowCloud(props.continueBook),
+                      },
+                      t('home.followCloud'),
+                    ),
+                  )
                 : null,
 
               h(
@@ -7841,6 +7931,13 @@ window.__ModuleLoader__.load({
                         recentNotes: notes,
                         wereadSeconds,
                         onOpen: openBook,
+                        onFollowCloud: (book) => {
+                          if (!book) return;
+                          fetch('/lamplit/api/book/' + encodeURIComponent(book.id) + '/cloud-progress', { method: 'POST' })
+                            .then((response) => response.json())
+                            .then((res) => openBook(res && res.book ? res.book : book))
+                            .catch(() => openBook(book));
+                        },
                         onOpenNote: openFromNote,
                         onOpenNotes: () => openNotesPage(null),
                         onOpenStats: () => setView('stats'),
