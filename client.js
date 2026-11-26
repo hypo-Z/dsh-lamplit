@@ -4674,9 +4674,13 @@ window.__ModuleLoader__.load({
       audio: null,
       utter: null,
       token: 0,
-      preload: null,
-      preload2: null,
-      preload3: null,
+      preloadMap: new Map(),
+      prefetchQueue: [],
+      prefetching: 0,
+      gapBatch: [],
+      gapTimer: 0,
+      lastEndAt: 0,
+      lastEndIndex: -1,
       fraction: 0,
       currentTime: 0,
       pausedAt: 0,
@@ -4769,6 +4773,75 @@ window.__ModuleLoader__.load({
         this.warmedVoice = this.voice
         fetch('/lamplit/api/tts/warm?voice=' + encodeURIComponent(this.voice)).catch(() => {})
       },
+      ttsUrl(value, stream) {
+        return '/lamplit/api/tts?voice=' + encodeURIComponent(this.voice) + '&rate=' + encodeURIComponent(String(this.rate)) + (stream ? '&stream=1' : '') + '&text=' + encodeURIComponent(String(value).slice(0, 600))
+      },
+      takePreload(index) {
+        const url = this.preloadMap.get(index)
+        if (!url) return null
+        this.preloadMap.delete(index)
+        return url
+      },
+      prefetchBlob(index, stream) {
+        if (this.preloadMap.has(index)) return Promise.resolve()
+        const token = this.token
+        const text = this.segments[index]
+        if (!text) return Promise.resolve()
+        return fetch(this.ttsUrl(text, stream), { signal: typeof AbortSignal !== 'undefined' && AbortSignal.timeout ? AbortSignal.timeout(15000) : undefined }).then((response) => response.ok ? response.blob() : null).then((blob) => {
+          if (!blob || blob.size === 0 || token !== this.token) return
+          if (this.preloadMap.has(index) || this.preloadMap.size >= 12) return
+          try { this.preloadMap.set(index, URL.createObjectURL(blob)) } catch (err) {}
+        }).catch(() => {})
+      },
+      // 预取策略：目标始终是「当前位置往后 8 句都落到缓存里」，
+      // 但同时只跑 3 个请求（Chromium 每个 host 只有 6 条连接，还要留一条给正在播的那句）
+      fillPrefetch(index, stream) {
+        for (const [key, url] of [...this.preloadMap.entries()]) {
+          if (key > index) continue
+          try { URL.revokeObjectURL(url) } catch (err) {}
+          this.preloadMap.delete(key)
+        }
+        this.prefetchQueue = this.prefetchQueue.filter((value) => value > index && !this.preloadMap.has(value))
+        for (let offset = 1; offset <= 8; offset += 1) {
+          const target = index + offset
+          if (target >= this.segments.length) break
+          if (this.preloadMap.has(target) || this.prefetchQueue.includes(target)) continue
+          this.prefetchQueue.push(target)
+        }
+        this.pumpPrefetch(stream)
+      },
+      pumpPrefetch(stream) {
+        const token = this.token
+        while (this.prefetching < 3 && this.prefetchQueue.length > 0) {
+          const target = this.prefetchQueue.shift()
+          if (target >= this.segments.length || this.preloadMap.has(target)) continue
+          this.prefetching += 1
+          this.prefetchBlob(target, stream).finally(() => {
+            this.prefetching = Math.max(0, this.prefetching - 1)
+            if (token === this.token) this.pumpPrefetch(stream)
+          })
+        }
+      },
+      reportGap(ms) {
+        if (!(ms > 0)) return
+        const text = this.segments[this.index] || ''
+        this.gapBatch.push({ ms: Math.round(ms), chars: text.length, index: this.index })
+        const flush = () => {
+          this.gapTimer = 0
+          if (this.gapBatch.length === 0) return
+          const gaps = this.gapBatch
+          this.gapBatch = []
+          try {
+            fetch('/lamplit/api/tts/stats', {
+              method: 'POST',
+              headers: { 'content-type': 'application/json' },
+              body: JSON.stringify({ gaps }),
+            }).catch(() => {})
+          } catch (err) {}
+        }
+        if (this.gapBatch.length >= 8) { if (this.gapTimer) clearTimeout(this.gapTimer); flush(); return }
+        if (!this.gapTimer) this.gapTimer = setTimeout(flush, 3000)
+      },
       speechFallback(text, onend) {
         console.log('[lamp-tts] fallback speech', String(text).slice(0, 24))
         if (typeof window === 'undefined' || !window.SpeechSynthesisUtterance || !window.speechSynthesis) return false
@@ -4807,11 +4880,14 @@ window.__ModuleLoader__.load({
         const text = this.segments[index]
         this.playing = true
         this.emit()
-        try {
-          window.dispatchEvent(new CustomEvent('lamp-tts-sentence', {
-            detail: { bookId: this.bookId, chapterIndex: this.chapterIndex, index, text: this.segments[index] || '' },
-          }))
-        } catch (err) {}
+        // 高亮/滚动放到出声之后再发：dispatchEvent 是同步的，早发会拖慢这一句的起播
+        const announce = () => {
+          try {
+            window.dispatchEvent(new CustomEvent('lamp-tts-sentence', {
+              detail: { bookId: this.bookId, chapterIndex: this.chapterIndex, index, text: this.segments[index] || '' },
+            }))
+          } catch (err) {}
+        }
         const next = () => {
           if (token !== this.token || !this.playing || this.index !== index) return
           if (this.index + 1 < this.segments.length) { this.playIndex(this.index + 1); return }
@@ -4823,28 +4899,14 @@ window.__ModuleLoader__.load({
           this.playing = false
           this.emit()
         }
-        if (!text) { next(); return }
+        if (!text) { announce(); next(); return }
         this.warmup()
         // stream=1：服务端边合成边回包，首字更快；出错时退回整段模式重试一次
         const useStream = !this.forceBuffer
-        const buildSrc = (value) => '/lamplit/api/tts?voice=' + encodeURIComponent(this.voice) + '&rate=' + encodeURIComponent(String(this.rate)) + (useStream ? '&stream=1' : '') + '&text=' + encodeURIComponent(String(value).slice(0, 600))
-        let preloaded = null
-        if (this.preload && this.preload.index === index) { preloaded = this.preload.url; this.preload = null }
-        else if (this.preload2 && this.preload2.index === index) { preloaded = this.preload2.url; this.preload2 = null }
-        else if (this.preload3 && this.preload3.index === index) { preloaded = this.preload3.url; this.preload3 = null }
-        const src = preloaded || buildSrc(text)
-        // 预取后两句，尽量消除句间等待
-        for (const offset of [1, 2, 3]) {
-          const nextText = this.segments[index + offset]
-          if (!nextText) continue
-          const nextIndex = index + offset
-          if ((this.preload && this.preload.index === nextIndex) || (this.preload2 && this.preload2.index === nextIndex) || (this.preload3 && this.preload3.index === nextIndex)) continue
-          fetch(buildSrc(nextText)).then((response) => response.ok ? response.blob() : null).then((blob) => {
-            if (!blob || token !== this.token) return
-            const slot = offset === 1 ? 'preload' : (offset === 2 ? 'preload2' : 'preload3')
-            if (!this[slot]) this[slot] = { index: nextIndex, url: URL.createObjectURL(blob) }
-          }).catch(() => {})
-        }
+        const preloaded = this.takePreload(index)
+        const src = preloaded || this.ttsUrl(text, useStream)
+        // 往后预取 8 句（同时最多 3 个请求），用深度换掉网络抖动
+        this.fillPrefetch(index, useStream)
         const audio = new Audio(src)
         lampAudios.add(audio)
         audio.addEventListener('ended', () => lampAudios.delete(audio))
@@ -4867,9 +4929,19 @@ window.__ModuleLoader__.load({
         })
         console.log('[lamp-tts] play token=', token, 'index=', index, 'text=', text.slice(0, 24))
         this.audio = audio
+        audio.addEventListener('playing', () => {
+          // 上一句结束后到这一句真正出声之间的空档，就是用户听到的停顿
+          if (this.lastEndIndex === index - 1 && this.lastEndAt > 0) {
+            this.reportGap((typeof performance !== 'undefined' ? performance.now() : Date.now()) - this.lastEndAt)
+          }
+          this.lastEndAt = 0
+          this.lastEndIndex = -1
+        })
         audio.onended = () => {
           if (src.startsWith('blob:')) { try { URL.revokeObjectURL(src) } catch (err) {} }
           this.forceBuffer = false
+          this.lastEndAt = typeof performance !== 'undefined' ? performance.now() : Date.now()
+          this.lastEndIndex = index
           next()
         }
         audio.onerror = () => {
@@ -4884,6 +4956,7 @@ window.__ModuleLoader__.load({
           if (!this.speechFallback(text, next)) next()
         }
         const started = audio.play()
+        announce()
         if (started && started.catch) started.catch(() => { if (token !== this.token) return; this.audio = null; if (!this.speechFallback(text, next)) next() })
       },
       play() {
@@ -4928,7 +5001,7 @@ window.__ModuleLoader__.load({
         this.emit()
       },
       toggle() { if (this.playing) this.pause(); else this.play() },
-      stop() { this.token += 1; this.playing = false; this.pausedAt = 0; this.pausedIndex = -1; this.currentTime = 0; this.stopAudio(); this.emit(); this.saveProgress(true) },
+      stop() { this.forceBuffer = false; this.prefetchQueue = []; this.token += 1; this.playing = false; this.pausedAt = 0; this.pausedIndex = -1; this.currentTime = 0; this.stopAudio(); this.emit(); this.saveProgress(true) },
       async load(book, chapterIndex) {
         const res = await fetch('/lamplit/api/book/' + encodeURIComponent(book) + '/chapter/' + chapterIndex).then((response) => response.json())
         if (!res || !res.ok) throw new Error(res?.error || '章节加载失败')
@@ -5465,6 +5538,7 @@ window.__ModuleLoader__.load({
 
       // 引擎切句时直接推送（无轮询、无延迟）
       useEffect(() => {
+        highlightPosRef.current = 0
         const onSentence = (event) => {
           const detail = event.detail || {}
           if (!detail.text) return
@@ -5492,13 +5566,23 @@ window.__ModuleLoader__.load({
       };
       const followPauseUntil = useRef(0);
       const highlightedRef = useRef(null);
+      const highlightPosRef = useRef(0);
       const applyDomHighlight = (text, retry) => {
         const head = String(text || '').trim().slice(0, 18)
         if (!head) return
         const nodes = document.querySelectorAll('.lamp-prose [data-block-index]')
         let target = null
-        for (const node of nodes) {
-          if (String(node.textContent || '').indexOf(head) >= 0) { target = node; break }
+        // 顺序朗读：从上次高亮的位置往后找，通常一两个节点就命中；
+        // 每句都从头扫描整章，会在句子切换时拖出 10–100ms 的空档。
+        const start = highlightPosRef.current % (nodes.length || 1)
+        for (let offset = 0; offset < nodes.length; offset += 1) {
+          const node = nodes[(start + offset) % nodes.length]
+          if (node === highlightedRef.current) continue
+          if (String(node.textContent || '').indexOf(head) >= 0) {
+            target = node
+            highlightPosRef.current = (start + offset) % nodes.length
+            break
+          }
         }
         if (!target) {
           // 刚挂载/刚切章时 DOM 可能还没渲染完：重试几次
@@ -5882,6 +5966,7 @@ window.__ModuleLoader__.load({
           lampTts.rate = lampRate()
           setTts({ text: lampTts.segments[lampTts.index] || '', paused: false })
           try { applyDomHighlight(lampTts.segments[lampTts.index] || '') } catch (err) {}
+          try { lampTts.fillPrefetch(lampTts.index - 1, true) } catch (err) {}
           if (!lampTts.playing) lampTts.play()
           openLampTtsWindow(true)
           return
@@ -5938,6 +6023,8 @@ window.__ModuleLoader__.load({
         if (startIndex < 0) startIndex = 0
         lampTts.index = startIndex
         lampTts.savedBlock = segmentBlocks[startIndex] ?? 0
+        // 先把开头几句排进预取队列，第一句不用等合成
+        try { lampTts.fillPrefetch(startIndex - 1, true) } catch (err) {}
         setTts({ index: segmentBlocks[startIndex] ?? 0, paused: false })
         lampTts.play()
         openLampTtsWindow(true)
