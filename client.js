@@ -202,6 +202,7 @@ window.__ModuleLoader__.load({
       'home.cloudAhead': '云端读到了第 {chapter} 章（{percent}%），比本地靠前',
       'home.followCloud': '跟随云端',
       'home.followFailed': '微信读书没有返回可用进度',
+      'home.following': '正在读取微信读书的进度…',
       'home.weekCard': '本周阅读',
       'home.weekdays': '一 二 三 四 五 六 日',
       'home.shelfCard': '书架',
@@ -576,6 +577,7 @@ window.__ModuleLoader__.load({
       'home.cloudAhead': 'WeRead is at ch. {chapter} ({percent}%), ahead of local',
       'home.followCloud': 'Follow WeRead',
       'home.followFailed': 'WeRead did not return a position',
+      'home.following': 'Reading your WeRead position…',
       'home.weekCard': 'This week',
       'home.weekdays': 'M T W T F S S',
       'home.shelfCard': 'Shelf',
@@ -4762,6 +4764,17 @@ window.__ModuleLoader__.load({
     // ── 听书引擎（模块级，切页不中断） ─────────────────────────────
     // 本插件创建过的全部 <audio>，用来在切句时停掉上一句，避免两路叠加
     const lampAudios = new Set()
+    // 关键动作上报：排查“点了跟随云端却没跳”到底是哪一步没执行
+    const lampTrace = (event, data) => {
+      try {
+        fetch('/lamplit/api/client-log', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ event, ...data }),
+          keepalive: true,
+        }).catch(() => {})
+      } catch (err) {}
+    }
     const lampTts = window.__lampTts || (window.__lampTts = {
       bookId: '',
       bookTitle: '',
@@ -5620,6 +5633,9 @@ window.__ModuleLoader__.load({
       const startPercent = useRef(chapterInnerPercent(book)).current;
 
       const openedAtRef = useRef(Date.now());
+      useEffect(() => {
+        lampTrace('mount', { bookId: book.id, startIndex, chapterCount: book.chapterCount || 0 });
+      }, []);
       const [meta, setMeta] = useState({ book, toc: [] });
       const [finished, setFinished] = useState(!!book.finished);
       const [chapter, setChapter] = useState(null);
@@ -5666,6 +5682,7 @@ window.__ModuleLoader__.load({
           if (detail.bookId && detail.bookId !== book.id) return
           const justOpened = Date.now() - openedAtRef.current < 2500
           if (!justOpened && Number(detail.chapterIndex) !== chapterIndex && status === 'ready' && loadChapterRef.current && lampTts.bookId === book.id) {
+            lampTrace('tts-jump', { from: chapterIndex, to: Number(detail.chapterIndex) });
             loadChapterRef.current(Number(detail.chapterIndex), 0)
           }
           setTts({ text: detail.text, paused: false })
@@ -7505,20 +7522,46 @@ window.__ModuleLoader__.load({
                 lampTts.stop()
               }
             } catch (err) {}
+            lampTrace('open', {
+              bookId: target && target.id,
+              chapter: Number(target && target.progress && target.progress.chapterIndex),
+              ttsBook: lampTts.bookId,
+              ttsChapter: Number(lampTts.chapterIndex),
+              ttsPlaying: lampTts.playing === true,
+            });
             setSession({ book: target, focusQuote: '', stamp: Date.now() });
           };
           if (!book || book.source !== 'weread') { show(book); return }
           // 打开前问一次云端：云端比本地新就从云端那一章开始，超时/失败照旧用本地
           let settled = false;
-          const fallback = () => { if (settled) return; settled = true; clearTimeout(timer); show(book) };
-          const timer = setTimeout(fallback, 4000);
+          let openedLocal = false;
+          const fallback = () => {
+            if (settled) return
+            settled = true
+            openedLocal = true
+            clearTimeout(timer)
+            show(book)
+          };
+          // 云端慢的时候别死等：先按本地打开，云端结果晚到再纠正到采纳的章节
+          const timer = setTimeout(fallback, 8000);
           fetch('/lamplit/api/book/' + encodeURIComponent(book.id) + '/cloud-progress', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' })
             .then((response) => response.json())
             .then((res) => {
-              if (settled) return;
-              settled = true;
-              clearTimeout(timer);
-              show(res && res.adopted === true && res.book ? res.book : book);
+              const adoptedBook = res && res.adopted === true && res.book ? res.book : null
+              if (!settled) {
+                settled = true
+                clearTimeout(timer)
+                show(adoptedBook || book)
+                return
+              }
+              // 已经用本地打开过了：云端这时候才回来，仍然要纠正（这就是“点进去还是旧章节”的来源）
+              if (openedLocal && adoptedBook) {
+                const targetIndex = Number(adoptedBook.progress && adoptedBook.progress.chapterIndex)
+                if (Number.isFinite(targetIndex) && targetIndex !== Number(book.progress && book.progress.chapterIndex)) {
+                  lampTrace('late-adopt', { bookId: book.id, chapter: targetIndex })
+                  show(adoptedBook)
+                }
+              }
             })
             .catch(fallback);
         }, []);
@@ -7963,6 +8006,7 @@ window.__ModuleLoader__.load({
                         onOpen: openBook,
                         onFollowCloud: (book) => {
                           if (!book) return;
+                          say(tr('home.following'));
                           // 采纳失败时不能悄悄用本地旧位置打开——用户会以为“跟了但没变”
                           const attempt = (left) => {
                             fetch('/lamplit/api/book/' + encodeURIComponent(book.id) + '/cloud-progress', {
@@ -7972,7 +8016,11 @@ window.__ModuleLoader__.load({
                             })
                               .then((response) => response.json())
                               .then((res) => {
-                                if (res && res.ok === true && res.adopted === true && res.book) { openBook(res.book); return }
+                                if (res && res.ok === true && res.adopted === true && res.book) {
+                                  replaceBook(res.book);
+                                  openBook(res.book);
+                                  return;
+                                }
                                 if (left > 0) { setTimeout(() => attempt(left - 1), 800); return }
                                 say(tr('toast.failed', { error: (res && res.error) || tr('home.followFailed') }));
                               })
