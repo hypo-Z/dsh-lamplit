@@ -4758,6 +4758,7 @@ window.__ModuleLoader__.load({
               chapterIndex: this.chapterIndex,
               percent: this.ratio(),
               seconds: Math.round(seconds),
+              force: force === true,
             }),
           }).catch(() => {})
         } catch (err) {}
@@ -5022,6 +5023,20 @@ window.__ModuleLoader__.load({
     })
 
     lampTts.restore()
+    // 关窗/切后台时最后一次位置立刻推回云端（sendBeacon 不会被打断）
+    if (typeof window !== 'undefined' && !lampTts.__flushBound) {
+      lampTts.__flushBound = true
+      lampTts.flushProgress = function flushProgress() {
+        if (!this.bookId) return
+        try {
+          const body = JSON.stringify({ bookId: this.bookId, chapterIndex: this.chapterIndex, percent: this.ratio(), seconds: 0, force: true })
+          if (navigator.sendBeacon) navigator.sendBeacon('/lamplit/api/progress', new Blob([body], { type: 'application/json' }))
+          else fetch('/lamplit/api/progress', { method: 'POST', headers: { 'content-type': 'application/json' }, body, keepalive: true })
+        } catch (err) {}
+      }
+      window.addEventListener('pagehide', () => lampTts.flushProgress())
+      document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') lampTts.flushProgress() })
+    }
     // 上次用的是在线音色：插件加载后就把连接热起来，第一句不必等握手
     if (/^edge_/.test(lampTts.voice)) setTimeout(() => { try { lampTts.warmup() } catch (err) {} }, 1500)
 
@@ -7371,7 +7386,21 @@ window.__ModuleLoader__.load({
         /* ---------------- 书 / 笔记 ---------------- */
 
         const openBook = useCallback((book) => {
-          setSession({ book, focusQuote: '' });
+          const show = (target) => setSession({ book: target, focusQuote: '' });
+          if (!book || book.source !== 'weread') { show(book); return }
+          // 打开前问一次云端：云端比本地新就从云端那一章开始，超时/失败照旧用本地
+          let settled = false;
+          const fallback = () => { if (settled) return; settled = true; clearTimeout(timer); show(book) };
+          const timer = setTimeout(fallback, 1500);
+          fetch('/lamplit/api/book/' + encodeURIComponent(book.id) + '/cloud-progress', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' })
+            .then((response) => response.json())
+            .then((res) => {
+              if (settled) return;
+              settled = true;
+              clearTimeout(timer);
+              show(res && res.adopted === true && res.book ? res.book : book);
+            })
+            .catch(fallback);
         }, []);
 
         const resolveBook = useCallback(
