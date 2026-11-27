@@ -7597,7 +7597,10 @@ window.__ModuleLoader__.load({
               if (!settled) {
                 settled = true
                 clearTimeout(timer)
-                show(adoptedBook || book)
+                // 已经用缓存章节打开过：网络没带来新章节（adopted=false）时不要再用旧 book 重开，
+                // 否则刚跳到的云端章节会被本地旧章节覆盖（日志里连续两条 open 就是这个）
+                if (adoptedBook) show(adoptedBook)
+                else if (!useCached) show(book)
                 return
               }
               // 已经用本地打开过了：云端这时候才回来，仍然要纠正（这就是“点进去还是旧章节”的来源）
