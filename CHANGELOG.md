@@ -1,5 +1,14 @@
 # Changelog
 
+## 未发布 · 0.2.20
+
+- **修掉“切章后页面又被拉回旧章节”的真正源头**：`lamp-tts-back`（听书窗口/小球的「回页面」）
+  原来会用 `resolveBook` **重建 session**；书架里找不到这本书时会造一本 `chapterCount = 章节号+1`
+  的假书，阅读器被整体重挂到听书所在章节（日志里 `mount startIndex=30 chapterCount=31` 就是它）
+- 现在：同一本书已打开时，`lamp-tts-back` 只切回阅读器视图，不动 session、不动章节
+- 书架里找不到时改为拉真实书籍数据，不再编造 `chapterCount`
+- 挂载时消费遗留回页面目标也不再造书；`client-log` 增加 `tts-back` 事件
+
 ## 未发布 · 0.2.19
 
 - **修复“页面被听书控制”**：`lamp-tts-sentence` 只有在 `lampTts.playing === true` 时才允许切章；

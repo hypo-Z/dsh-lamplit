@@ -7649,19 +7649,39 @@ window.__ModuleLoader__.load({
           const onBack = (event) => {
             const detail = event.detail || {}
             if (!detail.bookId) return
-            const book = resolveBook(detail.bookId, detail.chapterIndex, lampTts.bookTitle)
-            setSession({ book, focusQuote: '', stamp: Date.now() })
+            // 已经打开着这本书：只把视图切回阅读器，**不要重建 session**。
+            // 之前这里会用 resolveBook 造一个 chapterCount=index+1 的假书，
+            // 把阅读器整体重挂到听书所在章节——这就是“切不了章、页面被听书控制”的根因。
+            lampTrace('tts-back', {
+              bookId: detail.bookId,
+              chapter: Number(detail.chapterIndex),
+              hasSession: Boolean(session && session.book && session.book.id === detail.bookId),
+            })
+            if (session && session.book && session.book.id === detail.bookId) {
+              setView('reader')
+              return
+            }
+            const found = data.shelf.find((item) => item.id === detail.bookId)
+            if (found) {
+              setSession({ book: found, focusQuote: '', stamp: Date.now() })
+              return
+            }
+            // 书架里没有（可能只加载了部分）：拿真实书籍数据，别再编造 chapterCount
+            call('/book/' + encodeURIComponent(detail.bookId))
+              .then((res) => { if (res && res.book) setSession({ book: res.book, focusQuote: '', stamp: Date.now() }) })
+              .catch(() => {})
           }
           window.addEventListener('lamp-tts-back', onBack)
           return () => window.removeEventListener('lamp-tts-back', onBack)
-        }, [resolveBook]);
+        }, [resolveBook, session, data.shelf]);
         // 面板是刚挂载的（事件在挂载前发出）：消费一次遗留的回页面目标
         useEffect(() => {
           if (!lampBackTarget || !lampBackTarget.bookId) return
           const detail = lampBackTarget
-          const book = resolveBook(detail.bookId, detail.chapterIndex, lampTts.bookTitle)
-          setSession({ book, focusQuote: '', stamp: Date.now() })
-          // 章节跳转由 Reader 挂载时消费 lampBackTarget
+          lampBackTarget = null
+          const found = data.shelf.find((item) => item.id === detail.bookId)
+          if (found) setSession({ book: found, focusQuote: '', stamp: Date.now() })
+          // 章节跳转由 Reader 挂载时消费；找不到书就什么都不做，别造一本假书
         }, []);
 
 
