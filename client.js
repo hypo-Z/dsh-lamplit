@@ -7122,7 +7122,8 @@ window.__ModuleLoader__.load({
                 toc,
                 book: currentBook,
                 current: chapterIndex,
-                onJump: jumpChapter,
+                // 点完章节要收起目录，否则抽屉挡住正文，看起来“点了没反应”
+                onJump: (index) => { setOverlay(null); jumpChapter(index); },
               }),
             ]
           : null,
